@@ -1549,6 +1549,11 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
     }
     pSPARC->NPT_NHbmass = pSPARC_Input->NPT_NHbmass;
     pSPARC->prtarget = pSPARC_Input->prtarget;
+    pSPARC->pr_external = pSPARC_Input->pr_external;
+    for (i = 0; i < 6; i++){
+        pSPARC->stress_external[i] = pSPARC_Input->stress_external[i]; 
+    }
+    pSPARC->pr_external = pSPARC_Input->pr_external;
     pSPARC->NPT_NP_bmass = pSPARC_Input->NPT_NP_bmass;
     pSPARC->NPT_NP_qmass = pSPARC_Input->NPT_NP_qmass;
     pSPARC->NLCG_sigma = pSPARC_Input->NLCG_sigma;
@@ -3913,7 +3918,13 @@ void write_output_init(SPARC_OBJ *pSPARC) {
             else if (pSPARC->NPTconstraintFlag == 4) fprintf(output_fp," 123\n");
             fprintf(output_fp,"NPT_NP_QMASS: %.15g\n",pSPARC->NPT_NP_qmass);
             fprintf(output_fp,"NPT_NP_BMASS: %.15g\n",pSPARC->NPT_NP_bmass);
-            fprintf(output_fp,"TARGET_PRESSURE: %.15g GPa\n",pSPARC->prtarget);
+            fprintf(output_fp,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",pSPARC->pr_external+pSPARC->stress_external[0]
+                                                                                        ,pSPARC->pr_external+pSPARC->stress_external[1]
+                                                                                        ,pSPARC->pr_external+pSPARC->stress_external[2] 
+                                                                                        ,pSPARC->stress_external[3]
+                                                                                        ,pSPARC->stress_external[4]
+                                                                                        ,pSPARC->stress_external[5]);
+            
         }
     }
 

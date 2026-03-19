@@ -795,6 +795,13 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
         } else if (strcmpi(str,"NPT_NP_BMASS:") == 0) {    
             fscanf(input_fp,"%lf",&pSPARC_Input->NPT_NP_bmass);
             fscanf(input_fp, "%*[^\n]\n");
+        }else if (strcmpi(str,"EXTERNAL_PRESSURE:") == 0) {    
+            fscanf(input_fp,"%lf",&pSPARC_Input->pressure_external);
+            fscanf(input_fp, "%*[^\n]\n");
+        }else if (strcmpi(str,"EXTERNAL_STRESS:") == 0) {    
+            fscanf(input_fp,"%lf %lf %lf %lf %lf %lf",&pSPARC_Input->stress_external[0], &pSPARC_Input->stress_external[1], &pSPARC_Input->stress_external[2]
+                                                     ,&pSPARC_Input->stress_external[3], &pSPARC_Input->stress_external[4], &pSPARC_Input->stress_external[5]);
+            fscanf(input_fp, "%*[^\n]\n");
         } else if (strcmpi(str,"STANDARD_EIGEN:") == 0) {    
             fscanf(input_fp,"%d",&pSPARC_Input->StandardEigenFlag);
             fscanf(input_fp, "%*[^\n]\n");

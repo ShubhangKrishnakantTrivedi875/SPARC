@@ -880,8 +880,12 @@ typedef struct _SPARC_OBJ{
     double Hamiltonian_NPT_NH; // Hamiltonian of the NPT-NH system
     // NPT-NP
     int maxTimeIter;     // largest allowed amount of iteration
-    double NPT_NP_qmass; // qmass used in NPT_NP
-    double NPT_NP_bmass; // bmass used in NPT_NP
+    double pr_external;  // Externally applied hydrostatic pressure, used in NPT_NP and NPH
+    double stress_external[6]; // Externally applied anisotropic stress (applied separately from pr_external),  used in NPT_NP and NPH
+    //In NPT_NP and NPH,  the target_stress[i] = pr_external+stress_external[i];  in contrast to NPT_NH where there is just target_pressure.
+
+    double NPT_NP_qmass; // fictitious mass of thermostat (qmass) used in NPT_NP
+    double NPT_NP_bmass; // fictitious mass of barostat (bmass) used in NPT_NP
     double range_x_velo; // velocity of x sidelength
     double range_y_velo; // velocity of y sidelength
     double range_z_velo; // velocity of z sidelength
@@ -1422,7 +1426,12 @@ typedef struct _SPARC_INPUT_OBJ{
     // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
     double NPT_NHqmass[L_QMASS];// qmass used in NPT_NH
     double NPT_NHbmass;        // Bmass used in NPT_NH
-    double prtarget;     // Target pressure of barostatic system, UNIT on input file is GPa
+    double prtarget;     // Target pressure of NPT_NH system, UNIT on input file is GPa
+    
+    double pr_external;  // Externally applied hydrostatic pressure of NPT_NP or NPH system, UNIT on input file is GPa 
+    double stress_external[6]; // Externally applied anisotropic stress tensor (applied separately from pr_external) of NPT_NP or NPH system, UNIT on input file is GPa 
+    //In NPT_NP and NPH,  the target_stress[i] = pr_external+stress_external[i];  in contrast to NPT_NH where there is just target_pressure.
+
     double NPT_NP_qmass; // qmass used in NPT_NP
     double NPT_NP_bmass; // Bmass used in NPT_NP
     
