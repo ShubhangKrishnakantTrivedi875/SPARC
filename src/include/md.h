@@ -158,6 +158,11 @@ void hamiltonian_NPT_NH(SPARC_OBJ *pSPARC);
 void NPT_NP(SPARC_OBJ *pSPARC);
 
 /* 
+@ brief: Calculates cell angles, reciprocal lattice vectors, metric and reciprocal metric tensors, for use in NPT_NP and NPH dynamics
+*/
+void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC);
+
+/* 
 @ brief: calculate Hamiltonian of the NPT_NP system.
 */
 void initialize_Hamiltonian(SPARC_OBJ *pSPARC);
