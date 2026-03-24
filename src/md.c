@@ -1783,7 +1783,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 		pSPARC->Pm_metric_tensor[i] -=  0.5 * pSPARC->MD_dt * pSPARC->SNOSE[0] * temp_mat[i];
 	} 
 
-	if (pSPARC->NPT_NP_ANGLES == 0){
+	if (pSPARC->NPT_NP_NPH_ANGLES == 0){
 		compute_constraint_stress(pSPARC);
 	}
 

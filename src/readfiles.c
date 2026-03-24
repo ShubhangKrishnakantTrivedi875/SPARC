@@ -777,6 +777,63 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
                 exit(EXIT_FAILURE);
             }
             fscanf(input_fp, "%*[^\n]\n");
+        } else if (strcmpi(str,"NPT_NP_ANGLES:") == 0){
+            fscanf(input_fp,"%d",&pSPARC_Input->NPT_NP_angles);
+            fscanf(input_fp, "%*[^\n]\n");
+            
+            if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 && pSPARC_Input->NPTconstraintFlag == 0){
+                printf("Angle changing is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints imposed on them.\n");
+                printf("To allow Angle changing, input NPT_NP_ANGLES: 1, while simultaneously NPT_SCALE_VECS: 1 2 3 and omit/skip input of NPT_SCALE_CONSTRAINTS (so default: none will be triggered).\n");
+                exit(EXIT_FAILURE);
+            }
+        } else if (strcmpi(str,"NPH_SCALE_VECS:") == 0) {
+            int dir[3] = {0, 0, 0};
+            pSPARC_Input->NPHscaleVecs[0] = 0; pSPARC_Input->NPHscaleVecs[1] = 0; pSPARC_Input->NPHscaleVecs[2] = 0; 
+            int scanfResult;
+            scanfResult = fscanf(input_fp,"%d %d %d\n",&dir[0], &dir[1], &dir[2]);
+            if (scanfResult == -1) {
+                scanfResult = fscanf(input_fp,"%d %d\n",&dir[0], &dir[1]);
+            }
+            if (scanfResult == -1) {
+                scanfResult = fscanf(input_fp,"%d\n",&dir[0]);
+            }
+            if (scanfResult == -1) {
+                printf("To correctly input NPH_SCALE_VECS, please do not add space or other characters between number and newline.\n");
+                printf("input as NPH_SCALE_VECS: 1 2 3\n");
+                exit(EXIT_FAILURE);
+            }
+            for (int i = 0; i < 3; i++) {
+                if (dir[i] > 0) pSPARC_Input->NPHscaleVecs[dir[i] - 1] = 1;
+            }
+            // fscanf(input_fp, "%*[^\n]\n");
+         } else if (strcmpi(str,"NPH_SCALE_CONSTRAINTS:") == 0) {
+            fscanf(input_fp,"%s",temp);
+            if (strcmpi(temp,"none") == 0) {
+                pSPARC_Input->NPHconstraintFlag = 0;
+            } else if ((strcmpi(temp, "12") == 0) || (strcmpi(temp, "21") == 0)) {
+                pSPARC_Input->NPHconstraintFlag = 1;
+            } else if ((strcmpi(temp, "13") == 0) || (strcmpi(temp, "31") == 0)) {
+                pSPARC_Input->NPHconstraintFlag = 2;
+            } else if ((strcmpi(temp, "23") == 0) || (strcmpi(temp, "32") == 0)) {
+                pSPARC_Input->NPHconstraintFlag = 3;
+            } else if ((strcmpi(temp, "123") == 0) || (strcmpi(temp, "132") == 0) || (strcmpi(temp, "213") == 0) ||
+                (strcmpi(temp, "231") == 0) || (strcmpi(temp, "312") == 0) || (strcmpi(temp, "321") == 0)) {
+                pSPARC_Input->NPHconstraintFlag = 4;
+            }
+            else {
+                printf("Cannot recognize NPH_SCALE_CONSTRAINTS: %s\n", temp);
+                exit(EXIT_FAILURE);
+            }
+            fscanf(input_fp, "%*[^\n]\n");
+        } else if (strcmpi(str,"NPH_ANGLES:") == 0){
+            fscanf(input_fp,"%d",&pSPARC_Input->NPH_angles);
+            fscanf(input_fp, "%*[^\n]\n");
+            
+            if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 && pSPARC_Input->NPHconstraintFlag == 0){
+                printf("Angle changing is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints imposed on them.\n");
+                printf("To allow Angle changing, input NPH_ANGLES: 1, while simultaneously NPH_SCALE_VECS: 1 2 3 and omit/skip input of NPH_SCALE_CONSTRAINTS (so default: none will be triggered).\n");
+                exit(EXIT_FAILURE);
+            }
         } else if (strcmpi(str,"NPT_NH_QMASS:") == 0) { 
             fscanf(input_fp,"%d",&pSPARC_Input->NPT_NHnnos);
             for (int subscript_NPTNH_qmass = 0; subscript_NPTNH_qmass < pSPARC_Input->NPT_NHnnos; subscript_NPTNH_qmass++){
@@ -795,7 +852,10 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
         } else if (strcmpi(str,"NPT_NP_BMASS:") == 0) {    
             fscanf(input_fp,"%lf",&pSPARC_Input->NPT_NP_bmass);
             fscanf(input_fp, "%*[^\n]\n");
-        }else if (strcmpi(str,"EXTERNAL_PRESSURE:") == 0) {    
+        } else if (strcmpi(str,"NPH_BMASS:") == 0) {    
+            fscanf(input_fp,"%lf",&pSPARC_Input->NPH_bmass);
+            fscanf(input_fp, "%*[^\n]\n");
+        } else if (strcmpi(str,"EXTERNAL_PRESSURE:") == 0) {    
             fscanf(input_fp,"%lf",&pSPARC_Input->pressure_external);
             fscanf(input_fp, "%*[^\n]\n");
         }else if (strcmpi(str,"EXTERNAL_STRESS:") == 0) {    

@@ -830,16 +830,17 @@ void set_defaults(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     pSPARC_Input->NPTscaleVecs[1] = 1; 
     pSPARC_Input->NPTscaleVecs[2] = 1;        // default lattice vectors to be rescaled in NPT
     pSPARC_Input->NPTconstraintFlag = 0;     // confinement on side length of cell. none: no length confinement (default)
+    pSPARC_Input->NPT_NPH_ANGLES = 0;        // default: no change in angles during NPT_NP or NPH ensemble
     pSPARC_Input->NPT_NHnnos = 0;                   // default amount of thermo variable for NPT_NH. If MDMeth is this but nnos is 0, program will stop
     for (int subscript_NPTNH_qmass = 0; subscript_NPTNH_qmass < L_QMASS; subscript_NPTNH_qmass++){
         pSPARC_Input->NPT_NHqmass[subscript_NPTNH_qmass] = 0.0;
     }                                         // default mass of thermo variables for NPT_NH. If MDMeth is this but one of qmass is 0, program will stop
     pSPARC_Input->NPT_NHbmass = 0.0;          // default mass of baro variable for NPT_NH. If MDMeth is this but bmass is 0, program will stop
     pSPARC_Input->prtarget = 0.0;             // default target pressure for NPT_NH.
-    pSPARC_Input->pr_external = 0.0;             // default target pressure for NPT_NP and NPH.
+    pSPARC_Input->pr_external = 0.0;             // default externally applied hydrostatic pressure for NPT_NP and NPH.
 
     for (int i = 0; i<6; ++i){
-        pSPARC_Input->stress_external[i] = 0.0;             // default target pressure for NPT_NP and NPH.
+        pSPARC_Input->stress_external[i] = 0.0;             // default externally applied anisotropic stress for NPT_NP and NPH.
     }
     pSPARC_Input->NPT_NP_qmass = 0.0;         // default mass of thermo variables for NPT_NP. If MDMeth is this but qmass is 0, program will stop
     pSPARC_Input->NPT_NP_bmass = 0.0;         // default mass of thermo variables for NPT_NP. If MDMeth is this but bmass is 0, program will stop
