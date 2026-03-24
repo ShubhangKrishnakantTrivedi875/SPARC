@@ -836,7 +836,11 @@ void set_defaults(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     }                                         // default mass of thermo variables for NPT_NH. If MDMeth is this but one of qmass is 0, program will stop
     pSPARC_Input->NPT_NHbmass = 0.0;          // default mass of baro variable for NPT_NH. If MDMeth is this but bmass is 0, program will stop
     pSPARC_Input->prtarget = 0.0;             // default target pressure for NPT_NH.
+    pSPARC_Input->pr_external = 0.0;             // default target pressure for NPT_NP and NPH.
 
+    for (int i = 0; i<6; ++i){
+        pSPARC_Input->stress_external[i] = 0.0;             // default target pressure for NPT_NP and NPH.
+    }
     pSPARC_Input->NPT_NP_qmass = 0.0;         // default mass of thermo variables for NPT_NP. If MDMeth is this but qmass is 0, program will stop
     pSPARC_Input->NPT_NP_bmass = 0.0;         // default mass of thermo variables for NPT_NP. If MDMeth is this but bmass is 0, program will stop
 
@@ -4329,7 +4333,7 @@ void print_orthogonal_warning(SPARC_OBJ *pSPARC, FILE *output_fp)
 void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
     SPARC_INPUT_OBJ sparc_input_tmp;
 
-    MPI_Datatype SPARC_types[N_MEMBR] = {MPI_INT, MPI_INT, MPI_INT,
+    MPI_Datatype SPARC_types[N_MEMBR] = {MPI_INT, MPI_INT, MPI_INT, /* int array */
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
@@ -4353,10 +4357,10 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
-                                         MPI_INT, MPI_INT, MPI_INT, MPI_INT, /* int array */
+                                         MPI_INT, MPI_INT, MPI_INT, MPI_INT, /* int */
 
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
-                                         MPI_DOUBLE, MPI_DOUBLE,
+                                         MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, /* double array */
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
@@ -4371,8 +4375,8 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
-                                         MPI_DOUBLE,
-                                         MPI_CHAR, MPI_CHAR, MPI_CHAR, MPI_CHAR, MPI_CHAR,
+                                         MPI_DOUBLE, MPI_DOUBLE, /* double */
+                                         MPI_CHAR, MPI_CHAR, MPI_CHAR, MPI_CHAR, MPI_CHAR, /* char */
                                          MPI_CHAR, MPI_CHAR, MPI_CHAR, MPI_CHAR, MPI_CHAR};
     int blens[N_MEMBR] = {3, 3, 7,      /* int array */ 
                           1, 1, 1, 1, 1,
@@ -4400,7 +4404,7 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
                           1, 1, 1, 1, 1, 
                           1, 1, 1, 1, /* int */ 
                           9, 3, L_QMASS, L_kpoint, L_kpoint,
-                          L_kpoint, 6, /* double array */
+                          L_kpoint, 6, 6,/* double array */
                           1, 1, 1, 1, 1, 
                           1, 1, 1, 1, 1, 
                           1, 1, 1, 1, 1,
@@ -4414,7 +4418,7 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
                           1, 1, 1, 1, 1, 
                           1, 1, 1, 1, 1,
                           1, 1, 1, 1, 1,
-                          1, 1,  /* double */
+                          1, 1, 1, /* double */
                           32, 32, 32, L_STRING, L_STRING, /* char */
                           L_STRING, L_STRING, L_STRING, L_STRING, L_STRING};
 
@@ -4554,6 +4558,7 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
     MPI_Get_address(&sparc_input_tmp.kredx, addr + i++);
     MPI_Get_address(&sparc_input_tmp.kredy, addr + i++);
     MPI_Get_address(&sparc_input_tmp.kredz, addr + i++);
+    MPI_Get_address(&sparc_input_tmp.stress_external, addr + i++);
 
     MPI_Get_address(&sparc_input_tmp.stress_rel_scale, addr + i++);
     // double type
@@ -4630,6 +4635,7 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
     MPI_Get_address(&sparc_input_tmp.F_rel_scale, addr + i++);
 
     MPI_Get_address(&sparc_input_tmp.relaxPrTarget, addr + i++);
+    MPI_Get_address(&sparc_input_tmp.pr_external, addr + i++);
     
 
     // char type
