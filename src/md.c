@@ -308,10 +308,10 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		int rank;
         MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-        pSPARC->volumeCell = pSPARC->Jacbdet*pSPARC->range_x*pSPARC->range_y*pSPARC->range_z;
-		pSPARC->initialLatVecLength[0] = sqrt(pSPARC->LatVec[0]*pSPARC->LatVec[0] + pSPARC->LatVec[1]*pSPARC->LatVec[1] + pSPARC->LatVec[2]*pSPARC->LatVec[2]);
-		pSPARC->initialLatVecLength[1] = sqrt(pSPARC->LatVec[3]*pSPARC->LatVec[3] + pSPARC->LatVec[4]*pSPARC->LatVec[4] + pSPARC->LatVec[5]*pSPARC->LatVec[5]);
-		pSPARC->initialLatVecLength[2] = sqrt(pSPARC->LatVec[6]*pSPARC->LatVec[6] + pSPARC->LatVec[7]*pSPARC->LatVec[7] + pSPARC->LatVec[8]*pSPARC->LatVec[8]);
+        pSPARC->volumeCell = pSPARC->Jacbdet*pSPARC->range_x * pSPARC->range_y * pSPARC->range_z;
+		pSPARC->initialLatVecLength[0] = sqrt(pSPARC->LatVec[0] * pSPARC->LatVec[0] + pSPARC->LatVec[1] * pSPARC->LatVec[1] + pSPARC->LatVec[2] * pSPARC->LatVec[2]);
+		pSPARC->initialLatVecLength[1] = sqrt(pSPARC->LatVec[3] * pSPARC->LatVec[3] + pSPARC->LatVec[4] * pSPARC->LatVec[4] + pSPARC->LatVec[5] * pSPARC->LatVec[5]);
+		pSPARC->initialLatVecLength[2] = sqrt(pSPARC->LatVec[6] * pSPARC->LatVec[6] + pSPARC->LatVec[7] * pSPARC->LatVec[7] + pSPARC->LatVec[8] * pSPARC->LatVec[8]);
         pSPARC->maxTimeIter = 30;
 
         if(pSPARC->NPT_NP_bmass == 0.0) {
@@ -320,11 +320,12 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
                 exit(EXIT_FAILURE);
             }
         }
+
+		fetch_MD_cell_ingredients(pSPARC, false);
 		
-		
-	    pSPARC->pr_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
-		for (int i1 = 0; i1 < 6; i1++){
-			pSPARC->stress_external[i1] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
+	    pSPARC->pressure_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
+		for (int i = 0; i < 6; i++){
+			pSPARC->stress_external[i] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		}
 		pSPARC->external_stress_cartesian[0] = pSPARC->stress_external[0];
 		pSPARC->external_stress_cartesian[4] = pSPARC->stress_external[1];
@@ -338,15 +339,15 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		
 		if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0 && (pSPARC->NPT_NP_qmass == 0.0)){
             if (!rank) {
-                printf("Mass of thermostat variable cannot be zero in NPT_NP ensemble. Please input valid amount of mass of thermo variable. Using a zero mass would resemble NPH ensemble, if this is the case then please choose MD_METHOD as NPH \n");
+                printf("Mass of thermostat variable cannot be zero in NPT_NP ensemble. Please input valid amount of mass of thermo variable\n");
                 exit(EXIT_FAILURE);
             }
         }
 
 		if(strcmpi(pSPARC->MdMeth,"NPH")){
-			pSPARC->NPT_NP_qmass = 0;
+			pSPARC->NPT_NP_qmass = 0; // Internally we are setting NPT_NP_qmass to 0; as rest of the functionality is entirely same as NPT_NP so we are using the same functions for NPH
 			if (!rank) {
-                printf("Mass of thermostat variable is zero in NPH ensemble. If choosing MD_method as NPH with nonzero thermostat mass, it would be automatically set to zero at this point\n");
+                printf("Mass of thermostat variable is zero in NPH ensemble\n");
             }
 		}
 		
@@ -357,7 +358,7 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 
         pSPARC->thermos_Ti = pSPARC->ion_T;
 		pSPARC->thermos_T  = pSPARC->thermos_Ti;
-		fetch_MD_cell_ingredients(pSPARC, false);
+		
 		//Calculate initial hamitonian
 		NPT_NP_and_NPH_init_hamiltonian(pSPARC);
 
@@ -1451,6 +1452,11 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 		pSPARC->initialLatVecAngles[0] = pSPARC->metric_tensor[5] / (pSPARC->range_y * pSPARC->range_z);  // cos_alpha
 		pSPARC->initialLatVecAngles[1] = pSPARC->metric_tensor[2] / (pSPARC->range_x * pSPARC->range_z);  // cos_beta
 		pSPARC->initialLatVecAngles[2] = pSPARC->metric_tensor[1] / (pSPARC->range_x * pSPARC->range_y);  // cos_gamma
+
+		pSPARC->angle_12 = pSPARC->initialLatVecAngles[2];
+		pSPARC->angle_13 = pSPARC->initialLatVecAngles[1];
+		pSPARC->angle_23 = pSPARC->initialLatVecAngles[0];
+		
 	}
 
 	// Rotated cell, such that the lattice vectors are: LatVec1 = (a,0,0);  LatVec2 = (b1, b2, 0); LatVec3 = (c1,c2,c3)
@@ -1478,6 +1484,7 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 		//Update LatUVec, Jacbdet, metricT, gradT, lapcT
 		Cart2nonCart_transformMat(pSPARC);
 
+		//Update cell volume
 		pSPARC->volumeCell = pSPARC->Jacbdet * pSPARC->range_x * pSPARC->range_y * pSPARC->range_z;
 
 		// Update/Calculate new angles between lattice vectors  (only for inference, not used anywhere in the code)
@@ -1485,7 +1492,25 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 		double cos_beta_new = pSPARC->metric_tensor[2] / (pSPARC->range_x * pSPARC->range_z);
 		double cos_alpha_new = pSPARC->metric_tensor[5] / (pSPARC->range_y * pSPARC->range_z);
 		
-		
+		pSPARC->angle_12 = acos(cos_gamma_new) * 180 / M_PI;
+		pSPARC->angle_13 = acos(cos_beta_new) * 180 / M_PI;
+		pSPARC->angle_23 = acos(cos_gamma_new) * 180 / M_PI;
+
+		//Update LATVEC_SCALE and LatVec
+		if (pSPARC->Flag_latvec_scale == 1){
+			// LatVec just accounts for change in orientation/angles
+			for (int i = 0; i < 3; i++){
+				pSPARC->LatVec[i] = pSPARC->LatUVec[i] * pSPARC->initialLatVecLength[0];  
+				pSPARC->LatVec[i+3] = pSPARC->LatUVec[i+3] * pSPARC->initialLatVecLength[1]; 
+				pSPARC->LatVec[i+6] = pSPARC->LatUVec[i+6] * pSPARC->initialLatVecLength[2];
+			}
+
+			// LATVEC_SCALE accounts for change in lengths
+			pSPARC->latvec_scale_y = pSPARC->range_y / pSPARC->initialLatVecLength[1];
+			pSPARC->latvec_scale_x = pSPARC->range_x / pSPARC->initialLatVecLength[0];  
+			pSPARC->latvec_scale_z = pSPARC->range_z / pSPARC->initialLatVecLength[2];
+			
+		}
 
 	}
 	//Update reciprocal lattice vectors, reciprocal metric tensor
@@ -2490,15 +2515,27 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
     	if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
     		fprintf(output_md,":Desc_TENX: Total energy of extended system. Unit=Ha/atom \n");
     	}
-		if(strcmpi(pSPARC->MDMeth,"NPT_NH") == 0 || strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		if(strcmpi(pSPARC->MDMeth,"NPT_NH") == 0){
 			if (pSPARC->Flag_latvec_scale == 0)
 				fprintf(output_md,":Desc_CELL: lengths of three lattice vectors. Unit = Bohr \n");
 			else
 				fprintf(output_md,":Desc_LATVEC_SCALE: ratio of cell lattice vectors over input lattice vector. Unit = 1 \n");
-			if (strcmpi(pSPARC->MDMeth,"NPT_NH") == 0)
-				fprintf(output_md,":Desc_NPT_NH_HAMIL: Hamiltonian of the NPT_NH system, formula (5.4) in (M. E. Tuckerman et al, 2006). Unit = Ha/atom \n");
-			else 
+			fprintf(output_md,":Desc_NPT_NH_HAMIL: Hamiltonian of the NPT_NH system, formula (5.4) in (M. E. Tuckerman et al, 2006). Unit = Ha/atom \n");
+		}
+
+		if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0 || strcmpi(pSPARC->MDMeth,"NPH")==0){
+			frintf(output_md,":Desc_ANGLES: angles between cell lattice vectors. Format: (angle between 1 and 2,  angle between 1 and 3,  angle between 2 and 3). Unit = Degree \n");
+			if (pSPARC->Flag_latvec_scale == 0){
+				fprintf(output_md,":Desc_CELL: lengths of three lattice vectors. Unit = Bohr \n");
+				fprintf(output_md,":Desc_LatUVec: Lattice vectors of unit length, purpose: to represent change in angles during %s ensemble. Unit = Bohr \n",pSPARC->MDMeth);
+			} else {
+				fprintf(output_md,":Desc_LATVEC_SCALE: ratio of length of cell lattice vectors over length of input lattice vectors. Unit = 1 \n");
+				fprintf(output_md,":Desc_LatVec: Lattice vectors, purpose: to represent change in angles during %s ensemble. Unit = Bohr \n",pSPARC->MDMeth);
+			}
+			if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0)
 				fprintf(output_md,":Desc_NPT_NP_HAMIL: Hamiltonian of the NPT_NP system, formula (10) in (E. Hernandez, 2001). Unit = Ha/atom \n");
+			else
+				fprintf(output_md,":Desc_NPH_HAMIL: Hamiltonian of the NPH system, formula (10) in (E. Hernandez, 2001) with M_s (thermostat Mass) = 0. Unit = Ha/atom \n");
 		}
     	if(pSPARC->Calc_stress == 1){
 	    	fprintf(output_md,":Desc_STRESS: Stress, excluding ion-kinetic contribution. Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) \n");
@@ -2540,6 +2577,9 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 			fprintf(output_md,":NPT_NH_HAMIL:%18.10E \n", pSPARC->Hamiltonian_NPT_NH/pSPARC->n_atom);
 		if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0)
 			fprintf(output_md,":NPT_NP_HAMIL:%18.10E \n", pSPARC->Hamiltonian_NPT_NP/pSPARC->n_atom);
+		if(strcmpi(pSPARC->MDMeth,"NPH") == 0)
+			fprintf(output_md,":NPH_HAMIL:%18.10E \n", pSPARC->Hamiltonian_NPT_NP/pSPARC->n_atom); //Using Hamiltonian of NPT_NP is NOT a bug;
+			// NPH is using same functions as NPT_NP with only difference of setting NPT_NP_qmass = 0 (so thermostat mass to 0).
 
 	    // Print atomic position
 	    if(pSPARC->PrintAtomPosFlag){
@@ -2567,10 +2607,18 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 
 		// Print length of lattice vectors
 		if(strcmpi(pSPARC->MDMeth,"NPT_NH") == 0 || strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-			if (pSPARC->Flag_latvec_scale == 0)
+			fprintf(output_md,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
+			if (pSPARC->Flag_latvec_scale == 0){
 				fprintf(output_md,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x,pSPARC->range_y,pSPARC->range_z);
-			else
+				fprintf(output_md,":LatUVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0],pSPARC->LatUVec[1],pSPARC->LatUVec[2] 
+																														   , pSPARC->LatUVec[3],pSPARC->LatUVec[4],pSPARC->LatUVec[5]
+																														   , pSPARC->LatUVec[6],pSPARC->LatUVec[7],pSPARC->LatUVec[8]);
+			} else {
 				fprintf(output_md,":LATVEC_SCALE: %18.10E %18.10E %18.10E\n", pSPARC->range_x/pSPARC->initialLatVecLength[0], pSPARC->range_y/pSPARC->initialLatVecLength[1], pSPARC->range_z/pSPARC->initialLatVecLength[2]);
+				fprintf(output_md,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0],pSPARC->LatVec[1],pSPARC->LatVec[2] 
+																														   , pSPARC->LatVec[3],pSPARC->LatVec[4],pSPARC->LatVec[5]
+																														   , pSPARC->LatVec[6],pSPARC->LatVec[7],pSPARC->LatVec[8]);
+				}
 		}
 
 	    // Print stress
@@ -2643,7 +2691,7 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 }
 
 /*
- @ brief function to evaluate the qunatities of interest in a MD simulation
+ @ brief function to evaluate the quantities of interest in a MD simulation
 */
 void MD_QOI(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis) {
 	// Compute MD energies (TE=KE+PE)/atom and temperature

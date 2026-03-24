@@ -888,7 +888,10 @@ typedef struct _SPARC_OBJ{
     double reciprocal_lattice[9]; //Reciprocal (inverse matrix) lattice of the full cell (i.e of lattice_vector*LATVEC_SCALE),
     double metric_tensor[9]; // G tensor, for barostat control
     double reciprocal_metric_tensor[9]; // G tensor associated with reciprocal lattice vectors, for barostat control
-    double initialLatVecAngles[3]; // for keeping lattice vector angles fixed in case of NPT_NP or NPH with constraints 
+    double initialLatVecAngles[3]; // for keeping lattice vector angles fixed in case of NPT_NP or NPH with constraints.
+    double angle_12;        // Angle between lattice vectors 1 and 2.
+    double angle_13;        // Angle between lattice vectors 1 and 3.
+    double angle_23;        // Angle between lattice vectors 2 and 3. 
     double rotation_matrix[9]; //For rotating between actual cell, and rotated_cell
     double lattice_avg_velo[9];  // Average velocity of lattice vectors
     double Pm_metric_tensor[9]; // Momenta of the metric_tensor
