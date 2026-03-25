@@ -864,9 +864,9 @@ typedef struct _SPARC_OBJ{
     int NPTconstraintFlag; // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
     // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
     int NPT_NP_ANGLES;
-    int NPHscaleVecs[3];
-    int NPHconstraintFlag;
-    int NPH_angles;
+    int NPHscaleVecs[3];     // Same as NPTconstraintFlag, but meant for NPH
+    int NPHconstraintFlag;   // Same as NPTconstraintFlag, but meant for NPH
+    int NPH_ANGLES;          // Same as NPTconstraintFlag, but meant for NPH
     int NPTisotropicFlag;   // whether it is an isotropic cell expansion; a:b:c keeps similar during NPT. 
     // For NPT_NH, if all 3 lattive vectors are scalable, it will be an isotropic expansion;
     // For NPT_NP, if all 3 lattive vectors are scalable, AND NPTconstraintFlag is 4, it will be an isotropic expansion.
