@@ -778,7 +778,7 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
             }
             fscanf(input_fp, "%*[^\n]\n");
         } else if (strcmpi(str,"NPT_NP_ANGLES:") == 0){
-            fscanf(input_fp,"%d",&pSPARC_Input->NPT_NP_angles);
+            fscanf(input_fp,"%d",&pSPARC_Input->NPT_NP_ANGLES);
             fscanf(input_fp, "%*[^\n]\n");
             
             if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 && pSPARC_Input->NPTconstraintFlag == 0){
@@ -826,7 +826,7 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
             }
             fscanf(input_fp, "%*[^\n]\n");
         } else if (strcmpi(str,"NPH_ANGLES:") == 0){
-            fscanf(input_fp,"%d",&pSPARC_Input->NPH_angles);
+            fscanf(input_fp,"%d",&pSPARC_Input->NPH_ANGLES);
             fscanf(input_fp, "%*[^\n]\n");
             
             if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 && pSPARC_Input->NPHconstraintFlag == 0){

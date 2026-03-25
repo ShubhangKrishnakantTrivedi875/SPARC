@@ -863,7 +863,7 @@ typedef struct _SPARC_OBJ{
     int NPTscaleVecs[3];    // which lattice vector can be rescaled?
     int NPTconstraintFlag; // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
     // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
-    int NPT_NP_ANGLES;
+    int NPT_NP_ANGLES;      // Flag to decide whether changing of angles during NPT_NP ensemble is allowed
     int NPHscaleVecs[3];     // Same as NPTconstraintFlag, but meant for NPH
     int NPHconstraintFlag;   // Same as NPTconstraintFlag, but meant for NPH
     int NPH_ANGLES;          // Same as NPTconstraintFlag, but meant for NPH
