@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <math.h>
-
+#include <stdbool.h>
 #ifdef USE_MKL
     #include <mkl.h>
 #else
@@ -375,7 +375,7 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
  
         // pSPARC->thermos_Ti = pSPARC->elec_T;
 		pSPARC->thermos_T = pSPARC->thermos_Ti; // It comes from restart file!
-        pSPARC->pr_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
+        pSPARC->pressure_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		for (int i1 = 0; i1 < 6; i1++){
 			pSPARC->stress_external[i1] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		}// transfer from GPa to Ha/Bohr^3
@@ -1433,6 +1433,15 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 	
 	double old_cell[9]; double new_cell[9]; 
 
+	double NPT_NPH_bmass;
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		NPT_NPH_bmass = pSPARC->NPT_NP_bmass; 
+	}
+	else {
+		NPT_NPH_bmass = pSPARC->NPH_bmass; 
+	}
+
+
 	if (update_cell == false){ // Update_cell === false only initializes the cell parameters and basic key ingredients used in NPT_NP and NPH ensemble; such as full_lattice, metric_tensor, reciprocal_metric_tensor ...etc,  to be used when doing first step of MD
 	
 		double cell[3] = {pSPARC->range_x, pSPARC->range_y, pSPARC->range_z};
@@ -1558,7 +1567,12 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 			temp_mat_3[i] = pSPARC->Pm_metric_tensor[i];
 		}
 
-		cblas_dscal(9, pSPARC->SNOSE[2] / ( pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell ), temp_mat_3, 1);
+		if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+			cblas_dscal(9, pSPARC->SNOSE[2] / ( pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell ), temp_mat_3, 1);
+		}
+		else {
+			cblas_dscal(9, pSPARC->SNOSE[2] / ( pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell ), temp_mat_3, 1);
+		}
 		cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, 1.0, pSPARC->metric_tensor, 3, temp_mat_3, 3, 0.0, temp_mat_2, 3);
 		cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, 1.0, temp_mat_2, 3, pSPARC->metric_tensor, 3, 0.0, temp_mat_3, 3);
 
@@ -1643,13 +1657,14 @@ void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, dou
 
 	cblas_dscal(9, 0.5 / (pSPARC->SNOSE[0] * pSPARC->SNOSE[0]), pSPARC->kinetic_stress, 1);
 	
+	double total_internal_stress[9];
 	for (int i = 0; i < 9; i++){
-		pSPARC->total_internal_stress[i] = ( pSPARC->kinetic_stress[i] - internal_stress_fractional[i] - pSPARC->constraint_stress[i]) 
+		total_internal_stress[i] = ( pSPARC->kinetic_stress[i] - internal_stress_fractional[i] - pSPARC->constraint_stress[i]) 
 	}	
 
-	cblas_dscal(9, 1.0 / (pSPARC->volumeCell), pSPARC->total_internal_stress, 1);
+	cblas_dscal(9, 1.0 / (pSPARC->volumeCell), total_internal_stress, 1);
 	
-	pSPARC->internal_pressure = 2.0 / 3.0 * cblas_ddot(9, pSPARC->total_internal_stress, 1, pSPARC->metric_tensor, 1);
+	pSPARC->internal_pressure = 2.0 / 3.0 * cblas_ddot(9, total_internal_stress, 1, pSPARC->metric_tensor, 1);
 
 }
 
@@ -1659,7 +1674,12 @@ void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
 	//Initialize some useful constants
-	double baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		double baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+	}
+	else{
+		double baro_const1 = pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+	}
 	double baro_const2 = baro_const1 / pSPARC->SNOSE[2];
 	double baro_const3 = 1.0 / baro_const1;
 	double ktemp;
@@ -1694,7 +1714,7 @@ void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
 	temp_mat_b[3] = temp_mat_a[1]; temp_mat_b[6] = temp_mat_a[2]; temp_mat_b[7] = temp_mat_a[5]; 
 
 	pSPARC->Kbaro = 0.5 * baro_const1 * cblas_ddot(9, temp_mat_a, 1, temp_mat_b,1);//Kinetic;  Term 3 in Eqn.10 in Hernandez paper
-	pSPARC->Ubaro = pSPARC->pr_external * pSPARC->volumeCell; //Potential;  Term 4 in Eqn.10 in Hernandez paper
+	pSPARC->Ubaro = pSPARC->pressure_external * pSPARC->volumeCell; //Potential;  Term 4 in Eqn.10 in Hernandez paper
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, pSPARC->volumeCell, pSPARC->external_stress_cartesian, 3, pSPARC->reciprocal_metric_tensor, 3, 0.0, pSPARC->external_stress_lattice, 3);
 	pSPARC->Ubaro += 0.5 * cblas_ddot(9, pSPARC->external_stress_lattice, 1, pSPARC->metric_tensor, 1); //Potential;  Term 5 in Eqn.10 in Hernandez paper 
 
@@ -1708,7 +1728,7 @@ void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
 		  -update momentum
   
 */
-void NPT_NPH_main(SPARC_OBJ *pSPARC){
+void NPT_NPH_main(SPARC_OBJ *pSPARC) {
 	int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	double ktemp;
@@ -1719,19 +1739,36 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 	double internal_stress_cartesian[9]; double internal_stress_fractional[9]; 
 	
 	//Initialize some useful constants
-	double baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		double baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+	}
+	else{
+		double baro_const1 = pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+	}
 	double baro_const2 = baro_const1 / pSPARC->SNOSE[2];
 	double baro_const3 = 1.0 / baro_const1;
 
 
 	// ------------------------------------- BEGIN: Calculating Hamiltonian (Eqn 10)----------------------------------//
 	
-	double sumAllHamilTerms = pSPARC->Etot;//Potential;  Term 2 in Eqn.10 in Hernandez paper
+	double sumAllHamilTerms = pSPARC->Etot; //Potential;  Term 2 in Eqn.10 in Hernandez paper
 	sumAllHamilTerms += pSPARC->KE + pSPARC->Kther + pSPARC->Uther + pSPARC->Kbaro + pSPARC->Ubaro;
 	if ((pSPARC->MDCount == 1)  && (pSPARC->RestartFlag != 1)) {
-		pSPARC->init_Hamil_NPT_NP = sumAllHamilTerms;  //Initial Hamiltonian H0
+		if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+			pSPARC->init_Hamil_NPT_NP = sumAllHamilTerms;  //Initial Hamiltonian H0
+		}
+		else {
+			pSPARC->init_Hamil_NPH = sumAllHamilTerms;     //Initial Hamiltonian H0
+		}
 	}
-	pSPARC->Hamiltonian_NPT_NP = pSPARC->SNOSE[0] * (sumAllHamilTerms - pSPARC->init_Hamil_NPT_NP);  //Eqn. 8 in the Hernandez paper
+
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		pSPARC->Hamiltonian_NPT_NP = pSPARC->SNOSE[0] * (sumAllHamilTerms - pSPARC->init_Hamil_NPT_NP);  //Eqn. 8 in the Hernandez paper
+	}
+	else {
+		pSPARC->Hamiltonian_NPH = pSPARC->SNOSE[0] * (sumAllHamilTerms - pSPARC->init_Hamil_NPH);  //Eqn. 8 in the Hernandez paper
+	}
+
 	#ifdef DEBUG
 	if (rank == 0) {
     	printf("\n");
@@ -1744,7 +1781,12 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 	    printf("barostat potential energy (Ha)  : %12.9f\n", pSPARC->Ubaro);
 	    printf("thermostat potential energy (Ha): %12.9f\n", pSPARC->Uther);
 	    printf("Sum of all energy terms (Ha)    : %12.9f\n", sumAllHamilTerms);
-		printf("Hamiltonian (Ha)                : %12.9f\n", pSPARC->Hamiltonian_NPT_NP);
+		if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+			printf("Hamiltonian (Ha)                : %12.9f\n", pSPARC->Hamiltonian_NPT_NP);
+		}
+		else {
+			printf("Hamiltonian (Ha)                : %12.9f\n", pSPARC->Hamiltonian_NPH);
+		}
 	}
 	#endif
 	// ------------------------------------- END: Calculating Hamiltonian (Eqn 10)----------------------------------//
@@ -1804,18 +1846,25 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 	// Eqn. 18h  Hernandez paper
 	for (int i = 0; i < 9; i++){
 		temp_mat[i] = internal_stress_fractional[i] - pSPARC->kinetic_stress[i] + temp_mat_b[i];
-		temp_mat[i] += (0.5 * pSPARC->pr_external * pSPARC->volumeCell - pSPARC->Kbaro) * pSPARC->reciprocal_metric_tensor[i] + 0.5 * pSPARC->external_stress_lattice[i];
+		temp_mat[i] += (0.5 * pSPARC->pressure_external * pSPARC->volumeCell - pSPARC->Kbaro) * pSPARC->reciprocal_metric_tensor[i] + 0.5 * pSPARC->external_stress_lattice[i];
 		pSPARC->Pm_metric_tensor[i] -=  0.5 * pSPARC->MD_dt * pSPARC->SNOSE[0] * temp_mat[i];
 	} 
 
-	if (pSPARC->NPT_NP_NPH_ANGLES == 0){
-		compute_constraint_stress(pSPARC);
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		if (pSPARC->NPT_NP_ANGLES == 0){
+			compute_constraint_stress(pSPARC);
+		}
+	}
+	else {
+		if (pSPARC->NPH_ANGLES == 0){
+			compute_constraint_stress(pSPARC);
+		}
 	}
 
 	//This block below seems redundant, since we already update the momenta based on constraints in function: compute_constraint_stress
 	for (int i = 0; i < 9; i++){
 		temp_mat[i] = internal_stress_fractional[i] + pSPARC->constraint_stress[i] - pSPARC->kinetic_stress[i] + temp_mat_b[i];
-		temp_mat[i] += (0.5 * pSPARC->pr_external * pSPARC->volumeCell - pSPARC->Kbaro) * pSPARC->reciprocal_metric_tensor[i] + 0.5 * pSPARC->external_stress_lattice[i];
+		temp_mat[i] += (0.5 * pSPARC->pressure_external * pSPARC->volumeCell - pSPARC->Kbaro) * pSPARC->reciprocal_metric_tensor[i] + 0.5 * pSPARC->external_stress_lattice[i];
 		pSPARC->Pm_metric_tensor[i] = temp_Pm_mat[i] - 0.5 * pSPARC->MD_dt * pSPARC->SNOSE[0] * temp_mat[i];
 	} 	
 
@@ -1840,7 +1889,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 
 	//Update the kinetic energy of the barostat
 	pSPARC->Kbaro = 0.5 * baro_const1 * cblas_ddot(9, temp_mat_a, 1, temp_mat_b, 1);//Kinetic
-	pSPARC->Ubaro = pSPARC->pr_external * pSPARC->volumeCell + 0.5 * cblas_ddot(9, pSPARC->external_stress_lattice, 1, pSPARC->metric_tensor, 1); //Potential
+	pSPARC->Ubaro = pSPARC->pressure_external * pSPARC->volumeCell + 0.5 * cblas_ddot(9, pSPARC->external_stress_lattice, 1, pSPARC->metric_tensor, 1); //Potential
 
 
 	// bring the momenta of the Ionic particles in time-sync with the positions (since mometa are delayed by dt/2)
@@ -1871,9 +1920,15 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 	// ------------------------------------- END: Updating Momenta by half step (Eqns. 18g, 18h, 18i)----------------------------------//
 	
 
-	//Calculate/Update total energy (Hamiltonian)
+	// Calculate/Update the Hamiltonian (constant of motion)
 	sumAllHamilTerms = pSPARC->KE + pSPARC->Etot + pSPARC->Kther + pSPARC->Uther + pSPARC->Kbaro + pSPARC->Ubaro;
-	pSPARC->Hamiltonian_NPT_NP = pSPARC->SNOSE[0] * (sumAllHamilTerms - pSPARC->init_Hamil_NPT_NP); // Calculate the Hamiltonian (constant of motion)
+	
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		pSPARC->Hamiltonian_NPT_NP = pSPARC->SNOSE[0] * (sumAllHamilTerms - pSPARC->init_Hamil_NPT_NP);  //Eqn. 8 in the Hernandez paper
+	}
+	else {
+		pSPARC->Hamiltonian_NPH = pSPARC->SNOSE[0] * (sumAllHamilTerms - pSPARC->init_Hamil_NPH);  //Eqn. 8 in the Hernandez paper
+	} 
 	//Optionall write all individual energy contributions to the Hamiltonian to an output file
 
 
@@ -1934,7 +1989,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 		if (rank == 0)
 			printf("factor is %12.9f\n", factor);
 		#endif
-		if ((1.0 - factor*pSPARC->MD_dt/pSPARC->NPT_NP_qmass) < 0.0){
+		if ((1.0 - factor * pSPARC->MD_dt / pSPARC->NPT_NP_qmass) < 0.0){
 			if (rank == 0)
 				printf("The mass of thermostat variable NPT_NP_qmass is too small. Please try a larger thermostat mass.");
 			exit(EXIT_FAILURE);
@@ -1962,11 +2017,9 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 			TimeIter++;
 			//it iteration count exceeds max iteration counts, exit 
 			if (TimeIter > pSPARC->maxTimeIter){
-				for(int row = 0; row < 3; row++)
-					printf("%15.7f %15.7f %15.7f\n",S_new[row * 3 + 0], 
-								S_new[row *3 + 1], S_new[row * 3 + 2]);
-					printf("Reminder The themostat position SNOSE[0] does not converge to %e tolerance in %d timesteps : stopping\n", 1e-7, pSPARC->maxTimeIter );
-					exit(1);
+				printf("%15.7f \n", S_new);		
+				printf("Reminder The themostat position SNOSE[0] does not converge to %e tolerance in %d timesteps : stopping\n", 1e-7, pSPARC->maxTimeIter );
+				exit(1);
 			}
 		}
 		#ifdef DEBUG
@@ -2008,7 +2061,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC){
 	pSPARC->Kbaro = pSPARC->Kbaro / pSPARC->volumeCell / pSPARC->volumeCell;  //Kinetic
 
 	//Update the Potential energy of the barostat based on new metric tensor
-	pSPARC->Ubaro = pSPARC->pr_external * pSPARC->volumeCell + 0.5 * cblas_ddot(9, pSPARC->external_stress_lattice, 1, pSPARC->metric_tensor, 1);  //Potential
+	pSPARC->Ubaro = pSPARC->pressure_external * pSPARC->volumeCell + 0.5 * cblas_ddot(9, pSPARC->external_stress_lattice, 1, pSPARC->metric_tensor, 1);  //Potential
 
 
 
@@ -2072,7 +2125,13 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 	b_norm = sqrt(pSPARC->full_lattice[3] * pSPARC->full_lattice[3] + pSPARC->full_lattice[4] * pSPARC->full_lattice[4] + pSPARC->full_lattice[5] * pSPARC->full_lattice[5]);
 	c_norm = sqrt(pSPARC->full_lattice[6] * pSPARC->full_lattice[6] + pSPARC->full_lattice[7] * pSPARC->full_lattice[7] + pSPARC->full_lattice[8] * pSPARC->full_lattice[8]);
 	
-	baro_const4 = pSPARC->SNOSE[0]/(pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell);
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		baro_const4 = pSPARC->SNOSE[0]/(pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell); // M_G*det(G) in the Hernandez paper
+	}
+	else{
+		baro_const4 = pSPARC->SNOSE[0]/(pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell); // M_G*det(G) in the Hernandez paper
+	}
+	
 
 	da_dt_norm = baro_const4 * gpig[0] / (2.0 * a_norm);
 	db_dt_norm = baro_const4 * gpig[4] / (2.0 * b_norm);
@@ -2121,7 +2180,7 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, 1.0, pSPARC->reciprocal_metric_tensor, 3, constraint_velocity, 3, 0.0, gpi, 3);
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, 1.0/baro_const4, gpi, 3, pSPARC->reciprocal_metric_tensor, 3, 0.0, gpig, 3);
 
-	thermo_const1 = 2.0 / (pSPARC->MD_dt * pSPARC->SNOSE[0]);
+	double thermo_const1 = 2.0 / (pSPARC->MD_dt * pSPARC->SNOSE[0]);
 
 	// Calculating constraint stress
 	for (int i = 0; i < 9; i++){
@@ -2136,7 +2195,14 @@ void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, do
 	bool converged;  // determine whether the iteration converges or not
 	int TimeIter = 0; // current iteration count
 	const double tolerance = 1e-7; // tolerance criterion for checking convergence
-	double baro_const11 = 0.5 * pSPARC->MD_dt / (pSPARC->NPT_NP_bmass);
+	double baro_const11;
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		baro_const11 = 0.5 * pSPARC->MD_dt / (pSPARC->NPT_NP_bmass);
+	}
+	else{
+		baro_const11 = 0.5 * pSPARC->MD_dt / (pSPARC->NPT_NP_bmass);
+	}
+
 	double baro_const6 = baro_const11 * pSPARC->SNOSE[0] / (pSPARC->volumeCell * pSPARC->volumeCell);
 	double baro_const7;
 	double det_temp_metric_tensor;
@@ -2249,9 +2315,19 @@ void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, doubl
 	bool converged;  // determine whether the iteration converges or not
 	int TimeIter = 0;  // current iteration count
 	const double tolerance = 1e-7; // tolerance criterion for checking convergence
-	double baro_const0 = 0.5 * (pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell);
-	double baro_const3 = 0.5 / baro_const0;
-	double baro_const5 = baro_const0 * pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell;
+	double baro_const0, baro_const3, baro_const5;
+
+	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		baro_const0 = 0.5 * (pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell);
+		baro_const3 = 0.5 / baro_const0;
+		baro_const5 = baro_const0 * pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell;
+	}
+	else{
+		baro_const0 = 0.5 * (pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell);
+		baro_const3 = 0.5 / baro_const0;
+		baro_const5 = baro_const0 * pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell;
+	}
+	
 	
 	//Initialize empty temporary matrices and vectors 
 	double temp_mat[9]; 
@@ -2286,7 +2362,7 @@ void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, doubl
 		// Eqn. 18b  Hernandez paper
 		for (int i = 0; i < 9; i++){
 			temp_mat[i] = internal_stress_fractional[i] - pSPARC->kinetic_stress[i] + temp_mat_2[i];
-			temp_mat[i] += (0.5 * pSPARC->pr_external * pSPARC->volumeCell - pSPARC->Kbaro) * pSPARC->reciprocal_metric_tensor[i] + 0.5 * pSPARC->external_stress_lattice[i];
+			temp_mat[i] += (0.5 * pSPARC->pressure_external * pSPARC->volumeCell - pSPARC->Kbaro) * pSPARC->reciprocal_metric_tensor[i] + 0.5 * pSPARC->external_stress_lattice[i];
 			new_Pm_metric_tensor[i] =  pSPARC->Pm_metric_tensor[i]  - 0.5 * pSPARC->MD_dt * pSPARC->SNOSE[0] * temp_mat[i];
 		} 
 
@@ -2578,7 +2654,7 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 		if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0)
 			fprintf(output_md,":NPT_NP_HAMIL:%18.10E \n", pSPARC->Hamiltonian_NPT_NP/pSPARC->n_atom);
 		if(strcmpi(pSPARC->MDMeth,"NPH") == 0)
-			fprintf(output_md,":NPH_HAMIL:%18.10E \n", pSPARC->Hamiltonian_NPT_NP/pSPARC->n_atom); //Using Hamiltonian of NPT_NP is NOT a bug;
+			fprintf(output_md,":NPH_HAMIL:%18.10E \n", pSPARC->Hamiltonian_NPH/pSPARC->n_atom); //Using Hamiltonian of NPT_NP is NOT a bug;
 			// NPH is using same functions as NPT_NP with only difference of setting NPT_NP_qmass = 0 (so thermostat mass to 0).
 
 	    // Print atomic position
@@ -2618,7 +2694,7 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 				fprintf(output_md,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0],pSPARC->LatVec[1],pSPARC->LatVec[2] 
 																														   , pSPARC->LatVec[3],pSPARC->LatVec[4],pSPARC->LatVec[5]
 																														   , pSPARC->LatVec[6],pSPARC->LatVec[7],pSPARC->LatVec[8]);
-				}
+			}
 		}
 
 	    // Print stress
@@ -2963,19 +3039,64 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
     	if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
     		fprintf(mdout,":NPT_NP_QMASS: %.15g\n", pSPARC->NPT_NP_qmass);
     		fprintf(mdout,":NPT_NP_BMASS: %.15g\n", pSPARC->NPT_NP_bmass);
-    		fprintf(mdout,":NPT_NP_Sv: %.15g\n", pSPARC->Sv_NPT_NP); // velocity of virtual thermal parameter
-    		fprintf(mdout,":NPT_NP_Pm: %.15g %.15g %.15g\n", pSPARC->Pm_NPT_NP[0], pSPARC->Pm_NPT_NP[1], pSPARC->Pm_NPT_NP[2]); // velocity of virtual baro parameter
-    		fprintf(mdout,":NPT_NP_S: %.15g\n", pSPARC->S_NPT_NP); // value of virtual thermal parameter
-    		fprintf(mdout,":NPT_NP_range_x_velo: %.15g\n", pSPARC->range_x_velo); // velocity of virtual x baro parameter
-    		fprintf(mdout,":NPT_NP_range_y_velo: %.15g\n", pSPARC->range_y_velo); // velocity of virtual y baro parameter
-    		fprintf(mdout,":NPT_NP_range_z_velo: %.15g\n", pSPARC->range_z_velo); // velocity of virtual z baro parameter
-    		if (pSPARC->Flag_latvec_scale == 0)
-    			fprintf(mdout,":CELL: %.15g %.15g %.15g\n",pSPARC->range_x,pSPARC->range_y,pSPARC->range_z); //(no variable for position of barostat variable)
-			else 
-				fprintf(mdout,":LATVEC_SCALE: %.15g %.15g %.15g\n",pSPARC->range_x/pSPARC->initialLatVecLength[0],pSPARC->range_y/pSPARC->initialLatVecLength[1],pSPARC->range_z/pSPARC->initialLatVecLength[2]);
+    		fprintf(mdout,":SNOSE[1]: %.15g\n", pSPARC->SNOSE[1]); // velocity of virtual thermal parameter
+    		fprintf(mdout,":Pm_metric_tensor: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->Pm_metric_tensor[0], pSPARC->Pm_metric_tensor[1], pSPARC->Pm_metric_tensor[2]
+																							   		  , pSPARC->Pm_metric_tensor[3], pSPARC->Pm_metric_tensor[4], pSPARC->Pm_metric_tensor[5]
+																							   		  , pSPARC->Pm_metric_tensor[6], pSPARC->Pm_metric_tensor[7], pSPARC->Pm_metric_tensor[8]); // Momentum of virtual baro parameter
+    		fprintf(mdout,":SNOSE[0]: %.15g\n", pSPARC->SNOSE[0]); // value of virtual thermal parameter
+    		fprintf(mdout,":lattice_avg_velo: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->lattice_avg_velo[0], pSPARC->lattice_avg_velo[1], pSPARC->lattice_avg_velo[2]
+																									  , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
+																									  , pSPARC->lattice_avg_velo[6], pSPARC->lattice_avg_velo[7], pSPARC->lattice_avg_velo[8]); // velocity of lattice
+    		if (pSPARC->Flag_latvec_scale == 0){
+				fprintf(output_md,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x,pSPARC->range_y,pSPARC->range_z);
+				fprintf(output_md,":LatUVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0],pSPARC->LatUVec[1],pSPARC->LatUVec[2] 
+																														   , pSPARC->LatUVec[3],pSPARC->LatUVec[4],pSPARC->LatUVec[5]
+																														   , pSPARC->LatUVec[6],pSPARC->LatUVec[7],pSPARC->LatUVec[8]);
+			} else {
+				fprintf(output_md,":LATVEC_SCALE: %18.10E %18.10E %18.10E\n", pSPARC->range_x/pSPARC->initialLatVecLength[0], pSPARC->range_y/pSPARC->initialLatVecLength[1], pSPARC->range_z/pSPARC->initialLatVecLength[2]);
+				fprintf(output_md,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0],pSPARC->LatVec[1],pSPARC->LatVec[2] 
+																														   , pSPARC->LatVec[3],pSPARC->LatVec[4],pSPARC->LatVec[5]
+																														   , pSPARC->LatVec[6],pSPARC->LatVec[7],pSPARC->LatVec[8]);
+			}
+			fprintf(output_md,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
     		fprintf(mdout,":TTHRMI(K): %.15g\n", pSPARC->thermos_Ti);
-			fprintf(mdout,":TARGET_PRESSURE: %.15g GPa\n",pSPARC->prtarget * 29421.02648438959);
+			fprintf(output_fp,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",(pSPARC->pressure_external+pSPARC->stress_external[0]) * 29421.02648438959
+                                                                                        ,(pSPARC->pressure_external+pSPARC->stress_external[1]) * 29421.02648438959
+                                                                                        ,(pSPARC->pressure_external+pSPARC->stress_external[2]) * 29421.02648438959 
+                                                                                        ,pSPARC->stress_external[3] * 29421.02648438959
+                                                                                        ,pSPARC->stress_external[4] * 29421.02648438959
+                                                                                        ,pSPARC->stress_external[5] * 29421.02648438959);
     		fprintf(mdout,":NPT_NP_ini_Hamiltonian: %.15g\n", pSPARC->init_Hamil_NPT_NP);
+    	}
+		// Print extended system parameters in case of NPH
+    	if(strcmpi(pSPARC->MDMeth,"NPH") == 0){
+    		fprintf(mdout,":NPH_BMASS: %.15g\n", pSPARC->NPT_NP_bmass);
+    		fprintf(mdout,":Pm_metric_tensor: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->Pm_metric_tensor[0], pSPARC->Pm_metric_tensor[1], pSPARC->Pm_metric_tensor[2]
+																							   		  , pSPARC->Pm_metric_tensor[3], pSPARC->Pm_metric_tensor[4], pSPARC->Pm_metric_tensor[5]
+																							   		  , pSPARC->Pm_metric_tensor[6], pSPARC->Pm_metric_tensor[7], pSPARC->Pm_metric_tensor[8]); // Momentum of virtual baro parameter
+    		fprintf(mdout,":lattice_avg_velo: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->lattice_avg_velo[0], pSPARC->lattice_avg_velo[1], pSPARC->lattice_avg_velo[2]
+																									  , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
+																									  , pSPARC->lattice_avg_velo[6], pSPARC->lattice_avg_velo[7], pSPARC->lattice_avg_velo[8]); // velocity of lattice
+    		if (pSPARC->Flag_latvec_scale == 0){
+				fprintf(output_md,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x,pSPARC->range_y,pSPARC->range_z);
+				fprintf(output_md,":LatUVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0],pSPARC->LatUVec[1],pSPARC->LatUVec[2] 
+																														   , pSPARC->LatUVec[3],pSPARC->LatUVec[4],pSPARC->LatUVec[5]
+																														   , pSPARC->LatUVec[6],pSPARC->LatUVec[7],pSPARC->LatUVec[8]);
+			} else {
+				fprintf(output_md,":LATVEC_SCALE: %18.10E %18.10E %18.10E\n", pSPARC->range_x/pSPARC->initialLatVecLength[0], pSPARC->range_y/pSPARC->initialLatVecLength[1], pSPARC->range_z/pSPARC->initialLatVecLength[2]);
+				fprintf(output_md,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0],pSPARC->LatVec[1],pSPARC->LatVec[2] 
+																														   , pSPARC->LatVec[3],pSPARC->LatVec[4],pSPARC->LatVec[5]
+																														   , pSPARC->LatVec[6],pSPARC->LatVec[7],pSPARC->LatVec[8]);
+			}
+			fprintf(output_md,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
+    		fprintf(mdout,":TTHRMI(K): %.15g\n", pSPARC->thermos_Ti);
+			fprintf(output_fp,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",(pSPARC->pressure_external+pSPARC->stress_external[0]) * 29421.02648438959
+                                                                                        ,(pSPARC->pressure_external+pSPARC->stress_external[1]) * 29421.02648438959
+                                                                                        ,(pSPARC->pressure_external+pSPARC->stress_external[2]) * 29421.02648438959
+                                                                                        ,pSPARC->stress_external[3] * 29421.02648438959
+                                                                                        ,pSPARC->stress_external[4] * 29421.02648438959
+                                                                                        ,pSPARC->stress_external[5] * 29421.02648438959);
+    		fprintf(mdout,":NPH_ini_Hamiltonian: %.15g\n", pSPARC->init_Hamil_NPH);
     	}
     	// Print temperature
     	fprintf(mdout,":TEL(K): %.15g\n", pSPARC->elec_T);
@@ -3131,18 +3252,8 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 			if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0) {
             	if (strcmpi(str,":NPT_NP_QMASS:") == 0)
             		fscanf(rst_fp,"%lf", &pSPARC->NPT_NP_qmass);
-            	else if (strcmpi(str,":NPT_NP_Sv:") == 0)
-            		fscanf(rst_fp,"%lf", &pSPARC->Sv_NPT_NP);
-            	else if (strcmpi(str,":NPT_NP_S:") == 0)
-            		fscanf(rst_fp,"%lf", &pSPARC->S_NPT_NP);
             	else if (strcmpi(str,":NPT_NP_BMASS:") == 0)
             		fscanf(rst_fp,"%lf", &pSPARC->NPT_NP_bmass);
-            	else if (strcmpi(str,":NPT_NP_range_x_velo:") == 0)
-            		fscanf(rst_fp,"%lf", &pSPARC->range_x_velo);
-            	else if (strcmpi(str,":NPT_NP_range_y_velo:") == 0)
-            		fscanf(rst_fp,"%lf", &pSPARC->range_y_velo);
-            	else if (strcmpi(str,":NPT_NP_range_z_velo:") == 0)
-            		fscanf(rst_fp,"%lf", &pSPARC->range_z_velo);
             	else if (strcmpi(str,":CELL:") == 0) {
             		double nowRange_x, nowRange_y, nowRange_z;
         		    fscanf(rst_fp,"%lf", &nowRange_x); fscanf(rst_fp,"%lf", &nowRange_y); fscanf(rst_fp,"%lf", &nowRange_z);
@@ -3272,13 +3383,8 @@ void RestartMD(SPARC_OBJ *pSPARC) {
             }
             else if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
             	MPI_Unpack(buff, l_buff, &position, &pSPARC->NPT_NP_qmass, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->Sv_NPT_NP, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->S_NPT_NP, 1, MPI_DOUBLE, MPI_COMM_WORLD);
 
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->NPT_NP_bmass, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_x_velo, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_y_velo, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_z_velo, 1, MPI_DOUBLE, MPI_COMM_WORLD);
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->scale, 1, MPI_DOUBLE, MPI_COMM_WORLD);
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_x, 1, MPI_DOUBLE, MPI_COMM_WORLD);
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_y, 1, MPI_DOUBLE, MPI_COMM_WORLD);
@@ -3292,7 +3398,7 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 	}
 	if(pSPARC->RestartFlag == 1) {
 	    pSPARC->Beta = 1.0/(pSPARC->elec_T * pSPARC->kB);
-	    if((strcmpi(pSPARC->MDMeth,"NPT_NH") == 0) || (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0)) {
+	    if((strcmpi(pSPARC->MDMeth,"NPT_NH") == 0) || (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0) || (strcmpi(pSPARC->MDMeth,"NPH") == 0)) {
             reinitialize_mesh_NPT(pSPARC);
         }
 	}

@@ -157,31 +157,27 @@ void hamiltonian_NPT_NH(SPARC_OBJ *pSPARC);
 */
 void NPT_NP(SPARC_OBJ *pSPARC);
 
+void NPH(SPARC_OBJ *pSPARC);
+
+void NPT_NPH_main(SPARC_OBJ *pSPARC);
 /* 
 @ brief: Calculates cell angles, reciprocal lattice vectors, metric and reciprocal metric tensors, for use in NPT_NP and NPH dynamics
 */
-void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC);
+void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell);
 
-/* 
-@ brief: calculate Hamiltonian of the NPT_NP system.
-*/
-void initialize_Hamiltonian(SPARC_OBJ *pSPARC);
+void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC);
 
-/* 
-@ brief: updating momentums of thermostat and barostat variables and particles in the first half step in NPT_NP.
-*/
-void updateMomentum_FirstHalf(SPARC_OBJ *pSPARC);
+void transpose_and_add(double *matrix1);
 
-/* 
-@ brief: updating momentums of thermostat and barostat variables and particles in the second half step in NPT_NP.
-*/
-void updateMomentum_SecondHalf(SPARC_OBJ *pSPARC);
+void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC);
 
-/* 
-@ brief: updating value of thermostat variable and length of cell and positions of particles in NPT_NP.
-*/
-void updatePosition(SPARC_OBJ *pSPARC);
+void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, double *internal_stress_fractional);
 
+void compute_constraint_stress(SPARC_OBJ *pSPARC);
+
+void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new)
+
+void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, double* internal_stress_fractional);
 /**
  * @ brief: function to convert non cartesian to cartesian coordinates and velocities, from initialization.c
  */
