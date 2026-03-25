@@ -1430,7 +1430,9 @@ void transpose_and_add(double *matrix1){
 Computes: full_lattice (lattice vectors scaled by LATVEC SCALE), and corresponding:  reciprocal_lattice, metric_tensor, reciprocal_matric_tensor, initialLatVecAngles, rotation_matrix
 */
 void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
-	
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
 	double old_cell[9]; double new_cell[9]; 
 
 	double NPT_NPH_bmass;
@@ -1503,7 +1505,7 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 		
 		pSPARC->angle_12 = acos(cos_gamma_new) * 180 / M_PI;
 		pSPARC->angle_13 = acos(cos_beta_new) * 180 / M_PI;
-		pSPARC->angle_23 = acos(cos_gamma_new) * 180 / M_PI;
+		pSPARC->angle_23 = acos(cos_alpha_new) * 180 / M_PI;
 
 		//Update LATVEC_SCALE and LatVec
 		if (pSPARC->Flag_latvec_scale == 1){
@@ -1598,6 +1600,9 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 
 
 void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC){
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
 	int count = 0; 
 
 	pSPARC->KE = 0.0;
@@ -1614,7 +1619,8 @@ void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC){
 
 
 void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, double *internal_stress_fractional){
-	
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	double *ion_vel_fractional = (double *)malloc(3 * pSPARC->n_atom * sizeof(double));
 
 	for (int i = 0; i < 9; i++){
@@ -2141,7 +2147,8 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC) {
 
 
 void compute_constraint_stress(SPARC_OBJ *pSPARC){
-
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	//Initialize some useful constants
 	double a_norm; double b_norm; double c_norm; 
 	double da_dt_norm; double db_dt_norm; double dc_dt_norm;
@@ -2161,7 +2168,7 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 		baro_const4 = pSPARC->SNOSE[0]/(pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell); // M_G*det(G) in the Hernandez paper
 	}
 	else{
-		baro_const4 = pSPARC->SNOSE[0]/(pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell); // M_G*det(G) in the Hernandez paper
+		baro_const4 = pSPARC->SNOSE[0]/(pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell); // M_G*det(G) in the Hernandez paper
 	}
 	
 
@@ -2254,6 +2261,8 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 
 
 void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new){
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	//Initialize some useful constants
 	bool converged;  // determine whether the iteration converges or not
 	int TimeIter = 0; // current iteration count
@@ -2263,7 +2272,7 @@ void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, do
 		baro_const11 = 0.5 * pSPARC->MD_dt / (pSPARC->NPT_NP_bmass);
 	}
 	else{
-		baro_const11 = 0.5 * pSPARC->MD_dt / (pSPARC->NPT_NP_bmass);
+		baro_const11 = 0.5 * pSPARC->MD_dt / (pSPARC->NPH_bmass);
 	}
 
 	double baro_const6 = baro_const11 * pSPARC->SNOSE[0] / (pSPARC->volumeCell * pSPARC->volumeCell);
@@ -2403,7 +2412,8 @@ void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, do
 
 
 void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, double* internal_stress_fractional){
-	
+	int rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	//Initialize some useful constants
 	bool converged;  // determine whether the iteration converges or not
 	int TimeIter = 0;  // current iteration count
@@ -2935,7 +2945,7 @@ void MD_QOI(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis) {
 	cc = 0;
 
 	// Store the cell as a 3x3 lattice vector
-	double *lattice = (double *)calloc(sizeof(double), 9);
+	double *lattice = (double *)calloc(9, sizeof(double));
 	double cell[3] = {pSPARC->range_x, pSPARC->range_y, pSPARC->range_z};
 	double dr[3];
     int row, col;
@@ -3472,7 +3482,6 @@ void RestartMD(SPARC_OBJ *pSPARC) {
             	MPI_Unpack(buff, l_buff, &position, &pSPARC->NPT_NP_qmass, 1, MPI_DOUBLE, MPI_COMM_WORLD);
 
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->NPT_NP_bmass, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->scale, 1, MPI_DOUBLE, MPI_COMM_WORLD);
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_x, 1, MPI_DOUBLE, MPI_COMM_WORLD);
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_y, 1, MPI_DOUBLE, MPI_COMM_WORLD);
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_z, 1, MPI_DOUBLE, MPI_COMM_WORLD);
