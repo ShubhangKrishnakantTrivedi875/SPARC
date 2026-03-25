@@ -137,8 +137,8 @@ void VelocityParticle (SPARC_OBJ *pSPARC);
 */
 void PositionParticleCell(SPARC_OBJ *pSPARC);
 
-/**
- * @brief   Write the re-initialized parameters into the output file.
+/*
+ @brief   Write the re-initialized parameters into the output file.
  */
 void write_output_reinit_NPT(SPARC_OBJ *pSPARC);
 
@@ -155,6 +155,7 @@ void hamiltonian_NPT_NH(SPARC_OBJ *pSPARC);
 /* 
 @ brief: Performs Molecular Dynamics using NPT_NP.
 */
+
 void NPT_NP(SPARC_OBJ *pSPARC);
 
 void NPH(SPARC_OBJ *pSPARC);
@@ -183,7 +184,7 @@ void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, doubl
  */
 void nonCart2Cart(double *LatUVec, double *carCoord, double *nonCarCoord);
 
-/**
+/*
  * @brief: function to convert cartesian to non cartesian coordinates and velocities, from initialization.c
  */
 void Cart2nonCart(double *gradT, double *carCoord, double *nonCarCoord);
