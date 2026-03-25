@@ -863,6 +863,10 @@ typedef struct _SPARC_OBJ{
     int NPTscaleVecs[3];    // which lattice vector can be rescaled?
     int NPTconstraintFlag; // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
     // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
+    int NPT_NP_ANGLES;
+    int NPHscaleVecs[3];
+    int NPHconstraintFlag;
+    int NPH_angles;
     int NPTisotropicFlag;   // whether it is an isotropic cell expansion; a:b:c keeps similar during NPT. 
     // For NPT_NH, if all 3 lattive vectors are scalable, it will be an isotropic expansion;
     // For NPT_NP, if all 3 lattive vectors are scalable, AND NPTconstraintFlag is 4, it will be an isotropic expansion.
@@ -880,7 +884,7 @@ typedef struct _SPARC_OBJ{
     double xlogs[L_QMASS];       // Positions of virtual thermal variables
     double Hamiltonian_NPT_NH; // Hamiltonian of the NPT-NH system
     // NPT-NP AND NPH common
-    double pr_external;  // Externally applied hydrostatic pressure, used in NPT_NP and NPH
+    double pressure_external;  // Externally applied hydrostatic pressure, used in NPT_NP and NPH
     double stress_external[6]; // Externally applied anisotropic stress (applied separately from pr_external),  used in NPT_NP and NPH
     //In NPT_NP and NPH,  the target_stress[i] = pr_external+stress_external[i];  in contrast to NPT_NH where there is just target_pressure.
     int maxTimeIter;     // largest allowed amount of iteration

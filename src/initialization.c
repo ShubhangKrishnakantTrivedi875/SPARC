@@ -842,7 +842,7 @@ void set_defaults(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     }                                         // default mass of thermo variables for NPT_NH. If MDMeth is this but one of qmass is 0, program will stop
     pSPARC_Input->NPT_NHbmass = 0.0;          // default mass of baro variable for NPT_NH. If MDMeth is this but bmass is 0, program will stop
     pSPARC_Input->prtarget = 0.0;             // default target pressure for NPT_NH.
-    pSPARC_Input->pr_external = 0.0;             // default externally applied hydrostatic pressure for NPT_NP and NPH.
+    pSPARC_Input->pressure_external = 0.0;             // default externally applied hydrostatic pressure for NPT_NP and NPH.
 
     for (int i = 0; i<6; ++i){
         pSPARC_Input->stress_external[i] = 0.0;             // default externally applied anisotropic stress for NPT_NP and NPH.
