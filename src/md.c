@@ -344,7 +344,7 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
             }
         }
 
-		if(strcmpi(pSPARC->MdMeth,"NPH")){
+		if(strcmpi(pSPARC->MDMeth,"NPH")){
 			pSPARC->NPT_NP_qmass = 0; // Internally we are setting NPT_NP_qmass to 0; as rest of the functionality is entirely same as NPT_NP so we are using the same functions for NPH
 			if (!rank) {
                 printf("Mass of thermostat variable is zero in NPH ensemble\n");
@@ -389,7 +389,7 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		pSPARC->external_stress_cartesian[6] = pSPARC->stress_external[4];
 		pSPARC->external_stress_cartesian[7] = pSPARC->stress_external[5];
 		
-		if(strcmpi(pSPARC->MdMeth,"NPH")){
+		if(strcmpi(pSPARC->MDMeth,"NPH")){
 			pSPARC->NPT_NP_qmass = 0;
 		}
 
@@ -1085,7 +1085,7 @@ void PositionParticleCell(SPARC_OBJ *pSPARC) {
 			count ++;
 		}
     	// update size of cell
-    	pSPARC->scale = exp(pSPARC->MD_dt * pSPARC->vlog v * rescale);
+    	pSPARC->scale = exp(pSPARC->MD_dt * pSPARC->vlogv * rescale);
 		if (pSPARC->NPTscaleVecs[0] == 1) pSPARC->range_x *= pSPARC->scale;
     	if (pSPARC->NPTscaleVecs[1] == 1) pSPARC->range_y *= pSPARC->scale;
     	if (pSPARC->NPTscaleVecs[2] == 1) pSPARC->range_z *= pSPARC->scale;
@@ -1659,12 +1659,12 @@ void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, dou
 	
 	double total_internal_stress[9];
 	for (int i = 0; i < 9; i++){
-		total_internal_stress[i] = ( pSPARC->kinetic_stress[i] - internal_stress_fractional[i] - pSPARC->constraint_stress[i]) 
+		total_internal_stress[i] = ( pSPARC->kinetic_stress[i] - internal_stress_fractional[i] - pSPARC->constraint_stress[i]); 
 	}	
 
 	cblas_dscal(9, 1.0 / (pSPARC->volumeCell), total_internal_stress, 1);
 	
-	pSPARC->internal_pressure = 2.0 / 3.0 * cblas_ddot(9, total_internal_stress, 1, pSPARC->metric_tensor, 1);
+	double internal_pressure = 2.0 / 3.0 * cblas_ddot(9, total_internal_stress, 1, pSPARC->metric_tensor, 1);
 
 }
 
@@ -1672,13 +1672,14 @@ void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, dou
 void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
 	int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
+	
 	//Initialize some useful constants
+	double baro_const1;
 	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-		double baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+		baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
 	else{
-		double baro_const1 = pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+		baro_const1 = pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
 	double baro_const2 = baro_const1 / pSPARC->SNOSE[2];
 	double baro_const3 = 1.0 / baro_const1;
@@ -1739,11 +1740,12 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC) {
 	double internal_stress_cartesian[9]; double internal_stress_fractional[9]; 
 	
 	//Initialize some useful constants
+	double baro_const1;
 	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-		double baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+		baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
 	else{
-		double baro_const1 = pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
+		baro_const1 = pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
 	double baro_const2 = baro_const1 / pSPARC->SNOSE[2];
 	double baro_const3 = 1.0 / baro_const1;
@@ -2180,7 +2182,7 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, 1.0, pSPARC->reciprocal_metric_tensor, 3, constraint_velocity, 3, 0.0, gpi, 3);
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, 1.0/baro_const4, gpi, 3, pSPARC->reciprocal_metric_tensor, 3, 0.0, gpig, 3);
 
-	double thermo_const1 = 2.0 / (pSPARC->MD_dt * pSPARC->SNOSE[0]);
+	thermo_const1 = 2.0 / (pSPARC->MD_dt * pSPARC->SNOSE[0]);
 
 	// Calculating constraint stress
 	for (int i = 0; i < 9; i++){
@@ -2600,7 +2602,7 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 		}
 
 		if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0 || strcmpi(pSPARC->MDMeth,"NPH")==0){
-			frintf(output_md,":Desc_ANGLES: angles between cell lattice vectors. Format: (angle between 1 and 2,  angle between 1 and 3,  angle between 2 and 3). Unit = Degree \n");
+			fprintf(output_md,":Desc_ANGLES: angles between cell lattice vectors. Format: (angle between 1 and 2,  angle between 1 and 3,  angle between 2 and 3). Unit = Degree \n");
 			if (pSPARC->Flag_latvec_scale == 0){
 				fprintf(output_md,":Desc_CELL: lengths of three lattice vectors. Unit = Bohr \n");
 				fprintf(output_md,":Desc_LatUVec: Lattice vectors of unit length, purpose: to represent change in angles during %s ensemble. Unit = Bohr \n",pSPARC->MDMeth);
@@ -3048,19 +3050,19 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
 																									  , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
 																									  , pSPARC->lattice_avg_velo[6], pSPARC->lattice_avg_velo[7], pSPARC->lattice_avg_velo[8]); // velocity of lattice
     		if (pSPARC->Flag_latvec_scale == 0){
-				fprintf(output_md,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x,pSPARC->range_y,pSPARC->range_z);
-				fprintf(output_md,":LatUVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0],pSPARC->LatUVec[1],pSPARC->LatUVec[2] 
+				fprintf(mdout,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x,pSPARC->range_y,pSPARC->range_z);
+				fprintf(mdout,":LatUVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0],pSPARC->LatUVec[1],pSPARC->LatUVec[2] 
 																														   , pSPARC->LatUVec[3],pSPARC->LatUVec[4],pSPARC->LatUVec[5]
 																														   , pSPARC->LatUVec[6],pSPARC->LatUVec[7],pSPARC->LatUVec[8]);
 			} else {
-				fprintf(output_md,":LATVEC_SCALE: %18.10E %18.10E %18.10E\n", pSPARC->range_x/pSPARC->initialLatVecLength[0], pSPARC->range_y/pSPARC->initialLatVecLength[1], pSPARC->range_z/pSPARC->initialLatVecLength[2]);
-				fprintf(output_md,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0],pSPARC->LatVec[1],pSPARC->LatVec[2] 
+				fprintf(mdout,":LATVEC_SCALE: %18.10E %18.10E %18.10E\n", pSPARC->range_x/pSPARC->initialLatVecLength[0], pSPARC->range_y/pSPARC->initialLatVecLength[1], pSPARC->range_z/pSPARC->initialLatVecLength[2]);
+				fprintf(mdout,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0],pSPARC->LatVec[1],pSPARC->LatVec[2] 
 																														   , pSPARC->LatVec[3],pSPARC->LatVec[4],pSPARC->LatVec[5]
 																														   , pSPARC->LatVec[6],pSPARC->LatVec[7],pSPARC->LatVec[8]);
 			}
-			fprintf(output_md,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
+			fprintf(mdout,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
     		fprintf(mdout,":TTHRMI(K): %.15g\n", pSPARC->thermos_Ti);
-			fprintf(output_fp,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",(pSPARC->pressure_external+pSPARC->stress_external[0]) * 29421.02648438959
+			fprintf(mdout,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",(pSPARC->pressure_external+pSPARC->stress_external[0]) * 29421.02648438959
                                                                                         ,(pSPARC->pressure_external+pSPARC->stress_external[1]) * 29421.02648438959
                                                                                         ,(pSPARC->pressure_external+pSPARC->stress_external[2]) * 29421.02648438959 
                                                                                         ,pSPARC->stress_external[3] * 29421.02648438959
@@ -3078,19 +3080,19 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
 																									  , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
 																									  , pSPARC->lattice_avg_velo[6], pSPARC->lattice_avg_velo[7], pSPARC->lattice_avg_velo[8]); // velocity of lattice
     		if (pSPARC->Flag_latvec_scale == 0){
-				fprintf(output_md,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x,pSPARC->range_y,pSPARC->range_z);
-				fprintf(output_md,":LatUVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0],pSPARC->LatUVec[1],pSPARC->LatUVec[2] 
+				fprintf(mdout,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x,pSPARC->range_y,pSPARC->range_z);
+				fprintf(mdout,":LatUVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0],pSPARC->LatUVec[1],pSPARC->LatUVec[2] 
 																														   , pSPARC->LatUVec[3],pSPARC->LatUVec[4],pSPARC->LatUVec[5]
 																														   , pSPARC->LatUVec[6],pSPARC->LatUVec[7],pSPARC->LatUVec[8]);
 			} else {
-				fprintf(output_md,":LATVEC_SCALE: %18.10E %18.10E %18.10E\n", pSPARC->range_x/pSPARC->initialLatVecLength[0], pSPARC->range_y/pSPARC->initialLatVecLength[1], pSPARC->range_z/pSPARC->initialLatVecLength[2]);
-				fprintf(output_md,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0],pSPARC->LatVec[1],pSPARC->LatVec[2] 
+				fprintf(mdout,":LATVEC_SCALE: %18.10E %18.10E %18.10E\n", pSPARC->range_x/pSPARC->initialLatVecLength[0], pSPARC->range_y/pSPARC->initialLatVecLength[1], pSPARC->range_z/pSPARC->initialLatVecLength[2]);
+				fprintf(mdout,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0],pSPARC->LatVec[1],pSPARC->LatVec[2] 
 																														   , pSPARC->LatVec[3],pSPARC->LatVec[4],pSPARC->LatVec[5]
 																														   , pSPARC->LatVec[6],pSPARC->LatVec[7],pSPARC->LatVec[8]);
 			}
-			fprintf(output_md,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
+			fprintf(mdout,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
     		fprintf(mdout,":TTHRMI(K): %.15g\n", pSPARC->thermos_Ti);
-			fprintf(output_fp,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",(pSPARC->pressure_external+pSPARC->stress_external[0]) * 29421.02648438959
+			fprintf(mdout,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",(pSPARC->pressure_external+pSPARC->stress_external[0]) * 29421.02648438959
                                                                                         ,(pSPARC->pressure_external+pSPARC->stress_external[1]) * 29421.02648438959
                                                                                         ,(pSPARC->pressure_external+pSPARC->stress_external[2]) * 29421.02648438959
                                                                                         ,pSPARC->stress_external[3] * 29421.02648438959
@@ -3324,13 +3326,7 @@ void RestartMD(SPARC_OBJ *pSPARC) {
             }
             else if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
             	MPI_Pack(&pSPARC->NPT_NP_qmass, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            	MPI_Pack(&pSPARC->Sv_NPT_NP, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            	MPI_Pack(&pSPARC->S_NPT_NP, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->NPT_NP_bmass, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            	MPI_Pack(&pSPARC->range_x_velo, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            	MPI_Pack(&pSPARC->range_y_velo, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            	MPI_Pack(&pSPARC->range_z_velo, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            	MPI_Pack(&pSPARC->scale, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->range_x, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->range_y, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->range_z, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
