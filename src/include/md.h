@@ -176,7 +176,7 @@ void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, dou
 
 void compute_constraint_stress(SPARC_OBJ *pSPARC);
 
-void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new)
+void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new);
 
 void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, double* internal_stress_fractional);
 /**
