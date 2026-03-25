@@ -12,7 +12,7 @@
 #define MD_H
 
 #include "isddft.h"
-
+#include <stdbool.h>
 /**
 * @ brief Main function of molecular dynamics
 */
