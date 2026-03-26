@@ -376,8 +376,8 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
         // pSPARC->thermos_Ti = pSPARC->elec_T;
 		pSPARC->thermos_T = pSPARC->thermos_Ti; // It comes from restart file!
         pSPARC->pressure_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
-		for (int i1 = 0; i1 < 6; i1++){
-			pSPARC->stress_external[i1] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
+		for (int i = 0; i < 6; i++){
+			pSPARC->stress_external[i] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		}// transfer from GPa to Ha/Bohr^3
 		pSPARC->external_stress_cartesian[0] = pSPARC->stress_external[0];
 		pSPARC->external_stress_cartesian[4] = pSPARC->stress_external[1];
@@ -1877,28 +1877,28 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC) {
 	} 	
 
 	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-		if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPT_NP_ANGLES == 0){
+		if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPTconstraintFlag == 1){
 			pSPARC->Pm_metric_tensor[8] = 0;
 			pSPARC->Pm_metric_tensor[7] = 0;
 			pSPARC->Pm_metric_tensor[6] = 0;
 			pSPARC->Pm_metric_tensor[5] = 0;
 			pSPARC->Pm_metric_tensor[2] = 0;
 		}
-		if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPT_NP_ANGLES == 0){
+		if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPTscaleVecs[2] == 1){
 			pSPARC->Pm_metric_tensor[0] = 0; 
 			pSPARC->Pm_metric_tensor[4] = 0;
 		}
 	}
 
 	else {
-		if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPH_ANGLES == 0){
+		if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPHconstraintFlag == 1){
 			pSPARC->Pm_metric_tensor[8] = 0;
 			pSPARC->Pm_metric_tensor[7] = 0;
 			pSPARC->Pm_metric_tensor[6] = 0;
 			pSPARC->Pm_metric_tensor[5] = 0;
 			pSPARC->Pm_metric_tensor[2] = 0;
 		}
-		if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPH_ANGLES == 0){
+		if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPHscaleVecs[2] == 1){
 			pSPARC->Pm_metric_tensor[0] = 0; 
 			pSPARC->Pm_metric_tensor[4] = 0;
 		}
@@ -1984,28 +1984,28 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC) {
 
 	//Now impose the constraints on it
 	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-		if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPT_NP_ANGLES == 0){
+		if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPTconstraintFlag == 1){
 			pSPARC->Pm_metric_tensor[8] = 0;
 			pSPARC->Pm_metric_tensor[7] = 0;
 			pSPARC->Pm_metric_tensor[6] = 0;
 			pSPARC->Pm_metric_tensor[5] = 0;
 			pSPARC->Pm_metric_tensor[2] = 0;
 		}
-		if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPT_NP_ANGLES == 0){
+		if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPTscaleVecs[2] == 1){
 			pSPARC->Pm_metric_tensor[0] = 0; 
 			pSPARC->Pm_metric_tensor[4] = 0;
 		}
 	}
 
 	else {
-		if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPH_ANGLES == 0){
+		if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPHconstraintFlag == 1){
 			pSPARC->Pm_metric_tensor[8] = 0;
 			pSPARC->Pm_metric_tensor[7] = 0;
 			pSPARC->Pm_metric_tensor[6] = 0;
 			pSPARC->Pm_metric_tensor[5] = 0;
 			pSPARC->Pm_metric_tensor[2] = 0;
 		}
-		if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPH_ANGLES == 0){
+		if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPHscaleVecs[2] == 1){
 			pSPARC->Pm_metric_tensor[0] = 0; 
 			pSPARC->Pm_metric_tensor[4] = 0;
 		}
@@ -2191,7 +2191,7 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 		}
 
 		// Only |a| and |b| varies, no changes in third direction i.e |c| is fixed;  and all angles between lattice vectors are FIXED
-		else if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPT_NP_ANGLES == 0){
+		else if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPTconstraintFlag == 1){
 			gpig[8] = 0;
 			gpig[7] = 0;
 			gpig[6] = 0;
@@ -2199,9 +2199,8 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 			gpig[2] = 0;
 		}
 
-		// Only |c| varies, |a| and |b| are fixed; and all angles between lattice vectors are FIXED
-		else if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPT_NP_ANGLES == 0){
-			gpig[0] = 0;
+		else if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPTscaleVecs[2] == 1){
+			gpig[0] = 0; 
 			gpig[4] = 0;
 		}
 	}
@@ -2220,7 +2219,7 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 		}
 
 		// Only |a| and |b| varies, no changes in third direction i.e |c| is fixed;  and all angles between lattice vectors are FIXED
-		else if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPH_ANGLES == 0){
+		else if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPHconstraintFlag == 1){
 			gpig[8] = 0;
 			gpig[7] = 0;
 			gpig[6] = 0;
@@ -2228,9 +2227,8 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 			gpig[2] = 0;
 		}
 
-		// Only |c| varies, |a| and |b| are fixed; and all angles between lattice vectors are FIXED
-		else if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPH_ANGLES == 0){
-			gpig[0] = 0;
+		else if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPHscaleVecs[2] == 1){
+			gpig[0] = 0; 
 			gpig[4] = 0;
 		}
 	}
@@ -2360,7 +2358,11 @@ void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, do
 			new_metric_tensor[3] = new_metric_tensor[1];
 			new_metric_tensor[6] = new_metric_tensor[2];
 			new_metric_tensor[7] = new_metric_tensor[5];
-		}		
+		}	
+
+		for (int i = 0; i < 9; i++){
+			temp_metric_tensor[i] = new_metric_tensor[i];
+		}	
 	}
 
 	else {
@@ -2387,12 +2389,11 @@ void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, do
 			new_metric_tensor[3] = new_metric_tensor[1];
 			new_metric_tensor[6] = new_metric_tensor[2];
 			new_metric_tensor[7] = new_metric_tensor[5];
-		}		
-	}
+		}	
 
-
-	for (int i = 0; i < 9; i++){
+		for (int i = 0; i < 9; i++){
 			temp_metric_tensor[i] = new_metric_tensor[i];
+		}
 	}
 
 	for (int i = 0; i < 9; i++){

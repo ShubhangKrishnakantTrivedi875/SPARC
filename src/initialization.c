@@ -2991,6 +2991,13 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
                 exit(EXIT_FAILURE);
             }
         }
+        if (pSPARC->NPT_NP_ANGLES==1){
+            if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 || pSPARC_Input->NPTconstraintFlag != 0){
+                    printf("Angle changing is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints imposed on them.\n");
+                    printf("To allow Angle changing, input NPT_NP_ANGLES: 1, while simultaneously NPT_SCALE_VECS: 1 2 3 and omit/skip input of NPT_SCALE_CONSTRAINTS (so default: none will be triggered) or input NPT_SCALE_CONSTRAINTS: none.\n");
+                    exit(EXIT_FAILURE);
+                }
+        }
     }
     else if (strcmpi(pSPARC->MDMeth,"NPH") == 0) {
         if (pSPARC->NPHconstraintFlag == 1) { // check conflict between NPH_SCALE_CONFINEMENTS and NPH_SCALE_VECS
@@ -3024,6 +3031,13 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
                 }
                 exit(EXIT_FAILURE);
             }
+        }
+        if (pSPARC->NPH_ANGLES==1){
+            if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 || pSPARC_Input->NPHconstraintFlag != 0){
+                    printf("Angle changing is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints imposed on them.\n");
+                    printf("To allow Angle changing, input NPH_ANGLES: 1, while simultaneously NPH_SCALE_VECS: 1 2 3 and omit/skip input of NPH_SCALE_CONSTRAINTS (so default: none will be triggered) or input NPH_SCALE_CONSTRAINTS: none.\n");
+                    exit(EXIT_FAILURE);
+                }
         }
     }
 

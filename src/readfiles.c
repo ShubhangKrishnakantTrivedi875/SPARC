@@ -780,12 +780,6 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
         } else if (strcmpi(str,"NPT_NP_ANGLES:") == 0){
             fscanf(input_fp,"%d",&pSPARC_Input->NPT_NP_ANGLES);
             fscanf(input_fp, "%*[^\n]\n");
-            
-            if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 && pSPARC_Input->NPTconstraintFlag == 0){
-                printf("Angle changing is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints imposed on them.\n");
-                printf("To allow Angle changing, input NPT_NP_ANGLES: 1, while simultaneously NPT_SCALE_VECS: 1 2 3 and omit/skip input of NPT_SCALE_CONSTRAINTS (so default: none will be triggered).\n");
-                exit(EXIT_FAILURE);
-            }
         } else if (strcmpi(str,"NPH_SCALE_VECS:") == 0) {
             int dir[3] = {0, 0, 0};
             pSPARC_Input->NPHscaleVecs[0] = 0; pSPARC_Input->NPHscaleVecs[1] = 0; pSPARC_Input->NPHscaleVecs[2] = 0; 
@@ -828,12 +822,6 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
         } else if (strcmpi(str,"NPH_ANGLES:") == 0){
             fscanf(input_fp,"%d",&pSPARC_Input->NPH_ANGLES);
             fscanf(input_fp, "%*[^\n]\n");
-            
-            if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 && pSPARC_Input->NPHconstraintFlag == 0){
-                printf("Angle changing is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints imposed on them.\n");
-                printf("To allow Angle changing, input NPH_ANGLES: 1, while simultaneously NPH_SCALE_VECS: 1 2 3 and omit/skip input of NPH_SCALE_CONSTRAINTS (so default: none will be triggered).\n");
-                exit(EXIT_FAILURE);
-            }
         } else if (strcmpi(str,"NPT_NH_QMASS:") == 0) { 
             fscanf(input_fp,"%d",&pSPARC_Input->NPT_NHnnos);
             for (int subscript_NPTNH_qmass = 0; subscript_NPTNH_qmass < pSPARC_Input->NPT_NHnnos; subscript_NPTNH_qmass++){
