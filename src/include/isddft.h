@@ -912,10 +912,14 @@ typedef struct _SPARC_OBJ{
     double Hamiltonian_NPH;    // Hamiltonian of NPH system
     double init_Hamil_NPT_NP; // initial Hamiltonian in NPT_NP ensemble
     double init_Hamil_NPH;    // initial Hamiltonian in NPH ensemble
+    
     //NPT_NP_specific
     double NPT_NP_qmass; // fictitious mass of thermostat (qmass) used in NPT_NP
     double NPT_NP_bmass; // fictitious mass of barostat (bmass) used in NPT_NP
     
+    double temperature;
+    double internal_pressure;
+    FILE *fp_energy;
     //NPH specific
     double NPH_bmass; // fictitious mass of barostat (bmass) used in NPT_NP
     
