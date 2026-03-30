@@ -185,7 +185,7 @@ void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, doubl
  */
 void nonCart2Cart(double *LatUVec, double *carCoord, double *nonCarCoord);
 void Cart2nonCart_transformMat_MD(SPARC_OBJ *pSPARC);
-void Calculate_ionic_stress_linear_MD(SPARC_OBJ *pSPARC);
+
 /*
  * @brief: function to convert cartesian to non cartesian coordinates and velocities, from initialization.c
  */
