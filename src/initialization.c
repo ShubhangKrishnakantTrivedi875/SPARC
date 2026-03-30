@@ -1572,7 +1572,7 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
     }
     pSPARC->NPT_NP_bmass = pSPARC_Input->NPT_NP_bmass;
     pSPARC->NPT_NP_qmass = pSPARC_Input->NPT_NP_qmass;
-    pSPARC->NPH_bmass = pSPARC->NPH_bmass;
+    pSPARC->NPH_bmass = pSPARC_Input->NPH_bmass;
     pSPARC->NLCG_sigma = pSPARC_Input->NLCG_sigma;
     pSPARC->L_finit_stp = pSPARC_Input->L_finit_stp;
     pSPARC->L_maxmov = pSPARC_Input->L_maxmov;
@@ -1915,6 +1915,21 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
                 printf(YEL"\nWARNING: This system is cuboidal. To get the best performance, please align the lattice vectors onto standard cartesian coordinate.\n" RESET);
             }
         }
+
+        if (pSPARC->cell_typ == 0){
+            if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+                if (pSPARC->NPT_NP_ANGLES == 1){
+                    pSPARC->cell_typ = 17;  //change the default cell to triclinic as the change in angles in MD during NPT_NP ensemble would result in non-orthogonal cell if initially started with orthogonal
+                }
+            }
+            if (strcmpi(pSPARC->MDMeth,"NPH") == 0){
+                if (pSPARC->NPH_ANGLES == 1){
+                    pSPARC->cell_typ = 17;  //change the default cell to triclinic as the change in angles in MD during NPT_NP ensemble would result in non-orthogonal cell if initially started with orthogonal
+                }
+            }
+        }
+
+
         if (pSPARC->BC > 0) {
             if (pSPARC->BC == 1) {
                 // dirichlet boundary

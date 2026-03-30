@@ -172,7 +172,8 @@ void transpose_and_add(double *matrix1);
 
 void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC);
 
-void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, double *internal_stress_fractional);
+void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, double *internal_stress_fractional, double *ion_vel_fractional);
+void Calculate_Kinetic_stress_and_total_internal_pressure1(SPARC_OBJ *pSPARC, double *internal_stress_fractional);
 
 void compute_constraint_stress(SPARC_OBJ *pSPARC);
 
@@ -183,7 +184,8 @@ void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, doubl
  * @ brief: function to convert non cartesian to cartesian coordinates and velocities, from initialization.c
  */
 void nonCart2Cart(double *LatUVec, double *carCoord, double *nonCarCoord);
-
+void Cart2nonCart_transformMat_MD(SPARC_OBJ *pSPARC);
+void Calculate_ionic_stress_linear_MD(SPARC_OBJ *pSPARC);
 /*
  * @brief: function to convert cartesian to non cartesian coordinates and velocities, from initialization.c
  */

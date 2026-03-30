@@ -1781,41 +1781,6 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 	}
 }
 
-void Calculate_ionic_stress_linear_MD(SPARC_OBJ *pSPARC){
-    double *stress_i, *avgvel, mass_tot = 0.0;
-    stress_i = (double*) calloc(6, sizeof(double));
-    avgvel = (double*) calloc(3, sizeof(double));
-    int count, ityp, atm, j, k, index;
-    count = 0;
-	for(ityp = 0; ityp < pSPARC->Ntypes; ityp++){
-	    for(atm = 0; atm < pSPARC->nAtomv[ityp]; atm++){
-		    avgvel[0] += pSPARC->Mass[ityp] * pSPARC->ion_vel[count * 3];
-		    avgvel[1] += pSPARC->Mass[ityp] * pSPARC->ion_vel[count * 3 + 1];
-		    avgvel[2] += pSPARC->Mass[ityp] * pSPARC->ion_vel[count * 3 + 2];
-		    mass_tot += pSPARC->Mass[ityp];
-		    count += 1;
-	    }
-	}
-	
-    for(j = 0; j < 3; j++)
-        avgvel[j] /= mass_tot;
-    
-    index = 0;
-    for(j = 0; j < 3; j++){
-        for(k = j; k < 3; k++){
-            count = 0;
-            for(ityp = 0; ityp < pSPARC->Ntypes; ityp++){
-	            for(atm = 0; atm < pSPARC->nAtomv[ityp]; atm++){
-	                stress_i[index] = pSPARC->Mass[ityp] * (pSPARC->ion_vel[count * 3 + j] - avgvel[j]) * (pSPARC->ion_vel[count * 3 + k] - avgvel[k]);
-	                count++;
-	            }
-	        }
-	        index++;
-	    }
-    }
-    free(stress_i);
-    free(avgvel);
-}
 
 void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC){
 	int rank;
@@ -1843,8 +1808,6 @@ void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, dou
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	
-	double temp_mat_b[9]={0.0};
-
 	for (int i = 0; i < 9; i++){
 		pSPARC->kinetic_stress[i] = 0.0; //Initialize kinetic stress to 0
 	}
@@ -1852,21 +1815,19 @@ void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, dou
 	int count = 0;
 	for(int ityp = 0; ityp < pSPARC->Ntypes; ityp++){
 		for(int atm = 0; atm < pSPARC->nAtomv[ityp]; atm++){
-			pSPARC->ion_vel[count * 3] = ( pSPARC->full_lattice[0] * ion_vel_fractional[count*3] + pSPARC->full_lattice[3] * ion_vel_fractional[count * 3 + 1] + pSPARC->full_lattice[6] * ion_vel_fractional[count * 3 + 2]);
-			pSPARC->ion_vel[count * 3 + 1] = ( pSPARC->full_lattice[1] * ion_vel_fractional[count*3] + pSPARC->full_lattice[4] * ion_vel_fractional[count * 3 + 1] + pSPARC->full_lattice[7] * ion_vel_fractional[count * 3 + 2]);
-			pSPARC->ion_vel[count * 3 + 2] = ( pSPARC->full_lattice[2] * ion_vel_fractional[count*3] + pSPARC->full_lattice[5] * ion_vel_fractional[count * 3 + 1] + pSPARC->full_lattice[8] * ion_vel_fractional[count * 3 + 2]);
+			pSPARC->kinetic_stress[0] += pSPARC->Mass[ityp] * ion_vel_fractional[count*3] * ion_vel_fractional[count*3];
+			pSPARC->kinetic_stress[1] += pSPARC->Mass[ityp] * ion_vel_fractional[count*3] * ion_vel_fractional[count*3+1];
+			pSPARC->kinetic_stress[2] += pSPARC->Mass[ityp] * ion_vel_fractional[count*3] * ion_vel_fractional[count*3+2];
+			pSPARC->kinetic_stress[4] += pSPARC->Mass[ityp] * ion_vel_fractional[count*3+1] * ion_vel_fractional[count*3+1];
+			pSPARC->kinetic_stress[5] += pSPARC->Mass[ityp] * ion_vel_fractional[count*3+1] * ion_vel_fractional[count*3+2];
+			pSPARC->kinetic_stress[8] += pSPARC->Mass[ityp] * ion_vel_fractional[count*3+2] * ion_vel_fractional[count*3+2];
 			count++;
 		}
 	}
 	
-	Calculate_ionic_stress_linear_MD(pSPARC);
-
-	pSPARC->kinetic_stress[0] = pSPARC->stress_i[0]; pSPARC->kinetic_stress[4] = pSPARC->stress_i[3]; pSPARC->kinetic_stress[8] = pSPARC->stress_i[5];
-	pSPARC->kinetic_stress[1] = pSPARC->stress_i[1]; pSPARC->kinetic_stress[2] = pSPARC->stress_i[2]; pSPARC->kinetic_stress[3] = pSPARC->stress_i[1];
-	pSPARC->kinetic_stress[5] = pSPARC->stress_i[4]; pSPARC->kinetic_stress[6] = pSPARC->stress_i[2]; pSPARC->kinetic_stress[7] = pSPARC->stress_i[4];
-
-	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, 1.0, pSPARC->kinetic_stress, 3, pSPARC->reciprocal_lattice, 3, 0.0, temp_mat_b, 3);
-	cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans, 3, 3, 3, pSPARC->volumeCell, pSPARC->reciprocal_lattice, 3, temp_mat_b, 3, 0.0, pSPARC->kinetic_stress, 3); //Multiplying by volume since the stress is stored in the units of Ha/bohr^3
+	pSPARC->kinetic_stress[3] = pSPARC->kinetic_stress[1];
+	pSPARC->kinetic_stress[6] = pSPARC->kinetic_stress[2];
+	pSPARC->kinetic_stress[7] = pSPARC->kinetic_stress[5];
 
 	cblas_dscal(9, 0.5 / (pSPARC->SNOSE[0] * pSPARC->SNOSE[0]), pSPARC->kinetic_stress, 1);
 	
