@@ -2083,7 +2083,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	}
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans, pSPARC->n_atom, 3, 3, 1.0, pSPARC->forces, 3, pSPARC->full_lattice, 3, 0.0, ion_forces_fractional, 3); 
 	// Eqn. 18i: momentum += 0.5 * dt * S * D2C
-	cblas_daxpy(3 * pSPARC->n_atom, 0.5 * pSPARC->MD_dt * pSPARC->SNOSE[0], pSPARC->ion_forces_fractional, 1, pSPARC->Pm_ion, 1);
+	cblas_daxpy(3 * pSPARC->n_atom, 0.5 * pSPARC->MD_dt * pSPARC->SNOSE[0], ion_forces_fractional, 1, pSPARC->Pm_ion, 1);
 	//Update the kinetic energy of the Ionic particles
 	Calculate_Ionic_particles_Kinetic_energy(pSPARC);
 
@@ -2147,7 +2147,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	// Obtain updated velocities in cartesian coordinates for use in MD_QOI function
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, pSPARC->n_atom, 3, 3, 1.0, pSPARC->ion_vel_fractional, 3, pSPARC->full_lattice, 3, 0.0, pSPARC->ion_vel, 3); 
 	int check1 = (pSPARC->PrintMDout == 1 && !rank);
-	MD_QOI(avgvel, maxvel, mindis);
+	MD_QOI(pSPARC, avgvel, maxvel, mindis);
 	Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the .aimd file
 
 	// ------------------------------------- END: Updating Momenta by half step (Eqns. 18g, 18h, 18i)----------------------------------//
@@ -3077,7 +3077,7 @@ void MD_QOI(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis) {
 		pSPARC->Beta = 1.0/(pSPARC->elec_T * pSPARC->kB);
 	}
 	pSPARC->PE = pSPARC->Etot / pSPARC->n_atom;
-	pSPARC->KE = pSPARC->KE / pSPARC->n_atom
+	pSPARC->KE = pSPARC->KE / pSPARC->n_atom;
 	pSPARC->TE = (pSPARC->PE + pSPARC->KE);
 	// Extended System (Ionic system + Thermostat) energy
 	if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){

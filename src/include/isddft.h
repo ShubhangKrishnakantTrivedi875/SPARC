@@ -820,7 +820,7 @@ typedef struct _SPARC_OBJ{
     double *ion_vel;       // Ionic velocity 
     double *ion_accel;     // Ionic acceleration
     double *Pm_ion; // Ionic momenta 
-    double *ion_vel_fractional // Ionic velocity in fractional coordinates
+    double *ion_vel_fractional; // Ionic velocity in fractional coordinates
     double ion_T;          // Ionic temperature
     double PE, KE, TE, TE_ext;     // potential, kinetic and total energies respectively
     double kB;             // Boltzmann constant

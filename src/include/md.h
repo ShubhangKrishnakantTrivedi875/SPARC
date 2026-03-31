@@ -177,7 +177,7 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC);
 
 void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new);
 
-void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC, double* internal_stress_fractional);
+void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC);
 /**
  * @ brief: function to convert non cartesian to cartesian coordinates and velocities, from initialization.c
  */
