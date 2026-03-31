@@ -3575,7 +3575,10 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 	    	l_buff = (2 + 1) * sizeof(int) + (6 * pSPARC->n_atom + (5 + 3*pSPARC->NPT_NHnnos + 9)) * sizeof(double);
 	    }
 	    else if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + (5 + 14)) * sizeof(double);
+	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + (5 + 56)) * sizeof(double);
+	    } 
+		else if (strcmpi(pSPARC->MDMeth,"NPH") == 0){
+	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + (5 + 52)) * sizeof(double);
 	    } 
 	    else {
 	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + 5) * sizeof(double);
