@@ -156,15 +156,14 @@ void hamiltonian_NPT_NH(SPARC_OBJ *pSPARC);
 @ brief: Performs Molecular Dynamics using NPT_NP.
 */
 
-void NPT_NP(SPARC_OBJ *pSPARC);
+void NPT_NP_and_NPH(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *maxvel, double *mindis);
 
-void NPH(SPARC_OBJ *pSPARC);
-
-void NPT_NPH_main(SPARC_OBJ *pSPARC);
+void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *maxvel, double *mindis);
 /* 
 @ brief: Calculates cell angles, reciprocal lattice vectors, metric and reciprocal metric tensors, for use in NPT_NP and NPH dynamics
 */
 void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell);
+void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC);
 
 void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC);
 
@@ -172,8 +171,7 @@ void transpose_and_add(double *matrix1);
 
 void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC);
 
-void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, double *internal_stress_fractional, double *ion_vel_fractional);
-void Calculate_Kinetic_stress_and_total_internal_pressure1(SPARC_OBJ *pSPARC, double *internal_stress_fractional);
+void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC);
 
 void compute_constraint_stress(SPARC_OBJ *pSPARC);
 
