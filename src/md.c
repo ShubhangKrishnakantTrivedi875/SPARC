@@ -3425,12 +3425,12 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
     	if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
     		fprintf(mdout,":NPT_NP_QMASS: %.15g\n", pSPARC->NPT_NP_qmass);
     		fprintf(mdout,":NPT_NP_BMASS: %.15g\n", pSPARC->NPT_NP_bmass);
-    		fprintf(mdout,":SNOSE[1]: %.15g\n", pSPARC->SNOSE[1]); // velocity of virtual thermal parameter
+    		fprintf(mdout,":NPT_NP_SNOSE[1]: %.15g\n", pSPARC->SNOSE[1]); // velocity of virtual thermal parameter
     		// fprintf(mdout,":Pm_metric_tensor: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->Pm_metric_tensor[0], pSPARC->Pm_metric_tensor[1], pSPARC->Pm_metric_tensor[2]
 			// 																				   		  , pSPARC->Pm_metric_tensor[3], pSPARC->Pm_metric_tensor[4], pSPARC->Pm_metric_tensor[5]
 			// 																				   		  , pSPARC->Pm_metric_tensor[6], pSPARC->Pm_metric_tensor[7], pSPARC->Pm_metric_tensor[8]); // Momentum of virtual baro parameter
-    		fprintf(mdout,":SNOSE[0]: %.15g\n", pSPARC->SNOSE[0]); // value of virtual thermal parameter at current timestep
-			fprintf(mdout,":SNOSE[2]: %.15g\n", pSPARC->SNOSE[2]); // value of virtual thermal parameter at previous timestep
+    		fprintf(mdout,":NPT_NP_SNOSE[0]: %.15g\n", pSPARC->SNOSE[0]); // value of virtual thermal parameter at current timestep
+			fprintf(mdout,":NPT_NP_SNOSE[2]: %.15g\n", pSPARC->SNOSE[2]); // value of virtual thermal parameter at previous timestep
     		fprintf(mdout,":lattice_avg_velo: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->lattice_avg_velo[0], pSPARC->lattice_avg_velo[1], pSPARC->lattice_avg_velo[2]
 																									  , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
 																									  , pSPARC->lattice_avg_velo[6], pSPARC->lattice_avg_velo[7], pSPARC->lattice_avg_velo[8]); // velocity of lattice
@@ -3468,7 +3468,7 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
     		// fprintf(mdout,":Pm_metric_tensor: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->Pm_metric_tensor[0], pSPARC->Pm_metric_tensor[1], pSPARC->Pm_metric_tensor[2]
 			// 																				   		  , pSPARC->Pm_metric_tensor[3], pSPARC->Pm_metric_tensor[4], pSPARC->Pm_metric_tensor[5]
 			// 																				   		  , pSPARC->Pm_metric_tensor[6], pSPARC->Pm_metric_tensor[7], pSPARC->Pm_metric_tensor[8]); // Momentum of virtual baro parameter
-    		fprintf(mdout,":lattice_avg_velo: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->lattice_avg_velo[0], pSPARC->lattice_avg_velo[1], pSPARC->lattice_avg_velo[2]
+    		fprintf(mdout,":LATTICE_AVG_VELOCITY: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->lattice_avg_velo[0], pSPARC->lattice_avg_velo[1], pSPARC->lattice_avg_velo[2]
 																									  , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
 																									  , pSPARC->lattice_avg_velo[6], pSPARC->lattice_avg_velo[7], pSPARC->lattice_avg_velo[8]); // velocity of lattice
     		if (pSPARC->Flag_latvec_scale == 0){
@@ -3482,9 +3482,6 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
 																													  , pSPARC->LatVec[3], pSPARC->LatVec[4], pSPARC->LatVec[5]
 																													  , pSPARC->LatVec[6], pSPARC->LatVec[7], pSPARC->LatVec[8]);
 			}
-			fprintf(mdout,":RECIPROCAL_LATTICE: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->reciprocal_lattice[0], pSPARC->reciprocal_lattice[1], pSPARC->reciprocal_lattice[2] 
-																													  	   	  , pSPARC->reciprocal_lattice[3], pSPARC->reciprocal_lattice[4], pSPARC->reciprocal_lattice[5]
-																													      	  , pSPARC->reciprocal_lattice[6], pSPARC->reciprocal_lattice[7], pSPARC->reciprocal_lattice[8]);
 			fprintf(mdout,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
     		fprintf(mdout,":INITIAL_ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->initialLatVecAngles[0], pSPARC->initialLatVecAngles[1], pSPARC->initialLatVecAngles[2]);
 			fprintf(mdout,":ROTATION_MATRIX: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->rotation_matrix[0], pSPARC->rotation_matrix[1], pSPARC->rotation_matrix[2] 
@@ -3655,40 +3652,49 @@ void RestartMD(SPARC_OBJ *pSPARC) {
             		fscanf(rst_fp,"%lf", &pSPARC->NPT_NP_qmass);
             	else if (strcmpi(str,":NPT_NP_BMASS:") == 0)
             		fscanf(rst_fp,"%lf", &pSPARC->NPT_NP_bmass);
-            	else if (strcmpi(str,":CELL:") == 0) {
-            		double nowRange_x, nowRange_y, nowRange_z;
-        		    fscanf(rst_fp,"%lf", &nowRange_x); fscanf(rst_fp,"%lf", &nowRange_y); fscanf(rst_fp,"%lf", &nowRange_z);
-        		    fscanf(rst_fp, "%*[^\n]\n");
-
-        		    pSPARC->scale = nowRange_x / pSPARC->range_x; // now NPT_NP only support homogeneous expansion,
-        		    // compute scale from x is enough
-        		    pSPARC->range_x = nowRange_x;
-        		    pSPARC->range_y = nowRange_y;
-        		    pSPARC->range_z = nowRange_z;
-            	}
-				else if (strcmpi(str,":LATVEC_SCALE:") == 0) {
-					double nowLatScale_x, nowLatScale_y, nowLatScale_z;
-					fscanf(rst_fp,"%lf", &nowLatScale_x); fscanf(rst_fp,"%lf", &nowLatScale_y); fscanf(rst_fp,"%lf", &nowLatScale_z);
+				else if (strcmpi(str,":NPT_NP_SNOSE[0]:") == 0)
+            		fscanf(rst_fp,"%lf", &pSPARC->SNOSE[0]);
+				else if (strcmpi(str,":NPT_NP_SNOSE[1]:") == 0)
+            		fscanf(rst_fp,"%lf", &pSPARC->SNOSE[1]);
+				else if (strcmpi(str,":NPT_NP_SNOSE[2]:") == 0)
+            		fscanf(rst_fp,"%lf", &pSPARC->SNOSE[2]);
+				else if (strcmpi(str,":LATTICE_AVG_VELOCITY:") == 0){
+					fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[0]); fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[1]); fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[2]);
+					fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[3]); fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[4]); fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[5]);
+					fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[6]); fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[7]); fscanf(rst_fp,"%lf", &pSPARC->lattice_avg_velo[8]);
+            	
+				} else if (strcmpi(str,":CELL:") == 0) {
+        		    fscanf(rst_fp,"%lf", pSPARC->range_x); fscanf(rst_fp,"%lf", pSPARC->range_y); fscanf(rst_fp,"%lf", pSPARC->range_z);
+            	} else if (strcmpi(str,":LatUVec:") == 0) {
+					fscanf(rst_fp,"%lf", &pSPARC->LatUVec[0]); fscanf(rst_fp,"%lf", &pSPARC->LatUVec[1]); fscanf(rst_fp,"%lf", &pSPARC->LatUVec[2]);
+					fscanf(rst_fp,"%lf", &pSPARC->LatUVec[3]); fscanf(rst_fp,"%lf", &pSPARC->LatUVec[4]); fscanf(rst_fp,"%lf", &pSPARC->LatUVec[5]);
+					fscanf(rst_fp,"%lf", &pSPARC->LatUVec[6]); fscanf(rst_fp,"%lf", &pSPARC->LatUVec[7]); fscanf(rst_fp,"%lf", &pSPARC->LatUVec[8]);
+				} else if (strcmpi(str,":LATVEC_SCALE:") == 0) {
+					fscanf(rst_fp,"%lf", &pSPARC->latvec_scale_x); fscanf(rst_fp,"%lf", &pSPARC->latvec_scale_y); fscanf(rst_fp,"%lf", &pSPARC->latvec_scale_z);
 					fscanf(rst_fp, "%*[^\n]\n");
 
-					double nowRange_x, nowRange_y, nowRange_z;
 					pSPARC->initialLatVecLength[0] = sqrt(pSPARC->LatVec[0]*pSPARC->LatVec[0] + pSPARC->LatVec[1]*pSPARC->LatVec[1] + pSPARC->LatVec[2]*pSPARC->LatVec[2]);
 					pSPARC->initialLatVecLength[1] = sqrt(pSPARC->LatVec[3]*pSPARC->LatVec[3] + pSPARC->LatVec[4]*pSPARC->LatVec[4] + pSPARC->LatVec[5]*pSPARC->LatVec[5]);
 					pSPARC->initialLatVecLength[2] = sqrt(pSPARC->LatVec[6]*pSPARC->LatVec[6] + pSPARC->LatVec[7]*pSPARC->LatVec[7] + pSPARC->LatVec[8]*pSPARC->LatVec[8]);
-					nowRange_x = pSPARC->initialLatVecLength[0]*nowLatScale_x;
-					nowRange_y = pSPARC->initialLatVecLength[1]*nowLatScale_y;
-					nowRange_z = pSPARC->initialLatVecLength[2]*nowLatScale_z;
-					pSPARC->scale = nowRange_x / pSPARC->range_x; // now NPT_NP only support homogeneous expansion,
-        		    // compute scale from x is enough
-        		    pSPARC->range_x = nowRange_x;
-        		    pSPARC->range_y = nowRange_y;
-        		    pSPARC->range_z = nowRange_z;
+					pSPARC->range_x = pSPARC->initialLatVecLength[0]*pSPARC->latvec_scale_x;
+					pSPARC->range_y = pSPARC->initialLatVecLength[1]*pSPARC->latvec_scale_y;
+					pSPARC->range_z = pSPARC->initialLatVecLength[2]*pSPARC->latvec_scale_z;	
+				
+				} else if (strcmpi(str,":LatVec:") == 0){
+					fscanf(rst_fp,"%lf", &pSPARC->LatVec[0]); fscanf(rst_fp,"%lf", &pSPARC->LatVec[1]); fscanf(rst_fp,"%lf", &pSPARC->LatVec[2]);
+					fscanf(rst_fp,"%lf", &pSPARC->LatVec[3]); fscanf(rst_fp,"%lf", &pSPARC->LatVec[4]); fscanf(rst_fp,"%lf", &pSPARC->LatVec[5]);
+					fscanf(rst_fp,"%lf", &pSPARC->LatVec[6]); fscanf(rst_fp,"%lf", &pSPARC->LatVec[7]); fscanf(rst_fp,"%lf", &pSPARC->LatVec[8]);
+	
+				} else if (strcmpi(str,":ROTATION_MATRIX:") == 0){
+					fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[0]); fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[1]); fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[2]);
+					fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[3]); fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[4]); fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[5]);
+					fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[6]); fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[7]); fscanf(rst_fp,"%lf", &pSPARC->rotation_matrix[8]);
 				}
 				else if (strcmpi(str,":TTHRMI(K):") == 0)
             		fscanf(rst_fp,"%lf", &pSPARC->thermos_Ti);
             	else if (strcmpi(str,":TARGET_PRESSURE:") == 0)
             		fscanf(rst_fp,"%lf", &pSPARC->prtarget);
-            	else if (strcmpi(str,":NPT_NP_ini_Hamiltonian:") == 0)
+            	else if (strcmpi(str,":NPT_NP_INIT_Hamiltonian:") == 0)
             		fscanf(rst_fp,"%lf", &pSPARC->init_Hamil_NPT_NP);
 			}
 		}
