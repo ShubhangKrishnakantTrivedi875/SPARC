@@ -3463,11 +3463,8 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
     	if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
     		fprintf(mdout,":NPT_NP_QMASS: %.15g\n", pSPARC->NPT_NP_qmass);
     		fprintf(mdout,":NPT_NP_BMASS: %.15g\n", pSPARC->NPT_NP_bmass);
-    		fprintf(mdout,":NPT_NP_SNOSE[1]: %.15g\n", pSPARC->SNOSE[1]); // velocity of virtual thermal parameter
-    		// fprintf(mdout,":Pm_metric_tensor: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->Pm_metric_tensor[0], pSPARC->Pm_metric_tensor[1], pSPARC->Pm_metric_tensor[2]
-			// 																				   		  , pSPARC->Pm_metric_tensor[3], pSPARC->Pm_metric_tensor[4], pSPARC->Pm_metric_tensor[5]
-			// 																				   		  , pSPARC->Pm_metric_tensor[6], pSPARC->Pm_metric_tensor[7], pSPARC->Pm_metric_tensor[8]); // Momentum of virtual baro parameter
     		fprintf(mdout,":NPT_NP_SNOSE[0]: %.15g\n", pSPARC->SNOSE[0]); // value of virtual thermal parameter at current timestep
+			fprintf(mdout,":NPT_NP_SNOSE[1]: %.15g\n", pSPARC->SNOSE[1]); // velocity of virtual thermal parameter
 			fprintf(mdout,":NPT_NP_SNOSE[2]: %.15g\n", pSPARC->SNOSE[2]); // value of virtual thermal parameter at previous timestep
     		fprintf(mdout,":lattice_avg_velo: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->lattice_avg_velo[0], pSPARC->lattice_avg_velo[1], pSPARC->lattice_avg_velo[2]
 																									  , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
@@ -3483,7 +3480,6 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
 																													  , pSPARC->LatVec[3], pSPARC->LatVec[4], pSPARC->LatVec[5]
 																													  , pSPARC->LatVec[6], pSPARC->LatVec[7], pSPARC->LatVec[8]);
 			}
-			fprintf(mdout,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
     		fprintf(mdout,":INITIAL_ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->initialLatVecAngles[0], pSPARC->initialLatVecAngles[1], pSPARC->initialLatVecAngles[2]);
 			fprintf(mdout,":ROTATION_MATRIX: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->rotation_matrix[0], pSPARC->rotation_matrix[1], pSPARC->rotation_matrix[2] 
 																													  	    , pSPARC->rotation_matrix[3], pSPARC->rotation_matrix[4], pSPARC->rotation_matrix[5]
@@ -3518,7 +3514,6 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
 																													  , pSPARC->LatVec[3], pSPARC->LatVec[4], pSPARC->LatVec[5]
 																													  , pSPARC->LatVec[6], pSPARC->LatVec[7], pSPARC->LatVec[8]);
 			}
-			fprintf(mdout,":ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->angle_12, pSPARC->angle_13, pSPARC->angle_23);
     		fprintf(mdout,":INITIAL_ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->initialLatVecAngles[0], pSPARC->initialLatVecAngles[1], pSPARC->initialLatVecAngles[2]);
 			fprintf(mdout,":ROTATION_MATRIX: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->rotation_matrix[0], pSPARC->rotation_matrix[1], pSPARC->rotation_matrix[2] 
 																													  	    , pSPARC->rotation_matrix[3], pSPARC->rotation_matrix[4], pSPARC->rotation_matrix[5]
@@ -3825,12 +3820,44 @@ void RestartMD(SPARC_OBJ *pSPARC) {
             else if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
             	MPI_Pack(&pSPARC->NPT_NP_qmass, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->NPT_NP_bmass, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            	MPI_Pack(&pSPARC->range_x, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(&pSPARC->SNOSE[0], 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(&pSPARC->SNOSE[1], 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(&pSPARC->SNOSE[2], 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(pSPARC->lattice_avg_velo, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(pSPARC->initialLatVecAngles, 3, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(&pSPARC->range_x, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->range_y, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->range_z, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				if (pSPARC->Flag_latvec_scale == 0){
+					MPI_Pack(pSPARC->LatUVec, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				}
+				if (pSPARC->Flag_latvec_scale == 1){
+					MPI_Pack(pSPARC->LatVec, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				}
+				MPI_Pack(pSPARC->rotation_matrix, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
 				MPI_Pack(&pSPARC->thermos_Ti, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            	MPI_Pack(&pSPARC->prtarget, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Pack(&pSPARC->pressure_external, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(pSPARC->stress_external, 6, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->init_Hamil_NPT_NP, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            }
+			else if(strcmpi(pSPARC->MDMeth,"NPH") == 0){
+            	MPI_Pack(&pSPARC->NPH_bmass, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(pSPARC->lattice_avg_velo, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(pSPARC->initialLatVecAngles, 3, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(&pSPARC->range_x, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Pack(&pSPARC->range_y, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Pack(&pSPARC->range_z, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				if (pSPARC->Flag_latvec_scale == 0){
+					MPI_Pack(pSPARC->LatUVec, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				}
+				if (pSPARC->Flag_latvec_scale == 1){
+					MPI_Pack(pSPARC->LatVec, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				}
+				MPI_Pack(pSPARC->rotation_matrix, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(&pSPARC->thermos_Ti, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Pack(&pSPARC->pressure_external, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(pSPARC->stress_external, 6, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Pack(&pSPARC->init_Hamil_NPH, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             }
         }
 
@@ -3876,15 +3903,46 @@ void RestartMD(SPARC_OBJ *pSPARC) {
         		MPI_Unpack(buff, l_buff, &position, &pSPARC->prtarget, 1, MPI_DOUBLE, MPI_COMM_WORLD);
             }
             else if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-            	MPI_Unpack(buff, l_buff, &position, &pSPARC->NPT_NP_qmass, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->NPT_NP_bmass, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_x, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_y, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->range_z, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-				MPI_Unpack(buff, l_buff, &position, &pSPARC->thermos_Ti, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->prtarget, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        		MPI_Unpack(buff, l_buff, &position, &pSPARC->init_Hamil_NPT_NP, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->NPT_NP_qmass, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->NPT_NP_bmass, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(&pSPARC->SNOSE[0], 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(&pSPARC->SNOSE[1], 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(&pSPARC->SNOSE[2], 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(pSPARC->lattice_avg_velo, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(pSPARC->initialLatVecAngles, 3, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(&pSPARC->range_x, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->range_y, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->range_z, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				if (pSPARC->Flag_latvec_scale == 0){
+					MPI_Unpack(pSPARC->LatUVec, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				}
+				if (pSPARC->Flag_latvec_scale == 1){
+					MPI_Unpack(pSPARC->LatVec, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				}
+				MPI_Unpack(pSPARC->rotation_matrix, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(&pSPARC->thermos_Ti, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->pressure_external, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(pSPARC->stress_external, 6, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->init_Hamil_NPT_NP, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            }
+			else if(strcmpi(pSPARC->MDMeth,"NPH") == 0){
+            	MPI_Unpack(&pSPARC->NPH_bmass, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(pSPARC->lattice_avg_velo, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(pSPARC->initialLatVecAngles, 3, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(&pSPARC->range_x, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->range_y, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->range_z, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				if (pSPARC->Flag_latvec_scale == 0){
+					MPI_Unpack(pSPARC->LatUVec, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				}
+				if (pSPARC->Flag_latvec_scale == 1){
+					MPI_Unpack(pSPARC->LatVec, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				}
+				MPI_Unpack(pSPARC->rotation_matrix, 9, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(&pSPARC->thermos_Ti, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->pressure_external, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Unpack(pSPARC->stress_external, 6, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            	MPI_Unpack(&pSPARC->init_Hamil_NPH, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             }
         }
 
