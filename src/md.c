@@ -147,10 +147,8 @@ void main_MD(SPARC_OBJ *pSPARC) {
 		    NVK_G(pSPARC);
 		else if(strcmpi(pSPARC->MDMeth,"NPT_NH") == 0)
 		    NPT_NH(pSPARC);
-		else if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0)
-			NPT_NP(pSPARC);
-		else if(strcmpi(pSPARC->MDMeth,"NPH") == 0)
-			NPH(pSPARC);
+		else if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0 || strcmpi(pSPARC->MDMeth,"NPH") == 0)
+			NPT_NP_and_NPH(pSPARC);
 		else{
 			if (!rank){
 				printf("\nCannot recognize MDMeth = \"%s\"\n",pSPARC->MDMeth);
@@ -365,8 +363,8 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 			fprintf(stderr, "Error: Memory allocation failed for momentum array.\n");
 			exit(EXIT_FAILURE);
 		}
-	    pSPARC->pressure_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 
+	    pSPARC->pressure_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		for (int i = 0; i < 6; i++){
 			pSPARC->stress_external[i] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		}
@@ -380,8 +378,6 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		pSPARC->external_stress_cartesian[6] = pSPARC->stress_external[4];
 		pSPARC->external_stress_cartesian[7] = pSPARC->stress_external[5];
 		
-		
-
 		if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0 && (pSPARC->NPT_NP_qmass == 0.0)){
             if (!rank) {
                 printf("Mass of thermostat variable cannot be zero in NPT_NP ensemble. Please input valid amount of mass of thermo variable\n");
@@ -401,11 +397,8 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
         pSPARC->SNOSE[1] = 0.0;  // Ps/Ms or initial velocity of thermostat	
 		pSPARC->SNOSE[2] = pSPARC->SNOSE[0];  // S variable of the thermostat @ previous timestep (t-dt)
 		
-	
         pSPARC->thermos_Ti = pSPARC->ion_T;
 		pSPARC->thermos_T  = pSPARC->thermos_Ti;
-		
-
     }
     else if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0 || strcmpi(pSPARC->MDMeth,"NPH") == 0) { // restart
 		int rank;
@@ -763,7 +756,6 @@ void Leapfrog_part1(SPARC_OBJ *pSPARC) {
 		pSPARC->atom_pos[count * 3 + 2] += pSPARC->MD_dt * pSPARC->ion_vel[count * 3 + 2];
 		count ++;
 	}
-
 }
 
 /*
@@ -791,7 +783,6 @@ void Leapfrog_part2(SPARC_OBJ *pSPARC) {
 
 } 
 
-
 /**
   @ brief:  Perform molecular dynamics keeping number of particles, volume of the cell and kinetic energy constant i.e. NVK with Gaussian thermostat.
             It is based on the implementation in ABINIT (ionmov=12)
@@ -799,7 +790,6 @@ void Leapfrog_part2(SPARC_OBJ *pSPARC) {
 void NVK_G(SPARC_OBJ *pSPARC) {
 	// Calculate velocity at next half time step
 	Calc_vel1_G(pSPARC);
-
 	// Charge extrapolation (for better rho_guess)
 	elecDensExtrapolation(pSPARC);
 	// Check position of atom near the boundary and apply wraparound in case of PBC, otherwise show error if the atom is too close to the boundary for bounded domain
@@ -1408,22 +1398,23 @@ void hamiltonian_NPT_NH(SPARC_OBJ *pSPARC){
 
 
 /*
-@ brief function to perform NPT MD simulation with Nose-Poincare, wherein number of particles, pressure and temperature are kept constant
-Reference: Hernández, E. "Metric-tensor flexible-cell algorithm for isothermal–isobaric molecular dynamics simulations." 
+@ brief function to perform NPT MD simulation with Nose-Poincare, wherein number of particles, pressure and temperature are kept constant.
+Also performs NPH MD simulation , wherein number of particles, pressure and enthalpy are kept constant. NPH in this scheme is same as NPT_NP wherein Mass of thermostat is zero. So same functions are used.
+Reference for NPT_NP and NPH: Hernández, E. "Metric-tensor flexible-cell algorithm for isothermal–isobaric molecular dynamics simulations." 
 The Journal of Chemical Physics 115, no. 22 (2001): 10282-10290.
+Additional Reference for NPH: Souza, Ivo, and JoséLuís Martins. "Metric tensor as the dynamical variable for variable-cell-shape molecular dynamics." 
+Physical Review B 55.14 (1997): 8733.
 */
-void NPT_NP(SPARC_OBJ *pSPARC) {
+void NPT_NP_and_NPH(SPARC_OBJ *pSPARC) {
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Bcast(&pSPARC->stress, 9, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 	MPI_Bcast(&pSPARC->stress_i, 9, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
 	
 	//Calculate initial hamitonian
 	if ((pSPARC->MDCount == 1)  && (pSPARC->RestartFlag != 1)) {
 		NPT_NP_and_NPH_init_hamiltonian(pSPARC);
 	}
-
 	//NPT_NPH_main routine
 	NPT_NPH_main(pSPARC);
 	// Reinitialize mesh size and related variables after changing size of cell
@@ -1440,44 +1431,6 @@ void NPT_NP(SPARC_OBJ *pSPARC) {
 		if (!rank) printf("\nend NPT_NP timestep %d\n", pSPARC->MDCount + 1);
 	#endif
 }
-
-
-/*
-@ brief function to perform NPH MD simulation , wherein number of particles, pressure and enthalpy are kept constant  
-This is same as NPT_NP wherein Mass of thermostat is zero. So same functions are used.
-Reference: Hernández, E. "Metric-tensor flexible-cell algorithm for isothermal–isobaric molecular dynamics simulations." 
-The Journal of Chemical Physics 115, no. 22 (2001): 10282-10290.
-Reference: Souza, Ivo, and JoséLuís Martins. "Metric tensor as the dynamical variable for variable-cell-shape molecular dynamics." 
-Physical Review B 55.14 (1997): 8733.
-*/
-void NPH(SPARC_OBJ *pSPARC) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Bcast(&pSPARC->stress, 9, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Bcast(&pSPARC->stress_i, 9, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
-	
-	//Calculate initial hamitonian
-	if ((pSPARC->MDCount == 1)  && (pSPARC->RestartFlag != 1)) {
-		NPT_NP_and_NPH_init_hamiltonian(pSPARC);
-	}
-	//NPT_NPH_main routine
-	NPT_NPH_main(pSPARC);
-	// Reinitialize mesh size and related variables after changing size of cell
-    reinitialize_mesh_NPT(pSPARC);
-	// Charge extrapolation (for better rho_guess)
-	elecDensExtrapolation(pSPARC);
-	// Check position of atom near the boundary and apply wraparound in case of PBC, otherwise show error if the atom is too close to the boundary for bounded domain
-	Check_atomlocation(pSPARC);
-	// Compute DFT energy and forces by solving Kohn-Sham eigenvalue problem
-	Calculate_Properties(pSPARC);
-	//Calculate_electronicGroundState(pSPARC);
-	pSPARC->elecgs_Count++;
-	#ifdef DEBUG
-		if (!rank) printf("\nend NPH timestep %d\n", pSPARC->MDCount + 1);
-	#endif
-}
-
 
 /*
 Computes transpose of a matrix and adds it to the original matrix 
@@ -1652,7 +1605,6 @@ void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC){
 		old_cell[i] = pSPARC->full_lattice[i];
 	}
 	
-	
 	// Calculate the inverse of lattice-vector
 	double U[9]; double S[3]; double VT[9]; double superb[2]; double temp_mat[9];
 	double S_inv[9] = {0};
@@ -1734,22 +1686,6 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 		Cart2nonCart_transformMat_MD(pSPARC);
 		pSPARC->volumeCell = pSPARC->Jacbdet * pSPARC->range_x * pSPARC->range_y * pSPARC->range_z;
 
-		// double det_metric_tensor = pSPARC->metric_tensor[0] * ( pSPARC->metric_tensor[4] * pSPARC->metric_tensor[8] - pSPARC->metric_tensor[7] * pSPARC->metric_tensor[5] ) 
-		// 					     + pSPARC->metric_tensor[1] * ( pSPARC->metric_tensor[5] * pSPARC->metric_tensor[6] - pSPARC->metric_tensor[3] * pSPARC->metric_tensor[8] )
-		// 					     + pSPARC->metric_tensor[2] * ( pSPARC->metric_tensor[3] * pSPARC->metric_tensor[7] - pSPARC->metric_tensor[6] * pSPARC->metric_tensor[4] ) ;
-		
-		// double volume_check = sqrt(det_metric_tensor);
-		// //Update cell volume
-		// if (rank ==0){
-		// 	printf("Volume from Jac %.6f for MD count %d \n",pSPARC->volumeCell, pSPARC->MDCount);
-		// 	printf("Volume from metric tensor %.6f for MD count %d \n",volume_check,  pSPARC->MDCount);
-		// 	printf("Jacobian: %.6f for MD count %d \n",pSPARC->Jacbdet, pSPARC->MDCount);
-		// 	printf(":LatUVec: \n");
-		// 	printf(" %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0],pSPARC->LatUVec[1],pSPARC->LatUVec[2] 
-		// 																						   , pSPARC->LatUVec[3],pSPARC->LatUVec[4],pSPARC->LatUVec[5]
-		// 																						   , pSPARC->LatUVec[6],pSPARC->LatUVec[7],pSPARC->LatUVec[8]);
-		// }
-
 		// Update/Calculate new angles between lattice vectors  (only for inference, not used anywhere in the code)
 		double cos_gamma_new = pSPARC->metric_tensor[1] / (pSPARC->range_x * pSPARC->range_y); 
 		double cos_beta_new = pSPARC->metric_tensor[2] / (pSPARC->range_x * pSPARC->range_z);
@@ -1780,7 +1716,6 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 	for (int i = 0; i < 9; i++){
 		old_cell[i] = pSPARC->full_lattice[i];
 	}
-	
 	
 	// Calculate the inverse of lattice-vector
 	double U[9]; double S[3]; double VT[9]; double superb[2]; double temp_mat[9];
@@ -1899,7 +1834,6 @@ void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC, dou
 	pSPARC->kinetic_stress[7] = pSPARC->kinetic_stress[5];
 
 	cblas_dscal(9, 0.5 / (pSPARC->SNOSE[0] * pSPARC->SNOSE[0]), pSPARC->kinetic_stress, 1);
-	
 }
 
 
