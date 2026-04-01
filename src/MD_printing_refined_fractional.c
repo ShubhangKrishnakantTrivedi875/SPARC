@@ -372,15 +372,9 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		for (int i = 0; i < 6; i++){
 			pSPARC->stress_external[i] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		}
-		pSPARC->external_stress_cartesian[0] = pSPARC->stress_external[0];
-		pSPARC->external_stress_cartesian[4] = pSPARC->stress_external[1];
-		pSPARC->external_stress_cartesian[8] = pSPARC->stress_external[2];
-		pSPARC->external_stress_cartesian[1] = pSPARC->stress_external[3];
-		pSPARC->external_stress_cartesian[2] = pSPARC->stress_external[4];
-		pSPARC->external_stress_cartesian[3] = pSPARC->stress_external[3];
-		pSPARC->external_stress_cartesian[5] = pSPARC->stress_external[5];
-		pSPARC->external_stress_cartesian[6] = pSPARC->stress_external[4];
-		pSPARC->external_stress_cartesian[7] = pSPARC->stress_external[5];
+		pSPARC->external_stress_cartesian[0] = pSPARC->stress_external[0]; pSPARC->external_stress_cartesian[4] = pSPARC->stress_external[1]; pSPARC->external_stress_cartesian[8] = pSPARC->stress_external[2];
+		pSPARC->external_stress_cartesian[1] = pSPARC->stress_external[3]; pSPARC->external_stress_cartesian[2] = pSPARC->stress_external[4]; pSPARC->external_stress_cartesian[3] = pSPARC->stress_external[3];
+		pSPARC->external_stress_cartesian[5] = pSPARC->stress_external[5]; pSPARC->external_stress_cartesian[6] = pSPARC->stress_external[4]; pSPARC->external_stress_cartesian[7] = pSPARC->stress_external[5];
 		
 		if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0 && (pSPARC->NPT_NP_qmass == 0.0)){
             if (!rank) {
@@ -438,15 +432,9 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		for (int i = 0; i < 6; i++){
 			pSPARC->stress_external[i] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		}// transfer from GPa to Ha/Bohr^3
-		pSPARC->external_stress_cartesian[0] = pSPARC->stress_external[0];
-		pSPARC->external_stress_cartesian[4] = pSPARC->stress_external[1];
-		pSPARC->external_stress_cartesian[8] = pSPARC->stress_external[2];
-		pSPARC->external_stress_cartesian[1] = pSPARC->stress_external[3];
-		pSPARC->external_stress_cartesian[2] = pSPARC->stress_external[4];
-		pSPARC->external_stress_cartesian[3] = pSPARC->stress_external[3];
-		pSPARC->external_stress_cartesian[5] = pSPARC->stress_external[5];
-		pSPARC->external_stress_cartesian[6] = pSPARC->stress_external[4];
-		pSPARC->external_stress_cartesian[7] = pSPARC->stress_external[5];
+		pSPARC->external_stress_cartesian[0] = pSPARC->stress_external[0]; pSPARC->external_stress_cartesian[4] = pSPARC->stress_external[1]; pSPARC->external_stress_cartesian[8] = pSPARC->stress_external[2];
+		pSPARC->external_stress_cartesian[1] = pSPARC->stress_external[3]; pSPARC->external_stress_cartesian[2] = pSPARC->stress_external[4]; pSPARC->external_stress_cartesian[3] = pSPARC->stress_external[3];
+		pSPARC->external_stress_cartesian[5] = pSPARC->stress_external[5]; pSPARC->external_stress_cartesian[6] = pSPARC->stress_external[4]; pSPARC->external_stress_cartesian[7] = pSPARC->stress_external[5];
 		
 		if(strcmpi(pSPARC->MDMeth,"NPH")){
 			pSPARC->NPT_NP_qmass = 0;
@@ -579,9 +567,11 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 
 #ifdef DEBUG
 	// Statistics to be set to zero initially
-	pSPARC->mean_TE_ext = pSPARC->std_TE_ext = 0.0;
-	pSPARC->mean_elec_T = pSPARC->mean_ion_T = pSPARC->mean_TE = pSPARC->mean_KE = pSPARC->mean_PE = pSPARC->mean_U = pSPARC->mean_Entropy = 0.0; pSPARC->mean_internal_pressure = 0.0;
-	pSPARC->std_elec_T = pSPARC->std_ion_T = pSPARC->std_TE = pSPARC->std_KE = pSPARC->std_PE = pSPARC->std_U = pSPARC->std_Entropy = 0.0; pSPARC->std_internal_pressure = 0.0;
+	if (pSPARC->RestartFlag == 0){
+		pSPARC->mean_TE_ext = pSPARC->std_TE_ext = 0.0;
+		pSPARC->mean_elec_T = pSPARC->mean_ion_T = pSPARC->mean_TE = pSPARC->mean_KE = pSPARC->mean_PE = pSPARC->mean_U = pSPARC->mean_Entropy = 0.0; pSPARC->mean_internal_pressure = 0.0;
+		pSPARC->std_elec_T = pSPARC->std_ion_T = pSPARC->std_TE = pSPARC->std_KE = pSPARC->std_PE = pSPARC->std_U = pSPARC->std_Entropy = 0.0; pSPARC->std_internal_pressure = 0.0;
+	}
 #endif
 }
 
@@ -2745,6 +2735,7 @@ void wraparound_velocity(SPARC_OBJ *pSPARC, double shift, int dir, int loc) {
 		
 }
 
+
 /*
  @ brief: function to write all relevant DFT quantities generated during MD simulation
 */
@@ -2908,7 +2899,7 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 				fprintf(output_md,":STRESS:\n");
 				double stress_e[6]; // electronic stress
 				for (int i = 0; i < 6; i++) 
-					stress_e[i] = pSPARC->stress[i] - pSPARC->stress_i[i];
+					stress_e[i] = pSPARC->stress[i];  // stress_i or ionic stress function is never called in NPT_NP or NPH ensemble, so pSPARC->stress does not include contribution from it, and thus no need to subtract stress_i from pSPARC->stress, as done in other ensembles
 				PrintStress (pSPARC, stress_e, output_md);
 				fprintf(output_md,":TOTSTRESS:\n");	//Print total internal stress accouting for the constraints in NPT_NP or NPH ensemble
 				temp_stress[0] = pSPARC->total_internal_stress[0]; temp_stress[1] = pSPARC->total_internal_stress[1]; temp_stress[2] = pSPARC->total_internal_stress[2];
@@ -3002,16 +2993,18 @@ void MD_QOI(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis) {
 	if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
 		pSPARC->TE_ext = (0.5 * pSPARC->qmass * pow(pSPARC->xi_nose, 2.0) + pSPARC->dof * pSPARC->kB * pSPARC->thermos_T * pSPARC->snose)/pSPARC->n_atom + pSPARC->TE;
 	}
+
     // Compute Ionic stress/pressure
-	
-	if(pSPARC->Calc_stress == 1 || pSPARC->Calc_pres == 1)
-		Calculate_ionic_stress(pSPARC);
+	if(strcmpi(pSPARC->MDMeth,"NPT_NP") != 0 && strcmpi(pSPARC->MDMeth,"NPH") != 0){
+		if(pSPARC->Calc_stress == 1 || pSPARC->Calc_pres == 1)
+			Calculate_ionic_stress(pSPARC);
+	}
 
 	//	Calculate_stress(pSPARC);
 #ifdef DEBUG
 	// MD Statistics
 	double mean_TE_old, mean_KE_old, mean_PE_old, mean_U_old, mean_Eent_old, mean_Ti_old, mean_Te_old, mean_internal_pressure_old;
-	int Count = pSPARC->MDCount + (pSPARC->RestartFlag == 0) ;
+	int Count = pSPARC->MDCount +  pSPARC->restartCount + (pSPARC->RestartFlag == 0) ;
 	mean_Te_old = pSPARC->mean_elec_T;
 	mean_Ti_old = pSPARC->mean_ion_T;
 	mean_TE_old = pSPARC->mean_TE;
@@ -3272,40 +3265,50 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
 				fprintf(mdout,":NPT_NP_INIT_Hamiltonian: %.15g\n", pSPARC->init_Hamil_NPT_NP);
 			}
 			else if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-				fprintf(mdout,":NPH_BMASS: %.15g\n", pSPARC->NPT_NP_bmass);
+				fprintf(mdout,":NPH_BMASS: %.15g\n", pSPARC->NPH_bmass);
 				fprintf(mdout,":NPH_INIT_Hamiltonian: %.15g\n", pSPARC->init_Hamil_NPH);
 			}
-    		fprintf(mdout,":lattice_avg_velo: %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g %.15g\n", pSPARC->lattice_avg_velo[0], pSPARC->lattice_avg_velo[1], pSPARC->lattice_avg_velo[2]
-																									  , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
-																									  , pSPARC->lattice_avg_velo[6], pSPARC->lattice_avg_velo[7], pSPARC->lattice_avg_velo[8]); // velocity of lattice
+    		fprintf(mdout,":lattice_avg_velo: \n %.15g %.15g %.15g \n %.15g %.15g %.15g \n %.15g %.15g %.15g\n", pSPARC->lattice_avg_velo[0], pSPARC->lattice_avg_velo[1], pSPARC->lattice_avg_velo[2]
+																									  		   , pSPARC->lattice_avg_velo[3], pSPARC->lattice_avg_velo[4], pSPARC->lattice_avg_velo[5]
+																									  		   , pSPARC->lattice_avg_velo[6], pSPARC->lattice_avg_velo[7], pSPARC->lattice_avg_velo[8]); // velocity of lattice
     		if (pSPARC->Flag_latvec_scale == 0){
-				fprintf(mdout,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x,pSPARC->range_y,pSPARC->range_z);
-				fprintf(mdout,":LatUVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0], pSPARC->LatUVec[1], pSPARC->LatUVec[2] 
+				fprintf(mdout,":CELL: %18.10E %18.10E %18.10E\n", pSPARC->range_x, pSPARC->range_y, pSPARC->range_z);
+				fprintf(mdout,":LatUVec: \n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatUVec[0], pSPARC->LatUVec[1], pSPARC->LatUVec[2] 
 																													   , pSPARC->LatUVec[3], pSPARC->LatUVec[4], pSPARC->LatUVec[5]
 																													   , pSPARC->LatUVec[6], pSPARC->LatUVec[7], pSPARC->LatUVec[8]);
 			} else {
 				fprintf(mdout,":LATVEC_SCALE: %18.10E %18.10E %18.10E\n", pSPARC->range_x/pSPARC->initialLatVecLength[0], pSPARC->range_y/pSPARC->initialLatVecLength[1], pSPARC->range_z/pSPARC->initialLatVecLength[2]);
-				fprintf(mdout,":LatVec: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0], pSPARC->LatVec[1], pSPARC->LatVec[2] 
+				fprintf(mdout,":LatVec: \n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->LatVec[0], pSPARC->LatVec[1], pSPARC->LatVec[2] 
 																													  , pSPARC->LatVec[3], pSPARC->LatVec[4], pSPARC->LatVec[5]
 																													  , pSPARC->LatVec[6], pSPARC->LatVec[7], pSPARC->LatVec[8]);
 			}
-    		fprintf(mdout,":INITIAL_ANGLES: %18.10E %18.10E %18.10E\n", pSPARC->initialLatVecAngles[0], pSPARC->initialLatVecAngles[1], pSPARC->initialLatVecAngles[2]);
-			fprintf(mdout,":ROTATION_MATRIX: %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->rotation_matrix[0], pSPARC->rotation_matrix[1], pSPARC->rotation_matrix[2] 
+    		fprintf(mdout,":INITIAL_ANGLES: %18.10E %18.10E %18.10E\n", acos(pSPARC->initialLatVecAngles[0]) * 180 / M_PI, acos(pSPARC->initialLatVecAngles[1]) * 180 / M_PI, acos(pSPARC->initialLatVecAngles[2]) * 180 / M_PI );
+			fprintf(mdout,":ROTATION_MATRIX: \n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->rotation_matrix[0], pSPARC->rotation_matrix[1], pSPARC->rotation_matrix[2] 
 																													  	    , pSPARC->rotation_matrix[3], pSPARC->rotation_matrix[4], pSPARC->rotation_matrix[5]
 																													        , pSPARC->rotation_matrix[6], pSPARC->rotation_matrix[7], pSPARC->rotation_matrix[8]);
 			fprintf(mdout,":TTHRMI(K): %.15g\n", pSPARC->thermos_Ti);
 			fprintf(mdout,":EXTERNAL_PRESSURE %.15g\n", pSPARC->pressure_external * 29421.02648438959);
 			fprintf(mdout,":EXTERNAL_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",pSPARC->stress_external[0] * 29421.02648438959
-                                                                                      ,pSPARC->stress_external[1] * 29421.02648438959
-                                                                                      ,pSPARC->stress_external[2] * 29421.02648438959 
-                                                                                      ,pSPARC->stress_external[3] * 29421.02648438959
-                                                                                      ,pSPARC->stress_external[4] * 29421.02648438959
-                                                                                      ,pSPARC->stress_external[5] * 29421.02648438959);		
+                                                                                       ,pSPARC->stress_external[1] * 29421.02648438959
+                                                                                       ,pSPARC->stress_external[2] * 29421.02648438959 
+                                                                                       ,pSPARC->stress_external[3] * 29421.02648438959
+                                                                                       ,pSPARC->stress_external[4] * 29421.02648438959
+                                                                                       ,pSPARC->stress_external[5] * 29421.02648438959);		
     	}
     	// Print temperature
-    	fprintf(mdout,":TEL(K): %.15g\n", pSPARC->elec_T);
-    	fprintf(mdout,":TIO(K): %.15g\n", pSPARC->ion_T);
-
+    	fprintf(mdout,":TEL(K): %18.10E\n", pSPARC->elec_T);
+    	fprintf(mdout,":TIO(K): %18.10E\n", pSPARC->ion_T);
+		fprintf(mdout,":TELST(K): %18.10E %18.10E\n", pSPARC->mean_elec_T, pSPARC->std_elec_T);
+		fprintf(mdout,":TIOST(K): %18.10E %18.10E\n", pSPARC->mean_ion_T, pSPARC->std_ion_T);
+		fprintf(mdout,":PREST(Gpa): %18.10E %18.10E\n", pSPARC->mean_internal_pressure * CONST_HA_BOHR3_GPA, pSPARC->std_internal_pressure * CONST_HA_BOHR3_GPA);
+		fprintf(mdout,":TENST: %18.10E %18.10E\n", pSPARC->mean_TE, pSPARC->std_TE);
+		fprintf(mdout,":KENST: %18.10E %18.10E\n", pSPARC->mean_KE, pSPARC->std_KE);
+		fprintf(mdout,":FENST: %18.10E %18.10E\n", pSPARC->mean_PE, pSPARC->std_PE);
+		fprintf(mdout,":UENST: %18.10E %18.10E\n", pSPARC->mean_U, pSPARC->std_U);
+		fprintf(mdout,":TSENST: %18.10E %18.10E\n", pSPARC->mean_Entropy, pSPARC->std_Entropy);
+		if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
+			fprintf(mdout,":TENXST: %18.10E %18.10E\n", pSPARC->mean_TE_ext, pSPARC->std_TE_ext);
+		}
 		fclose(mdout);
 	}
 }
@@ -3346,16 +3349,16 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 	if(pSPARC->RestartFlag == 1){
 	    // l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + 5) * sizeof(double);
 	    if (strcmpi(pSPARC->MDMeth,"NPT_NH") == 0){
-	    	l_buff = (2 + 1) * sizeof(int) + (6 * pSPARC->n_atom + (5 + 3*pSPARC->NPT_NHnnos + 9)) * sizeof(double);
+	    	l_buff = (2 + 1) * sizeof(int) + (6 * pSPARC->n_atom + (5 + 3*pSPARC->NPT_NHnnos + 9 + 20)) * sizeof(double);
 	    }
 	    else if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + (5 + 56)) * sizeof(double);
+	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + (5 + 56 + 20)) * sizeof(double);
 	    } 
 		else if (strcmpi(pSPARC->MDMeth,"NPH") == 0){
-	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + (5 + 52)) * sizeof(double);
+	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + (5 + 52 + 20)) * sizeof(double);
 	    } 
 	    else {
-	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + 5) * sizeof(double);
+	    	l_buff = 2 * sizeof(int) + (6 * pSPARC->n_atom + 5 + 22) * sizeof(double);
 	    }
 	}
 	else if(pSPARC->RestartFlag == -1)
@@ -3390,6 +3393,28 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 				fscanf(rst_fp,"%lf", &pSPARC->ion_T);
 			else if (strcmpi(str,":TTHRMI(K):") == 0 && pSPARC->RestartFlag == 1)
 				fscanf(rst_fp,"%lf", &pSPARC->thermos_Ti);
+			else if (strcmpi(str,":TELST(K):") == 0 && pSPARC->RestartFlag == 1){
+				fscanf(rst_fp,"%lf", &pSPARC->mean_elec_T); fscanf(rst_fp,"%lf", &pSPARC->std_elec_T);
+			}else if (strcmpi(str,":TIOST(K):") == 0 && pSPARC->RestartFlag == 1){
+				fscanf(rst_fp,"%lf", &pSPARC->mean_ion_T); fscanf(rst_fp,"%lf", &pSPARC->std_ion_T);
+			}else if (strcmpi(str,":PREST(Gpa):") == 0 && pSPARC->RestartFlag == 1){
+				fscanf(rst_fp,"%lf", &pSPARC->mean_internal_pressure); fscanf(rst_fp,"%lf", &pSPARC->std_internal_pressure);
+			}else if (strcmpi(str,":TENST:") == 0 && pSPARC->RestartFlag == 1){
+				fscanf(rst_fp,"%lf", &pSPARC->mean_TE); fscanf(rst_fp,"%lf", &pSPARC->std_TE);
+			}else if (strcmpi(str,":KENST:") == 0 && pSPARC->RestartFlag == 1){
+				fscanf(rst_fp,"%lf", &pSPARC->mean_KE); fscanf(rst_fp,"%lf", &pSPARC->std_KE);
+			}else if (strcmpi(str,":FENST:") == 0 && pSPARC->RestartFlag == 1){
+				fscanf(rst_fp,"%lf", &pSPARC->mean_PE); fscanf(rst_fp,"%lf", &pSPARC->std_PE);
+			}else if (strcmpi(str,":UENST:") == 0 && pSPARC->RestartFlag == 1){
+				fscanf(rst_fp,"%lf", &pSPARC->mean_U);  fscanf(rst_fp,"%lf", &pSPARC->std_U);
+			}else if (strcmpi(str,":TSENST:") == 0 && pSPARC->RestartFlag == 1){
+				fscanf(rst_fp,"%lf", &pSPARC->mean_Entropy); fscanf(rst_fp,"%lf", &pSPARC->std_Entropy);
+			}
+			if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
+				if (strcmpi(str,":TSENST:") == 0 && pSPARC->RestartFlag == 1){
+					fscanf(rst_fp,"%lf", &pSPARC->mean_TE_ext); fscanf(rst_fp,"%lf", &pSPARC->std_TE_ext);
+				}
+			}
 			if (strcmpi(pSPARC->MDMeth,"NPT_NH") == 0) {
 				if (strcmpi(str,":NPT_NH_QMASS:") == 0) { 
             		fscanf(rst_fp,"%d",&pSPARC->NPT_NHnnos);
@@ -3484,6 +3509,7 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 				
 				} else if (strcmpi(str,":INITIAL_ANGLES:") == 0){
 					fscanf(rst_fp,"%lf", &pSPARC->initialLatVecAngles[0]); fscanf(rst_fp,"%lf", &pSPARC->initialLatVecAngles[1]); fscanf(rst_fp,"%lf", &pSPARC->initialLatVecAngles[2]);
+					for (int i = 0; i < 3; i++){pSPARC->initialLatVecAngles[i] = cos(M_PI / 180 * pSPARC->initialLatVecAngles[i]);}
 				} else if (strcmpi(str,":CELL:") == 0) {
         		    fscanf(rst_fp,"%lf", pSPARC->range_x); fscanf(rst_fp,"%lf", pSPARC->range_y); fscanf(rst_fp,"%lf", pSPARC->range_z);
             	} else if (strcmpi(str,":LatUVec:") == 0) {
@@ -3529,8 +3555,26 @@ void RestartMD(SPARC_OBJ *pSPARC) {
         if(pSPARC->RestartFlag == 1){
             MPI_Pack(&pSPARC->elec_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             MPI_Pack(&pSPARC->ion_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
-            	MPI_Pack(&pSPARC->snose, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            MPI_Pack(&pSPARC->mean_elec_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			MPI_Pack(&pSPARC->std_elec_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);	
+            MPI_Pack(&pSPARC->mean_ion_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			MPI_Pack(&pSPARC->std_ion_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            MPI_Pack(&pSPARC->mean_internal_pressure, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			MPI_Pack(&pSPARC->std_internal_pressure, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            MPI_Pack(&pSPARC->mean_TE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			MPI_Pack(&pSPARC->std_TE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            MPI_Pack(&pSPARC->mean_KE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			MPI_Pack(&pSPARC->std_KE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            MPI_Pack(&pSPARC->mean_PE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			MPI_Pack(&pSPARC->std_PE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            MPI_Pack(&pSPARC->mean_U, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			MPI_Pack(&pSPARC->std_U, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+            MPI_Pack(&pSPARC->mean_Entropy, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			MPI_Pack(&pSPARC->std_Entropy, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+			if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
+				MPI_Pack(&pSPARC->mean_TE_ext, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(&pSPARC->std_TE_ext, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
+				MPI_Pack(&pSPARC->snose, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->xi_nose, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->thermos_Ti, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             }
@@ -3601,10 +3645,28 @@ void RestartMD(SPARC_OBJ *pSPARC) {
         if(pSPARC->RestartFlag == 1){
             MPI_Unpack(buff, l_buff, &position, &pSPARC->elec_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
             MPI_Unpack(buff, l_buff, &position, &pSPARC->ion_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
-        	MPI_Unpack(buff, l_buff, &position, &pSPARC->snose, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        	MPI_Unpack(buff, l_buff, &position, &pSPARC->xi_nose, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-        	MPI_Unpack(buff, l_buff, &position, &pSPARC->thermos_Ti, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_elec_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_elec_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_ion_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_ion_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_internal_pressure, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_internal_pressure, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_TE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_TE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_KE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_KE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_PE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_PE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_U, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_U, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_Entropy, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_Entropy, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+			if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
+				MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_TE_ext, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+				MPI_Unpack(buff, l_buff, &position, &pSPARC->std_TE_ext, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+				MPI_Unpack(buff, l_buff, &position, &pSPARC->snose, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+				MPI_Unpack(buff, l_buff, &position, &pSPARC->xi_nose, 1, MPI_DOUBLE, MPI_COMM_WORLD);
+				MPI_Unpack(buff, l_buff, &position, &pSPARC->thermos_Ti, 1, MPI_DOUBLE, MPI_COMM_WORLD);
             }
 			else if(strcmpi(pSPARC->MDMeth,"NPT_NH") == 0){
             	MPI_Unpack(buff, l_buff, &position, &pSPARC->NPT_NHnnos, 1, MPI_INT, MPI_COMM_WORLD);
@@ -3661,6 +3723,7 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 	}
 	free(buff);
 }
+
 
 
 /*
