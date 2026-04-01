@@ -1951,12 +1951,12 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	
 	// bring the momenta of the Ionic particles in time-sync with the positions (since mometa are delayed by dt/2)
 	// This setup corresponds to Eqn. 18i in Hernandez paper
-	cblas_dscal(pSPARC->n_atom * 3, pSPARC->SNOSE[0], pSPARC->ion_vel, 1);
+	cblas_dscal(3 * pSPARC->n_atom, pSPARC->SNOSE[0], pSPARC->ion_vel, 1);
+	cblas_dcopy(3 * pSPARC->n_atom, pSPARC->forces, 1, pSPARC->ion_accel, 1); //copy the ion forces array into ion acceleration array
 	count = 0;
 	unsigned int len;
 	for (int ityp = 0; ityp < pSPARC->Ntypes; ityp++) {
 		len = 3 * pSPARC->nAtomv[ityp];
-		cblas_dcopy(len, &pSPARC->forces[count], 1, &pSPARC->ion_accel[count], 1); // Copy forces slice into ion_accel
 		cblas_dscal(len, 1.0 / pSPARC->Mass[ityp], &pSPARC->ion_accel[count], 1); // Scale by 1/mass
 		count += len;
 	}
