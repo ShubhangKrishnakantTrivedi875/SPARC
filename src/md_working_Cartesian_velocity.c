@@ -2049,17 +2049,16 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC) {
 	//cblas_dscal(pSPARC->n_atom * 3, pSPARC->SNOSE[0], pSPARC->ion_vel, 1);
 	double thermo_const0 = pSPARC->MD_dt * pSPARC->SNOSE[0] / 2.0;
 	count = 0;
-	for(int ityp = 0; ityp < pSPARC->Ntypes; ityp++){
-		for(int atm = 0; atm < pSPARC->nAtomv[ityp]; atm++){
-			pSPARC->ion_accel[count * 3] = pSPARC->forces[count * 3] / pSPARC->Mass[ityp];
-			pSPARC->ion_accel[count * 3 + 1] = pSPARC->forces[count * 3 + 1] / pSPARC->Mass[ityp];
-			pSPARC->ion_accel[count * 3 + 2] = pSPARC->forces[count * 3 + 2] / pSPARC->Mass[ityp];
-			pSPARC->ion_vel[count * 3] +=  thermo_const0 * pSPARC->ion_accel[count * 3];
-			pSPARC->ion_vel[count * 3 + 1] += thermo_const0 * pSPARC->ion_accel[count * 3 + 1];
-			pSPARC->ion_vel[count * 3 + 2] += thermo_const0 * pSPARC->ion_accel[count * 3 + 2]; 
-			count ++;
-		}
+	for (int ityp = 0; ityp < pSPARC->Ntypes; ityp++) {
+		int len = 3 * pSPARC->nAtomv[ityp];
+		// Copy forces slice into ion_accel
+		cblas_dcopy(len, pSPARC->forces + count, 1, pSPARC->ion_accel + count, 1);
+		// Scale by 1/mass
+		cblas_dscal(len, 1.0 / Mass[ityp], pSPARC->ion_accel + count, 1);
+		count += len;
 	}
+	cblas_daxpy(3 * pSPARC->n_atom, thermo_const0, pSPARC->ion_accel, 1, pSPARC->ion_vel, 1);
+
 	//Update the kinetic energy of the Ionic particles
 	Calculate_Ionic_particles_Kinetic_energy(pSPARC);
 
