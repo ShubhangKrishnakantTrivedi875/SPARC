@@ -827,6 +827,7 @@ typedef struct _SPARC_OBJ{
     double MD_dt;          // MD time step [femtosecond]
     double mean_elec_T;    // Average of electronic temperature
     double mean_ion_T;     // Average of ionic temperature
+    double mean_internal_pressure; // Average of the internal pressure
     double mean_TE;        // Average of total energy
     double mean_KE;        // Average of kinetic energy of ions
     double mean_PE;        // Average of electronic energy
@@ -835,6 +836,7 @@ typedef struct _SPARC_OBJ{
     double mean_TE_ext;    // Average of extended system energy
     double std_elec_T;     // Standard deviation of electronic temperature
     double std_ion_T;      // Standard deviation of ionic temperature
+    double std_internal_pressure; // Standard deviation of the internal pressure
     double std_TE;         // Standard deviation of total energy
     double std_KE;         // Standard deviation of kinetic energy of ions
     double std_PE;         // Standard deviation of electronic energy
@@ -915,7 +917,6 @@ typedef struct _SPARC_OBJ{
     double Hamiltonian_NPH;    // Hamiltonian of NPH system
     double init_Hamil_NPT_NP; // initial Hamiltonian in NPT_NP ensemble
     double init_Hamil_NPH;    // initial Hamiltonian in NPH ensemble
-    double mean_internal_pressure;
     double KE_save;
     //NPT_NP_specific
     double NPT_NP_qmass; // fictitious mass of thermostat (qmass) used in NPT_NP

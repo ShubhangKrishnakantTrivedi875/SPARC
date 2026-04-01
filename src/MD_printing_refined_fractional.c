@@ -1957,11 +1957,21 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	double internal_stress_cartesian[9];
 
 	//Initialize some useful constants
-	double baro_const1;
+	double baro_const1; int NPT_NPH_ANGLES;  int NPT_NPHconstraintFlag; int NPT_NPHscaleVecs[3];
 	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
+		NPT_NPH_ANGLES = pSPARC->NPT_NP_ANGLES;
+		NPT_NPHconstraintFlag = pSPARC->NPTconstraintFlag;
+		NPT_NPHscaleVecs[3] = {0};
+		NPT_NPHscaleVecs[0] = pSPARC->NPTscaleVecs[0]; NPT_NPHscaleVecs[1] = pSPARC->NPTscaleVecs[1]; NPT_NPHscaleVecs[2] = pSPARC->NPTscaleVecs[2];
+
 		baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
 	else{
+		NPT_NPH_ANGLES = pSPARC->NPH_ANGLES;
+		NPT_NPHconstraintFlag = pSPARC->NPHconstraintFlag;
+		NPT_NPHscaleVecs[3] = {0};
+		NPT_NPHscaleVecs[0] = pSPARC->NPHscaleVecs[0]; NPT_NPHscaleVecs[1] = pSPARC->NPHscaleVecs[1]; NPT_NPHscaleVecs[2] = pSPARC->NPHscaleVecs[2];
+
 		baro_const1 = pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
 	double baro_const3 = 1.0 / baro_const1;
@@ -2019,12 +2029,12 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 
 	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
 		if (pSPARC->NPT_NP_ANGLES == 0){
-			compute_constraint_stress(pSPARC);
+			compute_constraint_stress(pSPARC, NPT_NPHscaleVecs);
 		}
 	}
 	else {
 		if (pSPARC->NPH_ANGLES == 0){
-			compute_constraint_stress(pSPARC);
+			compute_constraint_stress(pSPARC, NPT_NPHscaleVecs);
 		}
 	}
 
@@ -2035,33 +2045,19 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 		pSPARC->Pm_metric_tensor[i] = temp_Pm_mat[i] - 0.5 * pSPARC->MD_dt * pSPARC->SNOSE[0] * temp_mat[i];
 	} 	
 
-	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-		if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPTconstraintFlag == 1){
-			pSPARC->Pm_metric_tensor[8] = 0;
-			pSPARC->Pm_metric_tensor[7] = 0;
-			pSPARC->Pm_metric_tensor[6] = 0;
-			pSPARC->Pm_metric_tensor[5] = 0;
-			pSPARC->Pm_metric_tensor[2] = 0;
-		}
-		if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPTscaleVecs[2] == 1){
-			pSPARC->Pm_metric_tensor[0] = 0; 
-			pSPARC->Pm_metric_tensor[4] = 0;
-		}
+	//Now impose the constraints on it
+	if (NPT_NPHscaleVecs[2] == 0 && NPT_NPHconstraintFlag == 1){
+		pSPARC->Pm_metric_tensor[8] = 0;
+		pSPARC->Pm_metric_tensor[7] = 0;
+		pSPARC->Pm_metric_tensor[6] = 0;
+		pSPARC->Pm_metric_tensor[5] = 0;
+		pSPARC->Pm_metric_tensor[2] = 0;
+	}
+	if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
+		pSPARC->Pm_metric_tensor[0] = 0; 
+		pSPARC->Pm_metric_tensor[4] = 0;
 	}
 
-	else {
-		if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPHconstraintFlag == 1){
-			pSPARC->Pm_metric_tensor[8] = 0;
-			pSPARC->Pm_metric_tensor[7] = 0;
-			pSPARC->Pm_metric_tensor[6] = 0;
-			pSPARC->Pm_metric_tensor[5] = 0;
-			pSPARC->Pm_metric_tensor[2] = 0;
-		}
-		if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPHscaleVecs[2] == 1){
-			pSPARC->Pm_metric_tensor[0] = 0; 
-			pSPARC->Pm_metric_tensor[4] = 0;
-		}
-	}
 
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, 3, 3, 3, baro_const3, pSPARC->Pm_metric_tensor, 3, pSPARC->metric_tensor, 3, 0.0, temp_mat_a, 3);
 	//Since these are 3x3 matrix, transposing without for loop (for avoiding loop overhead cost)
@@ -2180,33 +2176,18 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	Update_metric_tensor_momenta_iteratively_half_step(pSPARC);
 
 	//Now impose the constraints on it
-	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-		if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPTconstraintFlag == 1){
-			pSPARC->Pm_metric_tensor[8] = 0;
-			pSPARC->Pm_metric_tensor[7] = 0;
-			pSPARC->Pm_metric_tensor[6] = 0;
-			pSPARC->Pm_metric_tensor[5] = 0;
-			pSPARC->Pm_metric_tensor[2] = 0;
-		}
-		if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPTscaleVecs[2] == 1){
-			pSPARC->Pm_metric_tensor[0] = 0; 
-			pSPARC->Pm_metric_tensor[4] = 0;
-		}
+	if (NPT_NPHscaleVecs[2] == 0 && NPT_NPHconstraintFlag == 1){
+		pSPARC->Pm_metric_tensor[8] = 0;
+		pSPARC->Pm_metric_tensor[7] = 0;
+		pSPARC->Pm_metric_tensor[6] = 0;
+		pSPARC->Pm_metric_tensor[5] = 0;
+		pSPARC->Pm_metric_tensor[2] = 0;
 	}
-
-	else {
-		if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPHconstraintFlag == 1){
-			pSPARC->Pm_metric_tensor[8] = 0;
-			pSPARC->Pm_metric_tensor[7] = 0;
-			pSPARC->Pm_metric_tensor[6] = 0;
-			pSPARC->Pm_metric_tensor[5] = 0;
-			pSPARC->Pm_metric_tensor[2] = 0;
-		}
-		if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPHscaleVecs[2] == 1){
-			pSPARC->Pm_metric_tensor[0] = 0; 
-			pSPARC->Pm_metric_tensor[4] = 0;
-		}
+	if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
+		pSPARC->Pm_metric_tensor[0] = 0; 
+		pSPARC->Pm_metric_tensor[4] = 0;
 	}
+	
 
 
 	// Now we update/Step-up the momenta of the thermostat by dt/2
@@ -2272,7 +2253,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	pSPARC->Kbaro = pSPARC->Kbaro * pSPARC->volumeCell * pSPARC->volumeCell;
 
 	//Eqn. 18e is implicitly solved in the below subroutine
-	Update_metric_tensor_components_iteratively_full_step(pSPARC, S_new); 
+	Update_metric_tensor_components_iteratively_full_step(pSPARC, S_new, NPT_NPH_ANGLES, NPT_NPHconstraintFlag); 
 
 	//Before updating cell parameters, convert cartesian atomic position coordinates to fractional
 	double *atom_pos_fractional = (double *)malloc(3 * pSPARC->n_atom * sizeof(double));
@@ -2314,7 +2295,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 }
 	
 
-void compute_constraint_stress(SPARC_OBJ *pSPARC){
+void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int *NPT_NPHscaleVecs){
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	//Initialize some useful constants
@@ -2345,61 +2326,32 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 	dc_dt_norm = baro_const4 * gpig[8] / (2.0 * c_norm);
 
 	// Cell vectors are constrained to ISOTROPIC scaling;  and all angles between lattice vectors are FIXED
-	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){ 
-		if (pSPARC->NPTconstraintFlag == 4){
-			gpig[0] = (gpig[0] + gpig[4] + gpig[8]) / 3;
-			gpig[4] = gpig[0]; 
-			gpig[8] = gpig[0];
-		}
-
-		// |a| = |b| and |c| can vary independently;  and all angles between lattice vectors are FIXED
-		else if (pSPARC->NPTconstraintFlag == 1){
-			gpig[0] = (gpig[0] + gpig[4]) / 2;
-			gpig[4] = gpig[0]; 
-		}
-
-		// Only |a| and |b| varies, no changes in third direction i.e |c| is fixed;  and all angles between lattice vectors are FIXED
-		else if (pSPARC->NPTscaleVecs[2] == 0 && pSPARC->NPTconstraintFlag == 1){
-			gpig[8] = 0;
-			gpig[7] = 0;
-			gpig[6] = 0;
-			gpig[5] = 0;
-			gpig[2] = 0;
-		}
-
-		else if (pSPARC->NPTscaleVecs[0] == 0 && pSPARC->NPTscaleVecs[1] == 0 && pSPARC->NPTscaleVecs[2] == 1){
-			gpig[0] = 0; 
-			gpig[4] = 0;
-		}
+	if (NPT_NPHconstraintFlag == 4){
+		gpig[0] = (gpig[0] + gpig[4] + gpig[8]) / 3;
+		gpig[4] = gpig[0]; 
+		gpig[8] = gpig[0];
 	}
 
-	else { 
-		if (pSPARC->NPHconstraintFlag == 4){
-			gpig[0] = (gpig[0] + gpig[4] + gpig[8]) / 3;
-			gpig[4] = gpig[0]; 
-			gpig[8] = gpig[0];
-		}
-
-		// |a| = |b| and |c| can vary independently;  and all angles between lattice vectors are FIXED
-		else if (pSPARC->NPHconstraintFlag == 1){
-			gpig[0] = (gpig[0] + gpig[4]) / 2;
-			gpig[4] = gpig[0]; 
-		}
-
-		// Only |a| and |b| varies, no changes in third direction i.e |c| is fixed;  and all angles between lattice vectors are FIXED
-		else if (pSPARC->NPHscaleVecs[2] == 0 && pSPARC->NPHconstraintFlag == 1){
-			gpig[8] = 0;
-			gpig[7] = 0;
-			gpig[6] = 0;
-			gpig[5] = 0;
-			gpig[2] = 0;
-		}
-
-		else if (pSPARC->NPHscaleVecs[0] == 0 && pSPARC->NPHscaleVecs[1] == 0 && pSPARC->NPHscaleVecs[2] == 1){
-			gpig[0] = 0; 
-			gpig[4] = 0;
-		}
+	// |a| = |b| and |c| can vary independently;  and all angles between lattice vectors are FIXED
+	else if (NPT_NPHconstraintFlag == 1){
+		gpig[0] = (gpig[0] + gpig[4]) / 2;
+		gpig[4] = gpig[0]; 
 	}
+
+	// Only |a| and |b| varies, no changes in third direction i.e |c| is fixed;  and all angles between lattice vectors are FIXED
+	else if (NPT_NPHscaleVecs[2] == 0 && NPT_NPHconstraintFlag == 1){
+		gpig[8] = 0;
+		gpig[7] = 0;
+		gpig[6] = 0;
+		gpig[5] = 0;
+		gpig[2] = 0;
+	}
+
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
+		gpig[0] = 0; 
+		gpig[4] = 0;
+	}
+
 
 	constraint_velocity[0] = gpig[0] * baro_const4;
 	constraint_velocity[4] = gpig[4] * baro_const4;
@@ -2426,7 +2378,7 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC){
 }
 
 
-void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new){
+void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new, int NPT_NPH_ANGLES, int NPT_NPHconstraintFlag){
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	//Initialize some useful constants
@@ -2502,67 +2454,34 @@ void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, do
 		}
 	}
 
-	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-		if (pSPARC->NPT_NP_ANGLES == 0){
-			if (pSPARC->NPTconstraintFlag == 4){
-				new_metric_tensor[0] = ( new_metric_tensor[0] + new_metric_tensor[4] + new_metric_tensor[8]) / 3.0;
-				new_metric_tensor[4] = new_metric_tensor[0];
+	if (NPT_NPH_ANGLES == 0){
+		if (NPT_NPHconstraintFlag == 4){
+			new_metric_tensor[0] = ( new_metric_tensor[0] + new_metric_tensor[4] + new_metric_tensor[8]) / 3.0;
+			new_metric_tensor[4] = new_metric_tensor[0];
 				new_metric_tensor[8] = new_metric_tensor[0];
-			}
-
-			else if (pSPARC->NPTconstraintFlag == 1){
-				new_metric_tensor[0] = ( new_metric_tensor[0] + new_metric_tensor[4] ) / 2.0;
-				new_metric_tensor[4] = new_metric_tensor[0];
-			}
-
-			a_norm = sqrt( new_metric_tensor[0] );
-			b_norm = sqrt( new_metric_tensor[4] );
-			c_norm = sqrt( new_metric_tensor[8] );
-
-			new_metric_tensor[1] = a_norm * b_norm * pSPARC->initialLatVecAngles[2];
-			new_metric_tensor[2] = a_norm * c_norm * pSPARC->initialLatVecAngles[1];
-			new_metric_tensor[5] = b_norm * c_norm * pSPARC->initialLatVecAngles[0];
-
-			new_metric_tensor[3] = new_metric_tensor[1];
-			new_metric_tensor[6] = new_metric_tensor[2];
-			new_metric_tensor[7] = new_metric_tensor[5];
-		}	
-
-		for (int i = 0; i < 9; i++){
-			temp_metric_tensor[i] = new_metric_tensor[i];
-		}	
-	}
-
-	else {
-		if (pSPARC->NPH_ANGLES == 0){
-			if (pSPARC->NPHconstraintFlag == 4){
-				new_metric_tensor[0] = ( new_metric_tensor[0] + new_metric_tensor[4] + new_metric_tensor[8]) / 3.0;
-				new_metric_tensor[4] = new_metric_tensor[0];
-				new_metric_tensor[8] = new_metric_tensor[0];
-			}
-
-			else if (pSPARC->NPHconstraintFlag == 1){
-				new_metric_tensor[0] = ( new_metric_tensor[0] + new_metric_tensor[4] ) / 2.0;
-				new_metric_tensor[4] = new_metric_tensor[0];
-			}
-
-			a_norm = sqrt( new_metric_tensor[0]);
-			b_norm = sqrt( new_metric_tensor[4]);
-			c_norm = sqrt( new_metric_tensor[8]);
-
-			new_metric_tensor[1] = a_norm * b_norm * pSPARC->initialLatVecAngles[2];
-			new_metric_tensor[2] = a_norm * c_norm * pSPARC->initialLatVecAngles[1];
-			new_metric_tensor[5] = b_norm * c_norm * pSPARC->initialLatVecAngles[0];
-
-			new_metric_tensor[3] = new_metric_tensor[1];
-			new_metric_tensor[6] = new_metric_tensor[2];
-			new_metric_tensor[7] = new_metric_tensor[5];
-		}	
-
-		for (int i = 0; i < 9; i++){
-			temp_metric_tensor[i] = new_metric_tensor[i];
 		}
-	}
+
+		else if (NPT_NPHconstraintFlag == 1){
+			new_metric_tensor[0] = ( new_metric_tensor[0] + new_metric_tensor[4] ) / 2.0;
+			new_metric_tensor[4] = new_metric_tensor[0];
+		}
+
+		a_norm = sqrt( new_metric_tensor[0] );
+		b_norm = sqrt( new_metric_tensor[4] );
+		c_norm = sqrt( new_metric_tensor[8] );
+
+		new_metric_tensor[1] = a_norm * b_norm * pSPARC->initialLatVecAngles[2];
+		new_metric_tensor[2] = a_norm * c_norm * pSPARC->initialLatVecAngles[1];
+		new_metric_tensor[5] = b_norm * c_norm * pSPARC->initialLatVecAngles[0];
+
+		new_metric_tensor[3] = new_metric_tensor[1];
+		new_metric_tensor[6] = new_metric_tensor[2];
+		new_metric_tensor[7] = new_metric_tensor[5];
+
+		for (int i = 0; i < 9; i++){
+			temp_metric_tensor[i] = new_metric_tensor[i];
+		}	
+	}	
 
 	for (int i = 0; i < 9; i++){
 		pSPARC->metric_tensor[i] = temp_metric_tensor[i];

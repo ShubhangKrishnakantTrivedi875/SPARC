@@ -173,11 +173,11 @@ void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC);
 
 void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC);
 
-Calculate_Kinetic_energy_and_Kinetic_stress(SPARC_OBJ *pSPARC);
+void Calculate_Kinetic_energy_and_Kinetic_stress(SPARC_OBJ *pSPARC);
 
-void compute_constraint_stress(SPARC_OBJ *pSPARC);
+void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int *NPT_NPHscaleVecs);
 
-void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new);
+void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new, int NPT_NPH_ANGLES, int NPT_NPHconstraintFlag);
 
 void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC);
 /**
