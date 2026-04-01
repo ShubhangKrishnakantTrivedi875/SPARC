@@ -1603,8 +1603,8 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 		//Update LATVEC_SCALE and LatVec
 		for (int i = 0; i < 3; i++){  // LatVec just accounts for change in orientation/angles
 			pSPARC->LatVec[i] = ( pSPARC->full_lattice[i] / pSPARC->range_x ) * pSPARC->initialLatVecLength[0];  
-			pSPARC->LatVec[i+3] = ( pSPARC->LatUVec[i+3] / pSPARC->range_y ) * pSPARC->initialLatVecLength[1]; 
-			pSPARC->LatVec[i+6] = ( pSPARC->LatUVec[i+6] / pSPARC->range_z) * pSPARC->initialLatVecLength[2];
+			pSPARC->LatVec[i+3] = ( pSPARC->full_lattice[i+3] / pSPARC->range_y ) * pSPARC->initialLatVecLength[1]; 
+			pSPARC->LatVec[i+6] = ( pSPARC->full_lattice[i+6] / pSPARC->range_z) * pSPARC->initialLatVecLength[2];
 		}
 		if (pSPARC->Flag_latvec_scale == 1){ // LATVEC_SCALE accounts for change in lengths
 			pSPARC->latvec_scale_x = pSPARC->range_x / pSPARC->initialLatVecLength[0];  
@@ -3154,7 +3154,7 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
 																													  , pSPARC->LatVec[3], pSPARC->LatVec[4], pSPARC->LatVec[5]
 																													  , pSPARC->LatVec[6], pSPARC->LatVec[7], pSPARC->LatVec[8]);
 			}
-    		fprintf(mdout,":INITIAL_ANGLES: %18.10E %18.10E %18.10E\n", acos(pSPARC->initialLatVecAngles[0]) * 180 / M_PI, axos(pSPARC->initialLatVecAngles[1]) * 180 / M_PI, acos(pSPARC->initialLatVecAngles[2]) * 180 / M_PI );
+    		fprintf(mdout,":INITIAL_ANGLES: %18.10E %18.10E %18.10E\n", acos(pSPARC->initialLatVecAngles[0]) * 180 / M_PI, acos(pSPARC->initialLatVecAngles[1]) * 180 / M_PI, acos(pSPARC->initialLatVecAngles[2]) * 180 / M_PI );
 			fprintf(mdout,":ROTATION_MATRIX: \n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->rotation_matrix[0], pSPARC->rotation_matrix[1], pSPARC->rotation_matrix[2] 
 																													  	    , pSPARC->rotation_matrix[3], pSPARC->rotation_matrix[4], pSPARC->rotation_matrix[5]
 																													        , pSPARC->rotation_matrix[6], pSPARC->rotation_matrix[7], pSPARC->rotation_matrix[8]);
