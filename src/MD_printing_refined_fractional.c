@@ -2995,10 +2995,10 @@ void MD_QOI(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis) {
 	}
 
     // Compute Ionic stress/pressure
-	if(strcmpi(pSPARC->MDMeth,"NPT_NP") != 0 && strcmpi(pSPARC->MDMeth,"NPH") != 0){
+	//if(strcmpi(pSPARC->MDMeth,"NPT_NP") != 0 && strcmpi(pSPARC->MDMeth,"NPH") != 0){
 		if(pSPARC->Calc_stress == 1 || pSPARC->Calc_pres == 1)
 			Calculate_ionic_stress(pSPARC);
-	}
+	//}
 
 	//	Calculate_stress(pSPARC);
 #ifdef DEBUG
