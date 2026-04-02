@@ -828,6 +828,7 @@ typedef struct _SPARC_OBJ{
     double mean_elec_T;    // Average of electronic temperature
     double mean_ion_T;     // Average of ionic temperature
     double mean_internal_pressure; // Average of the internal pressure
+    double mean_total_internal_stress[9]; //Average of each total internal stress component
     double mean_TE;        // Average of total energy
     double mean_KE;        // Average of kinetic energy of ions
     double mean_PE;        // Average of electronic energy
@@ -837,6 +838,7 @@ typedef struct _SPARC_OBJ{
     double std_elec_T;     // Standard deviation of electronic temperature
     double std_ion_T;      // Standard deviation of ionic temperature
     double std_internal_pressure; // Standard deviation of the internal pressure
+    double std_total_internal_stress[9];  //Standard deviation of each total internal stress component
     double std_TE;         // Standard deviation of total energy
     double std_KE;         // Standard deviation of kinetic energy of ions
     double std_PE;         // Standard deviation of electronic energy
