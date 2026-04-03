@@ -156,9 +156,9 @@ void hamiltonian_NPT_NH(SPARC_OBJ *pSPARC);
 @ brief: Performs Molecular Dynamics using NPT_NP.
 */
 
-void NPT_NP_and_NPH(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *maxvel, double *mindis);
+void NPT_NP_and_NPH(SPARC_OBJ *pSPARC,  double *avgvel, double *maxvel, double *mindis);
 
-void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *maxvel, double *mindis);
+void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis);
 /* 
 @ brief: Calculates cell angles, reciprocal lattice vectors, metric and reciprocal metric tensors, for use in NPT_NP and NPH dynamics
 */
@@ -184,7 +184,7 @@ void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC);
  * @ brief: function to convert non cartesian to cartesian coordinates and velocities, from initialization.c
  */
 void nonCart2Cart(double *LatUVec, double *carCoord, double *nonCarCoord);
-void Cart2nonCart_transformMat_MD(SPARC_OBJ *pSPARC);
+//void Cart2nonCart_transformMat_MD(SPARC_OBJ *pSPARC);
 
 /*
  * @brief: function to convert cartesian to non cartesian coordinates and velocities, from initialization.c

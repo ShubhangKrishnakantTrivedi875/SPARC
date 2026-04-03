@@ -920,7 +920,7 @@ typedef struct _SPARC_OBJ{
     double init_Hamil_NPT_NP; // initial Hamiltonian in NPT_NP ensemble
     double init_Hamil_NPH;    // initial Hamiltonian in NPH ensemble
     double KE_save;
-    double t_md;
+    double t_run_md;
     //NPT_NP_specific
     double NPT_NP_qmass; // fictitious mass of thermostat (qmass) used in NPT_NP
     double NPT_NP_bmass; // fictitious mass of barostat (bmass) used in NPT_NP

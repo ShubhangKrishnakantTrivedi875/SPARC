@@ -46,7 +46,7 @@ void main_MD(SPARC_OBJ *pSPARC) {
 	int print_restart_typ = 0;
 	double t_init, t_acc, *avgvel, *maxvel, *mindis;
 	t_init = MPI_Wtime();
-	pSPARC->t_run_md = MPI_Wtime();
+	pSPARC->t_md = MPI_Wtime();
 
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	avgvel = (double *)malloc(pSPARC->Ntypes * sizeof(double) );
@@ -1902,6 +1902,10 @@ void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
 	#endif
 	// ------------------------------------- END: Calculating Hamiltonian (Eqn 10)----------------------------------//
 
+	//Initialize constraint stress to 0
+	for (int i = 0; i < 9; i++){
+		pSPARC->constraint_stress[i] = 0.0;
+	}
 }
 
 /*
@@ -2155,13 +2159,13 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 		}
 		fprintf(output_md,"\n\n");
 		fprintf(output_md,":MDSTEP: %d\n", Count);
-		fprintf(output_md,":MDTM: %.2f\n", MPI_Wtime() - pSPARC->t_run_md);
+		fprintf(output_md,":MDTM: %.2f\n", MPI_Wtime() - pSPARC->t_md);
 		Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the .aimd file
 		fclose(output_md);
 	} 
 	
 	#ifdef DEBUG
-		if (!rank) printf("Time taken by MDSTEP %d: %.3f s.\n", Count, (MPI_Wtime() - pSPARC->t_run_md));
+		if (!rank) printf("Time taken by MDSTEP %d: %.3f s.\n", Count, (MPI_Wtime() - pSPARC->t_md));
 	#endif
 	if(!rank){
 		output_fp = fopen(pSPARC->OutFilename,"a");
@@ -2169,12 +2173,12 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 			printf("\nCannot open file \"%s\"\n",pSPARC->OutFilename);
 			exit(EXIT_FAILURE);
 		}
-		fprintf(output_fp,"MD step time       :  %.3f (sec)\n", (MPI_Wtime() - pSPARC->t_run_md));
+		fprintf(output_fp,"MD step time       :  %.3f (sec)\n", (MPI_Wtime() - pSPARC->t_md));
 		fclose(output_fp);
 	}
 
 	//	(this marks the start of MDCount^{th} step ), but do not move pSPARC->MDCount increment here, it is affecting other functions
-	pSPARC->t_run_md = MPI_Wtime();
+	pSPARC->t_md = MPI_Wtime();
 	#ifdef DEBUG
 		if(!rank) printf(":MDSTEP: %d\n",  pSPARC->MDCount + pSPARC->restartCount);
 	#endif
@@ -3261,12 +3265,8 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
         	exit(EXIT_FAILURE);
     	}
     	// Update MD Count
-		if((strcmpi(pSPARC->MDMeth,"NPT_NP") == 0) || (strcmpi(pSPARC->MDMeth,"NPH") == 0)){
-    		fprintf(mdout,":STOPCOUNT: %d\n", pSPARC->MDCount + pSPARC->restartCount);
-		}
-		else{
-			fprintf(mdout,":STOPCOUNT: %d\n", pSPARC->MDCount + pSPARC->restartCount + (pSPARC->RestartFlag == 0));
-		}
+		
+    	fprintf(mdout,":STOPCOUNT: %d\n", pSPARC->MDCount + pSPARC->restartCount + (pSPARC->RestartFlag == 0));
     	fclose(mdout);
 
     }
@@ -3283,12 +3283,7 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
     	// Print restart Count
 		printf("\n");
 		printf("\n");
-		if((strcmpi(pSPARC->MDMeth,"NPT_NP") == 0) || (strcmpi(pSPARC->MDMeth,"NPH") == 0)){
-			fprintf(mdout,":MDSTEP: %d\n", pSPARC->MDCount + pSPARC->restartCount );
-		}
-		else{
-    		fprintf(mdout,":MDSTEP: %d\n", pSPARC->MDCount + pSPARC->restartCount + (pSPARC->RestartFlag == 0));
-		}
+    	fprintf(mdout,":MDSTEP: %d\n", pSPARC->MDCount + pSPARC->restartCount + (pSPARC->RestartFlag == 0));
     	// Print atomic position
     	int atm;
     	fprintf(mdout,":R(Bohr):\n");
@@ -3854,6 +3849,7 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 	}
 	free(buff);
 }
+
 
 
 /*
