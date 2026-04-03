@@ -1607,14 +1607,10 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 
 	if (update_cell == false){ // Update_cell == false only initializes the cell parameters and basic key ingredients used in NPT_NP and NPH ensemble; such as full_lattice, metric_tensor, reciprocal_metric_tensor ...etc,  to be used when doing first step of MD
 	
-		double cell[3] = {pSPARC->range_x, pSPARC->range_y, pSPARC->range_z};
- 
-		//Compute Cell lattice vectors (scaled by LATVEC scale)
-		int row;
-		for (row = 0; row < 3; row++) {
-			pSPARC->full_lattice[row*3] = pSPARC->LatUVec[row*3] * cell[row];
-			pSPARC->full_lattice[row*3 + 1] = pSPARC->LatUVec[row*3 + 1] * cell[row];
-			pSPARC->full_lattice[row*3 + 2] = pSPARC->LatUVec[row*3 + 2] * cell[row];
+		for (int i = 0; i < 3; i++) {
+			pSPARC->full_lattice[i] = pSPARC->LatUVec[i] * pSPARC->range_x;
+			pSPARC->full_lattice[i+3] = pSPARC->LatUVec[i + 3] * pSPARC->range_y;
+			pSPARC->full_lattice[i+6] = pSPARC->LatUVec[i + 6] * pSPARC->range_z;
 		}
 
 		//Compute metric_tensor (G) in real-space (not reciprocal space)
@@ -1653,18 +1649,21 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 		pSPARC->range_y = sqrt( pSPARC->metric_tensor[4] );
 		pSPARC->range_z = sqrt( pSPARC->metric_tensor[8] );
 
-		//Update LatUVec, Jacbdet, metricT, gradT, lapcT
-		Cart2nonCart_transformMat_MD(pSPARC);
+		//Assign full_lattice to LatVec for updating various quantities in 'Cart2nonCart_transformMat'
+		for (int i = 0; i < 9; i++){old_LatVec[i] = pSPARC->LatVec[i];}
+		for (int i = 0; i < 9; i++){pSPARC->LatVec[i] = pSPARC->full_lattice[i];}
+		
+		//Update LatUVec, Jacbdet, metricT, gradT, lapcT  (this function updates all quantites based on 'LatVec' variable as input,  but we actually want it based on 'full_lattice' variable, which contains all the cell lattice vectors updates,  so we do the step above this to assign full_lattice to LatVec)
+		Cart2nonCart_transformMat(pSPARC);
 		pSPARC->volumeCell = pSPARC->Jacbdet * pSPARC->range_x * pSPARC->range_y * pSPARC->range_z;
 
-		// Update/Calculate new angles between lattice vectors  (only for inference, not used anywhere in the code)
-		double cos_gamma_new = pSPARC->metric_tensor[1] / (pSPARC->range_x * pSPARC->range_y); 
-		double cos_beta_new = pSPARC->metric_tensor[2] / (pSPARC->range_x * pSPARC->range_z);
-		double cos_alpha_new = pSPARC->metric_tensor[5] / (pSPARC->range_y * pSPARC->range_z);
-		
-		pSPARC->angle_12 = acos(cos_gamma_new) * 180 / M_PI;
-		pSPARC->angle_13 = acos(cos_beta_new) * 180 / M_PI;
-		pSPARC->angle_23 = acos(cos_alpha_new) * 180 / M_PI;
+		//Reassign LatVec it old values
+		for (int i = 0; i < 9; i++){pSPARC->LatVec[i] = oldLatVec[i];}
+
+		// Update/Calculate new angles between lattice vectors
+		pSPARC->angle_12 = acos( pSPARC->metric_tensor[1] / (pSPARC->range_x * pSPARC->range_y) ) * 180 / M_PI;
+		pSPARC->angle_13 = acos( pSPARC->metric_tensor[2] / (pSPARC->range_x * pSPARC->range_z) ) * 180 / M_PI;
+		pSPARC->angle_23 = acos( pSPARC->metric_tensor[5] / (pSPARC->range_y * pSPARC->range_z) ) * 180 / M_PI;
 
 		//Update LATVEC_SCALE and LatVec
 		if (pSPARC->Flag_latvec_scale == 1){
@@ -2110,8 +2109,6 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	// Obtain updated velocities in cartesian coordinates for use in MD_QOI function
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, pSPARC->n_atom, 3, 3, 1.0 / pSPARC->SNOSE[0], pSPARC->ion_vel_fractional, 3, pSPARC->full_lattice, 3, 0.0, pSPARC->ion_vel, 3); 
 	
-	
-
 	#ifdef DEBUG
 		if (!rank) printf("\nend NPT_NP timestep %d\n", pSPARC->MDCount);
 	#endif
@@ -2980,11 +2977,11 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	    fprintf(output_md,":TELST: %18.10E %18.10E\n", pSPARC->mean_elec_T, pSPARC->std_elec_T);
 	    fprintf(output_md,":TIOST: %18.10E %18.10E\n", pSPARC->mean_ion_T, pSPARC->std_ion_T);
 		fprintf(output_md,":PRESST: %18.10E %18.10E\n", pSPARC->mean_internal_pressure * CONST_HA_BOHR3_GPA, pSPARC->std_internal_pressure * CONST_HA_BOHR3_GPA);
-		fprintf(output_md,":MEAN_TOTSTREST:\n");
+		fprintf(output_md,":MEAN_TOTSTRESS:\n");
 		fprintf(output_md," %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->mean_total_internal_stress[0] * CONST_HA_BOHR3_GPA, pSPARC->mean_total_internal_stress[1] * CONST_HA_BOHR3_GPA, pSPARC->mean_total_internal_stress[2] * CONST_HA_BOHR3_GPA 
 																										  , pSPARC->mean_total_internal_stress[3] * CONST_HA_BOHR3_GPA, pSPARC->mean_total_internal_stress[4] * CONST_HA_BOHR3_GPA, pSPARC->mean_total_internal_stress[5] * CONST_HA_BOHR3_GPA
 																										  , pSPARC->mean_total_internal_stress[6] * CONST_HA_BOHR3_GPA, pSPARC->mean_total_internal_stress[7] * CONST_HA_BOHR3_GPA, pSPARC->mean_total_internal_stress[8] * CONST_HA_BOHR3_GPA);
-		fprintf(output_md,":STD_TOTSTREST:\n");
+		fprintf(output_md,":STD_TOTSTRESS:\n");
 		fprintf(output_md," %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n %18.10E %18.10E %18.10E\n", pSPARC->std_total_internal_stress[0] * CONST_HA_BOHR3_GPA, pSPARC->std_total_internal_stress[1] * CONST_HA_BOHR3_GPA, pSPARC->std_total_internal_stress[2] * CONST_HA_BOHR3_GPA
 																										  , pSPARC->std_total_internal_stress[3] * CONST_HA_BOHR3_GPA, pSPARC->std_total_internal_stress[4] * CONST_HA_BOHR3_GPA, pSPARC->std_total_internal_stress[5] * CONST_HA_BOHR3_GPA
 																										  , pSPARC->std_total_internal_stress[6] * CONST_HA_BOHR3_GPA, pSPARC->std_total_internal_stress[7] * CONST_HA_BOHR3_GPA, pSPARC->std_total_internal_stress[8] * CONST_HA_BOHR3_GPA);
@@ -3802,9 +3799,10 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 	}
 	if(pSPARC->RestartFlag == 1) {
 	    pSPARC->Beta = 1.0/(pSPARC->elec_T * pSPARC->kB);
-	    if((strcmpi(pSPARC->MDMeth,"NPT_NH") == 0)) { // For NPT_NP and NPH the 'reinitialize_mesh_NPT' function is being called from 'fetch_MD_cell_ingredients_restart' after calculating new Jacbdet, cell volume etc
-            reinitialize_mesh_NPT(pSPARC);
+	    if((strcmpi(pSPARC->MDMeth,"NPT_NH") == 0)) { 
+			reinitialize_mesh_NPT(pSPARC);
         }
+		// For NPT_NP and NPH the 'reinitialize_mesh_NPT' function is being called from 'fetch_MD_cell_ingredients_restart' after calculating new Jacbdet, cell volume etc
 		if((strcmpi(pSPARC->MDMeth,"NPT_NP") == 0)||(strcmpi(pSPARC->MDMeth,"NPH") == 0) ){
 			fetch_MD_cell_ingredients_restart(pSPARC);
 			//Now reinitialize mesh based on calculated Jacbdet and other ingredients
