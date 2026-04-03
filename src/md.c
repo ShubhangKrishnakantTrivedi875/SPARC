@@ -404,10 +404,7 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 			}
 		}
 
-		pSPARC->KE_save = 0.0;
 		fetch_MD_cell_ingredients(pSPARC, false);
-		
-
 	    pSPARC->pressure_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
 		for (int i = 0; i < 6; i++){
 			pSPARC->stress_external[i] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
@@ -479,7 +476,7 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 
 		//Calculate_ionic_stress(pSPARC);
 
-		//Ion vel fractional memory allocation already done within 'RestartMD' function as that is being MPI communicated
+		//Pm_ion memory allocation already done within 'RestartMD' function as that is being MPI communicated
 		pSPARC->ion_vel_fractional = (double *)malloc( 3 * pSPARC->n_atom * sizeof(double) );
 		if (pSPARC->ion_vel_fractional == NULL) {
 			fprintf(stderr, "Error: Memory allocation failed for ionic fractional velocity array.\n");
@@ -1950,8 +1947,7 @@ void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
 	// Calculate kinetic energy and kinetic stress
 	Calculate_Kinetic_stress_and_total_internal_pressure(pSPARC); //Calculate kinetic stress with the initial distribution of Ionic particles velocity
 	Calculate_Ionic_particles_Kinetic_energy(pSPARC);  //Term 1 in Eqn.10 Hernandez paper
-	pSPARC->KE_save = pSPARC->KE;
-
+	
 	// Calculating thermostat energies
 	pSPARC->Kther = 0.5 * pSPARC->NPT_NP_qmass * pSPARC->SNOSE[1] * pSPARC->SNOSE[1]; //Kinetic;  Term 6 in Eqn.10 Hernandez paper
 	pSPARC->Uther = (double)pSPARC->dof * log(pSPARC->SNOSE[0]) * ktemp; //Entropic;  Term 7 in Eqn.10 Hernandez paper
@@ -2387,7 +2383,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	
 	//Update kinetic energy and kinetic stress based on new S
 	pSPARC->KE *=  (pSPARC->SNOSE[0] * pSPARC->SNOSE[0]) / ( S_new * S_new );
-	pSPARC->KE_save = pSPARC->KE;
+	
 	for (int i = 0; i < 9; i++){
 		pSPARC->kinetic_stress[i] *= (pSPARC->SNOSE[0] * pSPARC->SNOSE[0]) / ( S_new * S_new );
 	}
