@@ -1773,6 +1773,7 @@ void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC){
 	}
 	
 	pSPARC->KE = 0.5 * pSPARC->KE / ( pSPARC->SNOSE[0] * pSPARC->SNOSE[0] );
+	pSPARC->ion_T = 2 * pSPARC->KE /(pSPARC->kB * pSPARC->dof); //Update Ionic temperature;
 }
 
 
@@ -1922,18 +1923,20 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 	double internal_stress_cartesian[9];
 
 	//Initialize some useful constants
-	double baro_const1; int NPT_NPH_ANGLES;  int NPT_NPHconstraintFlag; int NPT_NPHscaleVecs[3]={0};
+	double baro_const1; int NPT_NPH_ANGLES;  int NPT_NPHconstraintFlag; int NPT_NPHscaleVecs[3]={0}; int NPT_NPHspecialconstraint;
 	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
 		NPT_NPH_ANGLES = pSPARC->NPT_NP_ANGLES;
 		NPT_NPHconstraintFlag = pSPARC->NPTconstraintFlag;
 		NPT_NPHscaleVecs[0] = pSPARC->NPTscaleVecs[0]; NPT_NPHscaleVecs[1] = pSPARC->NPTscaleVecs[1]; NPT_NPHscaleVecs[2] = pSPARC->NPTscaleVecs[2];
-
+		NPT_NPHspecialconstraint = pSPARC->NPTspecialconstraint;
+		
 		baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
 	else{
 		NPT_NPH_ANGLES = pSPARC->NPH_ANGLES;
 		NPT_NPHconstraintFlag = pSPARC->NPHconstraintFlag;
 		NPT_NPHscaleVecs[0] = pSPARC->NPHscaleVecs[0]; NPT_NPHscaleVecs[1] = pSPARC->NPHscaleVecs[1]; NPT_NPHscaleVecs[2] = pSPARC->NPHscaleVecs[2];
+		NPT_NPHspecialconstraint = pSPARC->NPHspecialconstraint;
 
 		baro_const1 = pSPARC->NPH_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
@@ -2013,13 +2016,13 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 
 	if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
 		if (pSPARC->NPT_NP_ANGLES == 0){
-			compute_constraint_stress(pSPARC, NPT_NPHconstraintFlag, NPT_NPHscaleVecs);
+			compute_constraint_stress(pSPARC, NPT_NPHconstraintFlag, NPT_NPHscaleVecs, NPT_NPHspecialconstraint);
 		}
 		
 	}
 	else {
 		if (pSPARC->NPH_ANGLES == 0){
-			compute_constraint_stress(pSPARC, NPT_NPHconstraintFlag, NPT_NPHscaleVecs);
+			compute_constraint_stress(pSPARC, NPT_NPHconstraintFlag, NPT_NPHscaleVecs, NPT_NPHspecialconstraint);
 		}
 	}
 
@@ -2031,7 +2034,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 	} 	
 
 	//Now impose the constraints on it
-	if (NPT_NPHscaleVecs[2] == 0){
+	if ( NPT_NPHspecialconstraint == 1 ){
 		pSPARC->Pm_metric_tensor[8] = 0;
 		pSPARC->Pm_metric_tensor[7] = 0;
 		pSPARC->Pm_metric_tensor[6] = 0;
@@ -2208,7 +2211,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 	Update_metric_tensor_momenta_iteratively_half_step(pSPARC);
 
 	//Now impose the constraints on it
-	if (NPT_NPHscaleVecs[2] == 0){
+	if ( NPT_NPHspecialconstraint == 1 ){
 		pSPARC->Pm_metric_tensor[8] = 0;
 		pSPARC->Pm_metric_tensor[7] = 0;
 		pSPARC->Pm_metric_tensor[6] = 0;
@@ -2322,12 +2325,13 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 		pSPARC->SNOSE[2] = pSPARC->SNOSE[0];
 		pSPARC->SNOSE[0] = S_new;
 	}
+	pSPARC->ion_T = 2 * pSPARC->KE /(pSPARC->kB * pSPARC->dof); //Update Ionic temperature;
 	// ------------------------------------- END: Updating Components of the metric tensor (Eqn. 18e)----------------------------------//
 	//						END:And updating the atomic positions  (Eqn. 18f), and restoring ionic velocties --------------------------//	
 }
 	
-
-void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int *NPT_NPHscaleVecs){
+// IF and When this function is called, it imposes a universal constraint of all angles between lattice vectors being FIXED;  on top of other constraints explicitly imposed in the function through 'if' condition
+void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int *NPT_NPHscaleVecs, int *NPT_NPHspecialconstraint){
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	//Initialize some useful constants
@@ -2368,10 +2372,31 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int
 	else if (NPT_NPHconstraintFlag == 1){
 		gpig[0] = (gpig[0] + gpig[4]) / 2;
 		gpig[4] = gpig[0]; 
+		if (NPT_NPHscaleVecs[2] == 0){
+			gpig[8] = 0;
+		}
+	}
+
+	// |a| = |c| and |b| can vary independently;  and all angles between lattice vectors are FIXED
+	else if (NPT_NPHconstraintFlag == 2){
+		gpig[0] = (gpig[0] + gpig[8]) / 2;
+		gpig[8] = gpig[0]; 
+		if (NPT_NPHscaleVecs[1] == 0){
+			gpig[4] = 0;
+		}
+	}
+
+	// |b| = |c| and |a| can vary independently;  and all angles between lattice vectors are FIXED
+	else if (NPT_NPHconstraintFlag == 3){
+		gpig[4] = (gpig[4] + gpig[8]) / 2;
+		gpig[8] = gpig[4]; 
+		if (NPT_NPHscaleVecs[0] == 0){
+			gpig[0] = 0;
+		}
 	}
 
 	// Only |a| and |b| varies, no changes in third direction i.e |c| is fixed;  and all angles between lattice vectors are FIXED
-	else if (NPT_NPHscaleVecs[2] == 0 ){
+	else if ( NPT_NPHspecialconstraint==1 ){
 		gpig[8] = 0;
 		gpig[7] = 0;
 		gpig[6] = 0;
@@ -2379,9 +2404,22 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int
 		gpig[2] = 0;
 	}
 
-	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
+	//Only |c| varies, |a| and |b| are fixed
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){ 
 		gpig[0] = 0; 
 		gpig[4] = 0;
+	}
+
+	//Only |a| varies, |b| and |c| are fixed
+	else if (NPT_NPHscaleVecs[0] == 1 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 0){
+		gpig[4] = 0; 
+		gpig[8] = 0;
+	}
+
+	//Only |b| varies, |a| and |c| are fixed
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 1 && NPT_NPHscaleVecs[2] == 0){
+		gpig[0] = 0; 
+		gpig[8] = 0;
 	}
 
 
@@ -2389,6 +2427,7 @@ void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int
 	constraint_velocity[4] = gpig[4] * baro_const4;
 	constraint_velocity[8] = gpig[8] * baro_const4;
 	
+	//Impose the constraint on angles being FIXED
 	constraint_velocity[1] = (da_dt_norm * b_norm + a_norm * db_dt_norm) * pSPARC->initialLatVecAngles[2];
 	constraint_velocity[2] = (da_dt_norm * c_norm + a_norm * dc_dt_norm) * pSPARC->initialLatVecAngles[1];
 	constraint_velocity[5] = (db_dt_norm * c_norm + b_norm * dc_dt_norm) * pSPARC->initialLatVecAngles[0];
@@ -2499,6 +2538,16 @@ void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, do
 		else if (NPT_NPHconstraintFlag == 1){
 			new_metric_tensor[0] = ( new_metric_tensor[0] + new_metric_tensor[4] ) / 2.0;
 			new_metric_tensor[4] = new_metric_tensor[0];
+		}
+
+		else if (NPT_NPHconstraintFlag == 2){
+			new_metric_tensor[0] = ( new_metric_tensor[0] + new_metric_tensor[8] ) / 2.0;
+			new_metric_tensor[8] = new_metric_tensor[0];
+		}
+
+		else if (NPT_NPHconstraintFlag == 3){
+			new_metric_tensor[4] = ( new_metric_tensor[4] + new_metric_tensor[8] ) / 2.0;
+			new_metric_tensor[8] = new_metric_tensor[4];
 		}
 
 		a_norm = sqrt( new_metric_tensor[0] );
@@ -3077,10 +3126,10 @@ void MD_QOI(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis) {
 	double mean_TE_old, mean_KE_old, mean_PE_old, mean_U_old, mean_Eent_old, mean_Ti_old, mean_Te_old, mean_internal_pressure_old, mean_total_internal_stress_old[9];
 	int Count;
 	if(strcmpi(pSPARC->MDMeth,"NPT_NP") != 0 && strcmpi(pSPARC->MDMeth,"NPH") != 0){
-		Count = pSPARC->MDCount +  pSPARC->restartCount + (pSPARC->RestartFlag == 0) ;
+		Count = pSPARC->MDCount + (pSPARC->RestartFlag == 0) ;
 	}
 	else{
-		Count = pSPARC->MDCount +  pSPARC->restartCount;
+		Count = pSPARC->MDCount;
 	}
 	mean_Te_old = pSPARC->mean_elec_T;
 	mean_Ti_old = pSPARC->mean_ion_T;
