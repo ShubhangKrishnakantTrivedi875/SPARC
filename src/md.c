@@ -3399,17 +3399,6 @@ void PrintMD(SPARC_OBJ *pSPARC, int Flag, int print_restart_typ) {
     	// Print temperature
     	fprintf(mdout,":TEL(K): %18.10E\n", pSPARC->elec_T);
     	fprintf(mdout,":TIO(K): %18.10E\n", pSPARC->ion_T);
-		fprintf(mdout,":TELST(K): %18.10E %18.10E\n", pSPARC->mean_elec_T, pSPARC->std_elec_T);
-		fprintf(mdout,":TIOST(K): %18.10E %18.10E\n", pSPARC->mean_ion_T, pSPARC->std_ion_T);
-		fprintf(mdout,":PREST(Gpa): %18.10E %18.10E\n", pSPARC->mean_internal_pressure * CONST_HA_BOHR3_GPA, pSPARC->std_internal_pressure * CONST_HA_BOHR3_GPA);
-		fprintf(mdout,":TENST: %18.10E %18.10E\n", pSPARC->mean_TE, pSPARC->std_TE);
-		fprintf(mdout,":KENST: %18.10E %18.10E\n", pSPARC->mean_KE, pSPARC->std_KE);
-		fprintf(mdout,":FENST: %18.10E %18.10E\n", pSPARC->mean_PE, pSPARC->std_PE);
-		fprintf(mdout,":UENST: %18.10E %18.10E\n", pSPARC->mean_U, pSPARC->std_U);
-		fprintf(mdout,":TSENST: %18.10E %18.10E\n", pSPARC->mean_Entropy, pSPARC->std_Entropy);
-		if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
-			fprintf(mdout,":TENXST: %18.10E %18.10E\n", pSPARC->mean_TE_ext, pSPARC->std_TE_ext);
-		}
 		fclose(mdout);
 	}
 }
@@ -3510,29 +3499,6 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 				fscanf(rst_fp,"%lf", &pSPARC->ion_T);
 			else if (strcmpi(str,":TTHRMI(K):") == 0 && pSPARC->RestartFlag == 1)
 				fscanf(rst_fp,"%lf", &pSPARC->thermos_Ti);
-			else if (strcmpi(str,":TELST(K):") == 0 && pSPARC->RestartFlag == 1){
-				fscanf(rst_fp,"%lf", &pSPARC->mean_elec_T); fscanf(rst_fp,"%lf", &pSPARC->std_elec_T);
-			}else if (strcmpi(str,":TIOST(K):") == 0 && pSPARC->RestartFlag == 1){
-				fscanf(rst_fp,"%lf", &pSPARC->mean_ion_T); fscanf(rst_fp,"%lf", &pSPARC->std_ion_T);
-			}else if (strcmpi(str,":PREST(Gpa):") == 0 && pSPARC->RestartFlag == 1){
-				fscanf(rst_fp,"%lf", &pSPARC->mean_internal_pressure); fscanf(rst_fp,"%lf", &pSPARC->std_internal_pressure);
-				pSPARC->mean_internal_pressure /= CONST_HA_BOHR3_GPA; pSPARC->std_internal_pressure /= CONST_HA_BOHR3_GPA; 
-			}else if (strcmpi(str,":TENST:") == 0 && pSPARC->RestartFlag == 1){
-				fscanf(rst_fp,"%lf", &pSPARC->mean_TE); fscanf(rst_fp,"%lf", &pSPARC->std_TE);
-			}else if (strcmpi(str,":KENST:") == 0 && pSPARC->RestartFlag == 1){
-				fscanf(rst_fp,"%lf", &pSPARC->mean_KE); fscanf(rst_fp,"%lf", &pSPARC->std_KE);
-			}else if (strcmpi(str,":FENST:") == 0 && pSPARC->RestartFlag == 1){
-				fscanf(rst_fp,"%lf", &pSPARC->mean_PE); fscanf(rst_fp,"%lf", &pSPARC->std_PE);
-			}else if (strcmpi(str,":UENST:") == 0 && pSPARC->RestartFlag == 1){
-				fscanf(rst_fp,"%lf", &pSPARC->mean_U);  fscanf(rst_fp,"%lf", &pSPARC->std_U);
-			}else if (strcmpi(str,":TSENST:") == 0 && pSPARC->RestartFlag == 1){
-				fscanf(rst_fp,"%lf", &pSPARC->mean_Entropy); fscanf(rst_fp,"%lf", &pSPARC->std_Entropy);
-			}
-			if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
-				if (strcmpi(str,":TSENST:") == 0 && pSPARC->RestartFlag == 1){
-					fscanf(rst_fp,"%lf", &pSPARC->mean_TE_ext); fscanf(rst_fp,"%lf", &pSPARC->std_TE_ext);
-				}
-			}
 			if (strcmpi(pSPARC->MDMeth,"NPT_NH") == 0) {
 				if (strcmpi(str,":NPT_NH_QMASS:") == 0) { 
             		fscanf(rst_fp,"%d",&pSPARC->NPT_NHnnos);
@@ -3673,25 +3639,7 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 			}
             MPI_Pack(&pSPARC->elec_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             MPI_Pack(&pSPARC->ion_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            MPI_Pack(&pSPARC->mean_elec_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-			MPI_Pack(&pSPARC->std_elec_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);	
-            MPI_Pack(&pSPARC->mean_ion_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-			MPI_Pack(&pSPARC->std_ion_T, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            MPI_Pack(&pSPARC->mean_internal_pressure, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-			MPI_Pack(&pSPARC->std_internal_pressure, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            MPI_Pack(&pSPARC->mean_TE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-			MPI_Pack(&pSPARC->std_TE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            MPI_Pack(&pSPARC->mean_KE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-			MPI_Pack(&pSPARC->std_KE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            MPI_Pack(&pSPARC->mean_PE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-			MPI_Pack(&pSPARC->std_PE, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            MPI_Pack(&pSPARC->mean_U, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-			MPI_Pack(&pSPARC->std_U, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-            MPI_Pack(&pSPARC->mean_Entropy, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-			MPI_Pack(&pSPARC->std_Entropy, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
 			if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
-				MPI_Pack(&pSPARC->mean_TE_ext, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
-				MPI_Pack(&pSPARC->std_TE_ext, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
 				MPI_Pack(&pSPARC->snose, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->xi_nose, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
             	MPI_Pack(&pSPARC->thermos_Ti, 1, MPI_DOUBLE, buff, l_buff, &position, MPI_COMM_WORLD);
@@ -3768,25 +3716,7 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 			}
             MPI_Unpack(buff, l_buff, &position, &pSPARC->elec_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
             MPI_Unpack(buff, l_buff, &position, &pSPARC->ion_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_elec_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_elec_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_ion_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_ion_T, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_internal_pressure, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_internal_pressure, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_TE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_TE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_KE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_KE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_PE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_PE, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_U, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_U, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-            MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_Entropy, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-			MPI_Unpack(buff, l_buff, &position, &pSPARC->std_Entropy, 1, MPI_DOUBLE, MPI_COMM_WORLD);
 			if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0){
-				MPI_Unpack(buff, l_buff, &position, &pSPARC->mean_TE_ext, 1, MPI_DOUBLE, MPI_COMM_WORLD);
-				MPI_Unpack(buff, l_buff, &position, &pSPARC->std_TE_ext, 1, MPI_DOUBLE, MPI_COMM_WORLD);
 				MPI_Unpack(buff, l_buff, &position, &pSPARC->snose, 1, MPI_DOUBLE, MPI_COMM_WORLD);
 				MPI_Unpack(buff, l_buff, &position, &pSPARC->xi_nose, 1, MPI_DOUBLE, MPI_COMM_WORLD);
 				MPI_Unpack(buff, l_buff, &position, &pSPARC->thermos_Ti, 1, MPI_DOUBLE, MPI_COMM_WORLD);
