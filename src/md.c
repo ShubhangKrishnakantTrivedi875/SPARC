@@ -1449,8 +1449,8 @@ void NPT_NP_and_NPH(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Bcast(&pSPARC->stress, 9, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	MPI_Bcast(&pSPARC->stress_i, 9, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-	
+	//MPI_Bcast(&pSPARC->stress_i, 9, MPI_DOUBLE, 0, MPI_COMM_WORLD);  //Stress_i is never used in this ensemble
+	 
 	//Calculate initial hamitonian
 	if ((pSPARC->MDCount == 1)  && (pSPARC->RestartFlag != 1)){
 		NPT_NP_and_NPH_init_hamiltonian(pSPARC);
@@ -1467,9 +1467,6 @@ void NPT_NP_and_NPH(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *
 	Calculate_Properties(pSPARC);
 	//Calculate_electronicGroundState(pSPARC);
 	pSPARC->elecgs_Count++;
-	#ifdef DEBUG
-		if (!rank) printf("\nend NPT_NP timestep %d\n", pSPARC->MDCount + 1);
-	#endif
 }
 
 /*
@@ -1490,119 +1487,6 @@ void transpose_and_add(double *matrix1){
 	matrix1[5] = matrix1[7] = s12;
 }
 
-void Cart2nonCart_transformMat_MD(SPARC_OBJ *pSPARC) {
-    int rank;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    int i, j, k;
-
-	double TEMP_TOL = 1e-12;
-    // Construct LatUVec;
-    double mag;
-    for(i = 0; i < 3; i++){
-        mag = sqrt(pow(pSPARC->full_lattice[3 * i], 2.0) 
-                 + pow(pSPARC->full_lattice[3 * i + 1], 2.0) 
-                 + pow(pSPARC->full_lattice[3 * i + 2], 2.0));
-        pSPARC->LatUVec[3 * i] = pSPARC->full_lattice[3 * i]/mag;
-        pSPARC->LatUVec[3 * i + 1] = pSPARC->full_lattice[3 * i + 1]/mag;
-        pSPARC->LatUVec[3 * i + 2] = pSPARC->full_lattice[3 * i + 2]/mag;
-    }
-
-    // determinant of 3x3 Jacobian
-    pSPARC->Jacbdet = 0.0;
-    for(i = 0; i < 3; i++){
-        for(j = 0; j < 3; j++){
-            for(k = 0; k < 3; k++){
-                if(i != j && j != k && k != i)
-                    pSPARC->Jacbdet += ((i - j) * (j - k) * (k - i)/2) * pSPARC->LatUVec[3 * i] * pSPARC->LatUVec[3 * j + 1] * pSPARC->LatUVec[3 * k + 2];
-            }
-        }
-    }
-
-    if(pSPARC->Jacbdet <= 0){
-        if(rank == 0)
-            printf("ERROR: Volume(det(jacobian)) %lf is <= 0\n", pSPARC->Jacbdet);
-        exit(EXIT_FAILURE);
-    }
-
-    // transformation matrix for distance
-    for(i = 0; i < 9; i++)
-        pSPARC->metricT[i] = 0.0;
-
-    for(i = 0; i < 3; i++){
-        for(j = 0; j < 3; j++){
-            for(k = 0; k < 3; k++){
-                pSPARC->metricT[3*i + j] += pSPARC->LatUVec[3*i + k] * pSPARC->LatUVec[3*j + k];
-            }
-        }
-    }
-
-    pSPARC->metricT[1] = 2 * pSPARC->metricT[1];
-    pSPARC->metricT[2] = 2 * pSPARC->metricT[2];
-    pSPARC->metricT[5] = 2 * pSPARC->metricT[5];
-
-    // transformation matrix for gradient
-    for(i = 0; i < 3; i++){
-        for(j = 0; j < 3; j++){
-           pSPARC->gradT[3*j + i] = (pSPARC->LatUVec[3 * ((j+1) % 3) + (i+1) % 3] * pSPARC->LatUVec[3 * ((j+2) % 3) + (i+2) % 3] - pSPARC->LatUVec[3 * ((j+1) % 3) + (i+2) % 3] * pSPARC->LatUVec[3 * ((j+2) % 3) + (i+1) % 3])/pSPARC->Jacbdet;
-        }
-    }
-
-    // transformation matrix for laplacian
-    for(i = 0; i < 9; i++)
-        pSPARC->lapcT[i] = 0.0;
-
-    for(i = 0; i < 3; i++){
-        for(j = 0; j < 3; j++){
-            for(k = 0; k < 3; k++){
-                pSPARC->lapcT[3*i + j] += pSPARC->gradT[3*i + k] * pSPARC->gradT[3*j + k];
-            }
-        }
-    }
-
-    /* Different cell types for laplacian */
-    if(fabs(pSPARC->lapcT[1]) > TEMP_TOL && fabs(pSPARC->lapcT[2]) < TEMP_TOL && fabs(pSPARC->lapcT[5]) < TEMP_TOL)
-        pSPARC->cell_typ = 11;
-    else if(fabs(pSPARC->lapcT[1]) < TEMP_TOL && fabs(pSPARC->lapcT[2]) > TEMP_TOL && fabs(pSPARC->lapcT[5]) < TEMP_TOL)
-        pSPARC->cell_typ = 12;
-    else if(fabs(pSPARC->lapcT[1]) < TEMP_TOL && fabs(pSPARC->lapcT[2]) < TEMP_TOL && fabs(pSPARC->lapcT[5]) > TEMP_TOL)
-        pSPARC->cell_typ = 13;
-    else if(fabs(pSPARC->lapcT[1]) > TEMP_TOL && fabs(pSPARC->lapcT[2]) > TEMP_TOL && fabs(pSPARC->lapcT[5]) < TEMP_TOL)
-        pSPARC->cell_typ = 14;
-    else if(fabs(pSPARC->lapcT[1]) < TEMP_TOL && fabs(pSPARC->lapcT[2]) > TEMP_TOL && fabs(pSPARC->lapcT[5]) > TEMP_TOL)
-        pSPARC->cell_typ = 15;
-    else if(fabs(pSPARC->lapcT[1]) > TEMP_TOL && fabs(pSPARC->lapcT[2]) < TEMP_TOL && fabs(pSPARC->lapcT[5]) > TEMP_TOL)
-        pSPARC->cell_typ = 16;
-    else if(fabs(pSPARC->lapcT[1]) > TEMP_TOL && fabs(pSPARC->lapcT[2]) > TEMP_TOL && fabs(pSPARC->lapcT[5]) > TEMP_TOL)
-        pSPARC->cell_typ = 17;
-#ifdef DEBUG
-    if(!rank)
-        printf("\n\nCELL_TYP: %d\n\n",pSPARC->cell_typ);
-#endif
-    /* transform the coefficiens of lapacian*/
-    // int p, FDn = pSPARC->order/2;
-    // double dx_inv, dy_inv, dz_inv, dx2_inv, dy2_inv, dz2_inv;
-    // dx_inv = 1.0 / (pSPARC->delta_x);
-    // dy_inv = 1.0 / (pSPARC->delta_y);
-    // dz_inv = 1.0 / (pSPARC->delta_z);
-    // dx2_inv = 1.0 / (pSPARC->delta_x * pSPARC->delta_x);
-    // dy2_inv = 1.0 / (pSPARC->delta_y * pSPARC->delta_y);
-    // dz2_inv = 1.0 / (pSPARC->delta_z * pSPARC->delta_z);
-    // for (p = 0; p < FDn + 1; p++) {
-    //     pSPARC->D2_stencil_coeffs_x[p] = pSPARC->lapcT[0] * pSPARC->FDweights_D2[p] * dx2_inv;
-    //     pSPARC->D2_stencil_coeffs_y[p] = pSPARC->lapcT[4] * pSPARC->FDweights_D2[p] * dy2_inv;
-    //     pSPARC->D2_stencil_coeffs_z[p] = pSPARC->lapcT[8] * pSPARC->FDweights_D2[p] * dz2_inv;
-    //     pSPARC->D2_stencil_coeffs_xy[p] = 2 * pSPARC->lapcT[1] * pSPARC->FDweights_D1[p] * dx_inv; // 2*T_12 d/dx(df/dy)
-    //     pSPARC->D2_stencil_coeffs_xz[p] = 2 * pSPARC->lapcT[2] * pSPARC->FDweights_D1[p] * dx_inv; // 2*T_13 d/dx(df/dz)
-    //     pSPARC->D2_stencil_coeffs_yz[p] = 2 * pSPARC->lapcT[5] * pSPARC->FDweights_D1[p] * dy_inv; // 2*T_23 d/dy(df/dz)
-    //     pSPARC->D1_stencil_coeffs_xy[p] = 2 * pSPARC->lapcT[1] * pSPARC->FDweights_D1[p] * dy_inv; // d/dx(2*T_12 df/dy) used in d/dx(2*T_12 df/dy + 2*T_13 df/dz)
-    //     pSPARC->D1_stencil_coeffs_yx[p] = 2 * pSPARC->lapcT[1] * pSPARC->FDweights_D1[p] * dx_inv; // d/dy(2*T_12 df/dx) used in d/dy(2*T_12 df/dx + 2*T_23 df/dz)
-    //     pSPARC->D1_stencil_coeffs_xz[p] = 2 * pSPARC->lapcT[2] * pSPARC->FDweights_D1[p] * dz_inv; // d/dx(2*T_13 df/dz) used in d/dx(2*T_12 df/dy + 2*T_13 df/dz)
-    //     pSPARC->D1_stencil_coeffs_zx[p] = 2 * pSPARC->lapcT[2] * pSPARC->FDweights_D1[p] * dx_inv; // d/dz(2*T_13 df/dx) used in d/dz(2*T_13 df/dz + 2*T_23 df/dy)
-    //     pSPARC->D1_stencil_coeffs_yz[p] = 2 * pSPARC->lapcT[5] * pSPARC->FDweights_D1[p] * dz_inv; // d/dy(2*T_23 df/dz) used in d/dy(2*T_12 df/dx + 2*T_23 df/dz)
-    //     pSPARC->D1_stencil_coeffs_zy[p] = 2 * pSPARC->lapcT[5] * pSPARC->FDweights_D1[p] * dy_inv; // d/dz(2*T_23 df/dy) used in d/dz(2*T_12 df/dx + 2*T_23 df/dy)
-    // }
-    // TODO: Find maximum eigenvalue of Hamiltionian (= max. eigvalue of -0.5 lap) for non orthogonal periodic systems
-}
 
 /*
 Computes: full_lattice (lattice vectors scaled by LATVEC SCALE), and corresponding:  reciprocal_lattice, metric_tensor, reciprocal_matric_tensor, initialLatVecAngles, rotation_matrix
@@ -1612,7 +1496,7 @@ void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC){
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	double old_cell[9];
+	double old_cell[9]; old_LatVec[9];
 
 	//Compute Cell lattice vectors (scaled by LATVEC scale)
 	if (pSPARC->Flag_latvec_scale == 0){
@@ -1633,7 +1517,7 @@ void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC){
 	//Compute metric_tensor (G) in real-space (not reciprocal space)
 	cblas_dgemm(CblasRowMajor,CblasNoTrans, CblasTrans, 3, 3, 3, 1.0, pSPARC->full_lattice, 3, pSPARC->full_lattice, 3, 0.0, pSPARC->metric_tensor, 3);
 	
-	if (pSPARC->Flag_latvec_scale == 1){
+	if (pSPARC->Flag_latvec_scale == 1){ // for Flag_latvec_scale == 0,  the update for 'range_x,y,z' has already happened within restart function
 		pSPARC->range_x = sqrt( pSPARC->metric_tensor[0] );
 		pSPARC->range_y = sqrt( pSPARC->metric_tensor[4] );
 		pSPARC->range_z = sqrt( pSPARC->metric_tensor[8] );
@@ -1646,9 +1530,17 @@ void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC){
 		pSPARC->initialLatVecLength[0] = 1; pSPARC->initialLatVecLength[1] = 1; pSPARC->initialLatVecLength[2] = 1;
 	}
 
-	//Update LatUVec, Jacbdet, metricT, gradT, lapcT
-	Cart2nonCart_transformMat_MD(pSPARC);
+	//Assign full_lattice to LatVec for updating various quantities in 'Cart2nonCart_transformMat'
+	for (int i = 0; i < 9; i++){old_LatVec[i] = pSPARC->LatVec[i];}
+	for (int i = 0; i < 9; i++){pSPARC->LatVec[i] = pSPARC->full_lattice[i];}
+	
+	//Update LatUVec, Jacbdet, metricT, gradT, lapcT  (this function updates all quantites based on 'LatVec' variable as input,  but we actually want it based on 'full_lattice' variable, which contains all the cell lattice vectors updates,  so we do the step above this to assign full_lattice to LatVec)
+	Cart2nonCart_transformMat(pSPARC);
 	pSPARC->volumeCell = pSPARC->Jacbdet * pSPARC->range_x * pSPARC->range_y * pSPARC->range_z;
+
+	//Reassign LatVec it old values
+	for (int i = 0; i < 9; i++){pSPARC->LatVec[i] = oldLatVec[i];}
+	
 
 	// printf("Volume cell %lf \n",pSPARC->volumeCell);
 	// printf("range_x %lf \n",pSPARC->range_x);
@@ -1659,16 +1551,16 @@ void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC){
 	// 	printf("FUll lattice[%d] is %lf \n",i,pSPARC->full_lattice[i]);
 	// }
 
-	if (pSPARC->Flag_latvec_scale == 1){
-		for (int i = 0; i < 9; i++){
-			printf("LatVec[%d] is %lf \n",i,pSPARC->LatVec[i]);
-		}
-	}
-	if (pSPARC->Flag_latvec_scale == 0){
-		for (int i = 0; i < 9; i++){
-			printf("LatUVec[%d] is %lf \n",i,pSPARC->LatUVec[i]);
-		}
-	}
+	// if (pSPARC->Flag_latvec_scale == 1){
+	// 	for (int i = 0; i < 9; i++){
+	// 		printf("LatVec[%d] is %lf \n",i,pSPARC->LatVec[i]);
+	// 	}
+	// }
+	// if (pSPARC->Flag_latvec_scale == 0){
+	// 	for (int i = 0; i < 9; i++){
+	// 		printf("LatUVec[%d] is %lf \n",i,pSPARC->LatUVec[i]);
+	// 	}
+	// }
 	
 	// Update/Calculate new angles between lattice vectors  (only for inference, not used anywhere in the code)
 	double cos_gamma_new = pSPARC->metric_tensor[1] / (pSPARC->range_x * pSPARC->range_y); 
@@ -1704,7 +1596,7 @@ void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC){
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans, 3, 3, 3, 1.0, temp_mat, 3, U, 3, 0.0, pSPARC->reciprocal_lattice, 3);
 	// Now computing reciprocal metric tensor, 
 	cblas_dgemm(CblasRowMajor, CblasTrans, CblasNoTrans, 3, 3, 3, 1.0, pSPARC->reciprocal_lattice, 3, pSPARC->reciprocal_lattice, 3, 0.0, pSPARC->reciprocal_metric_tensor, 3);
-	printf("here");
+	
 }
 
 void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
@@ -1827,7 +1719,7 @@ void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell){
 		}
 	}
 
-	//If updating the cell, then also calculate the velocity of cell lattice vectors  (only useful in 1st MD step (start afresh or restart))
+	//If updating the cell, then also calculate the velocity of cell lattice vectors  (only useful in 1st MD step (if starting with nonzero lattice vector velocities:  but as of now this step is not really useful, as we are by default only supporting zero initializing for lattice vector velocities))
 	else {
 		double temp_mat_2[9] = {0.0};  double temp_mat_3[9];
 
@@ -1987,11 +1879,6 @@ void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
 		pSPARC->Hamiltonian_NPH = pSPARC->SNOSE[0] * (sumAllHamilTerms - pSPARC->init_Hamil_NPH);  //Eqn. 8 in the Hernandez paper
 	}
 	// ------------------------------------- END: Calculating Hamiltonian (Eqn 10)----------------------------------//
-
-	//Initialize constraint stress to 0
-	for (int i = 0; i < 9; i++){
-		pSPARC->constraint_stress[i] = 0.0;
-	}
 }
 
 /*
@@ -2029,6 +1916,12 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	}
 	double baro_const3 = 1.0 / baro_const1;
 
+	if (pSPARC->MDCount == 1){
+		//Initialize constraint stress to 0
+		for (int i = 0; i < 9; i++){
+			pSPARC->constraint_stress[i] = 0.0;
+		}
+	}
 	// printf("QMASS: %lf\n",pSPARC->NPT_NP_qmass);
 	// printf("SNOSE[0] %lf \n",pSPARC->SNOSE[0]);
 	// printf("SNOSE[1] %lf \n",pSPARC->SNOSE[1]);
@@ -2095,6 +1988,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 		if (pSPARC->NPT_NP_ANGLES == 0){
 			compute_constraint_stress(pSPARC, NPT_NPHconstraintFlag, NPT_NPHscaleVecs);
 		}
+		
 	}
 	else {
 		if (pSPARC->NPH_ANGLES == 0){
@@ -2217,6 +2111,10 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, pSPARC->n_atom, 3, 3, 1.0 / pSPARC->SNOSE[0], pSPARC->ion_vel_fractional, 3, pSPARC->full_lattice, 3, 0.0, pSPARC->ion_vel, 3); 
 	
 	
+
+	#ifdef DEBUG
+		if (!rank) printf("\nend NPT_NP timestep %d\n", pSPARC->MDCount);
+	#endif
 	int Count = pSPARC->MDCount + pSPARC->restartCount; 
 	int check1 = (pSPARC->PrintMDout == 1 && !rank);
 	int check2 = (pSPARC->Printrestart == 1 && !rank);
