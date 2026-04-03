@@ -405,9 +405,9 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		}
 
 		fetch_MD_cell_ingredients(pSPARC, false);
-	    pSPARC->pressure_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
+	    pSPARC->pressure_external /= CONST_HA_BOHR3_GPA; // transfer from GPa to Ha/Bohr^3
 		for (int i = 0; i < 6; i++){
-			pSPARC->stress_external[i] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
+			pSPARC->stress_external[i] /= CONST_HA_BOHR3_GPA; // transfer from GPa to Ha/Bohr^3
 		}
 		pSPARC->external_stress_cartesian[0] = pSPARC->stress_external[0]; pSPARC->external_stress_cartesian[4] = pSPARC->stress_external[1]; pSPARC->external_stress_cartesian[8] = pSPARC->stress_external[2];
 		pSPARC->external_stress_cartesian[1] = pSPARC->stress_external[3]; pSPARC->external_stress_cartesian[2] = pSPARC->stress_external[4]; pSPARC->external_stress_cartesian[3] = pSPARC->stress_external[3];
@@ -454,9 +454,9 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		//fetch_MD_cell_ingredients_restart(pSPARC);
 		pSPARC->KE_save = 0.0;
 
-        pSPARC->pressure_external /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
+        pSPARC->pressure_external /= CONST_HA_BOHR3_GPA; // transfer from GPa to Ha/Bohr^3
 		for (int i = 0; i < 6; i++){
-			pSPARC->stress_external[i] /= 29421.02648438959; // transfer from GPa to Ha/Bohr^3
+			pSPARC->stress_external[i] /= CONST_HA_BOHR3_GPA; // transfer from GPa to Ha/Bohr^3
 		}// transfer from GPa to Ha/Bohr^3
 		pSPARC->external_stress_cartesian[0] = pSPARC->stress_external[0]; pSPARC->external_stress_cartesian[4] = pSPARC->stress_external[1]; pSPARC->external_stress_cartesian[8] = pSPARC->stress_external[2];
 		pSPARC->external_stress_cartesian[1] = pSPARC->stress_external[3]; pSPARC->external_stress_cartesian[2] = pSPARC->stress_external[4]; pSPARC->external_stress_cartesian[3] = pSPARC->stress_external[3];
@@ -3906,7 +3906,6 @@ void RestartMD(SPARC_OBJ *pSPARC) {
 	}
 	free(buff);
 }
-
 
 
 /*
