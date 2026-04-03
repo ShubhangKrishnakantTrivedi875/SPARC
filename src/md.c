@@ -86,111 +86,167 @@ void main_MD(SPARC_OBJ *pSPARC) {
 	
 	pSPARC->MD_maxStep = pSPARC->restartCount + pSPARC->MD_Nstep;
 
-	// File output_md stores all the desirable properties from a MD run
-	FILE *output_md, *output_fp;
-	if (pSPARC->PrintMDout == 1 && !rank && pSPARC->MD_Nstep > 0){
-        output_md = fopen(pSPARC->MDFilename,"w");
-        if (output_md == NULL) {
-            printf("\nCannot open file \"%s\"\n",pSPARC->MDFilename);
-            exit(EXIT_FAILURE);
-        }
-        pSPARC->MDCount = -1;
-        Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the output_md file
-        pSPARC->MDCount++;
-
-        if(pSPARC->RestartFlag == 0){
-        	fprintf(output_md,":MDSTEP: %d\n", 1);
-        	fprintf(output_md,":MDTM: %.2f\n", (MPI_Wtime() - t_init));
-			MD_QOI(pSPARC, avgvel, maxvel, mindis); // calculates the quantities of interest in an MD simulation
-			Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the output_md file
-        }
-        fclose(output_md);
-    }
-
-    if (!rank && pSPARC->MD_Nstep > 0) {
-        output_fp = fopen(pSPARC->OutFilename,"a");
-	    if (output_fp == NULL) {
-            printf("\nCannot open file \"%s\"\n",pSPARC->OutFilename);
-            exit(EXIT_FAILURE);
-        }
-        fprintf(output_fp,"MD step time                       :  %.3f (sec)\n", (MPI_Wtime() - t_init));
-        fclose(output_fp);
-    }
-
-    pSPARC->MDCount++;
-	pSPARC->elecgs_Count++;
-
-    // Perform MD until maxStep is reached or total walltime is hit
-	int Count = pSPARC->MDCount + pSPARC->restartCount + (pSPARC->RestartFlag == 0); // Count is the MD step no. to be performed
-	int check1 = (pSPARC->PrintMDout == 1 && !rank);
-	int check2 = (pSPARC->Printrestart == 1 && !rank);
-	t_acc = (MPI_Wtime() - t_init)/60;// tracks time in minutes
-   	while(Count <= pSPARC->MD_maxStep && (t_acc + 1.0*(MPI_Wtime() - t_init)/60) < pSPARC->TWtime){
-   		t_init = MPI_Wtime();
-#ifdef DEBUG
-   		if(!rank) printf(":MDSTEP: %d\n", Count);
-#endif
-		if (check1){
-			output_md = fopen(pSPARC->MDFilename,"a+");
+	if((strcmpi(pSPARC->MDMeth,"NPT_NP") != 0) && (strcmpi(pSPARC->MDMeth,"NPH") != 0)){  // For NPT_NP and NPH, a similar but slightly modified printing scheme is run, as the printing instances in this below setup is not compatible with NPT_NP and NPH ensemble, i.e. the printing setup in the below scheme (if condition) if used for NPT_NP and NPH would be corresponding to time = t in positions and potential energies, but only time = t-dt/2 for momenta, velocities and kinetic energies. So the quantities are not in-sync when being printed to 'log' or 'aimd' file, so this setup is done separately for NPT_NP and NPH with printing happening when all quantities are in-sync and belong to same time = t
+		// File output_md stores all the desirable properties from a MD run
+		FILE *output_md, *output_fp;
+		if (pSPARC->PrintMDout == 1 && !rank && pSPARC->MD_Nstep > 0){
+			output_md = fopen(pSPARC->MDFilename,"w");
 			if (output_md == NULL) {
-			    printf("\nCannot open file \"%s\"\n",pSPARC->MDFilename);
-			    exit(EXIT_FAILURE);
+				printf("\nCannot open file \"%s\"\n",pSPARC->MDFilename);
+				exit(EXIT_FAILURE);
 			}
-			fprintf(output_md,"\n\n:MDSTEP: %d\n", Count);
-		}
-
-		if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0)
-			NVT_NH(pSPARC);
-		else if(strcmpi(pSPARC->MDMeth,"NVE") == 0)
-			NVE(pSPARC);
-		else if(strcmpi(pSPARC->MDMeth,"NVK_G") == 0)
-		    NVK_G(pSPARC);
-		else if(strcmpi(pSPARC->MDMeth,"NPT_NH") == 0)
-		    NPT_NH(pSPARC);
-		else if(strcmpi(pSPARC->MDMeth,"NPT_NP") == 0 || strcmpi(pSPARC->MDMeth,"NPH") == 0)
-			NPT_NP_and_NPH(pSPARC, output_md, avgvel, maxvel, mindis); //The last four arguments: output_md, avgvel, maxvel and mindis are only passed so as to facilitate calling 'MD_QOI' or 'Print_fullMD' function from within NPT_NP or NPH subroutines
-		else{
-			if (!rank){
-				printf("\nCannot recognize MDMeth = \"%s\"\n",pSPARC->MDMeth);
-            }
-            exit(EXIT_FAILURE);
-        }
-
-		if((strcmpi(pSPARC->MDMeth,"NPT_NP") != 0) && (strcmpi(pSPARC->MDMeth,"NPH") != 0)){ // for NPT_NP and NPH, this instance is corresponding to time = t in positions and potential energies, but only time = t-dt/2 for momenta, velocities and kinetic energies, so the same function is called within NPT_NP or NPH subroutine, when all quantities are in-sync and belong to same time = t
-        	MD_QOI(pSPARC, avgvel, maxvel, mindis); // calculates the quantities of interest in an MD simulation
-		}
-
-        if(check1) {
-            fprintf(output_md,":MDTM: %.2f\n", MPI_Wtime() - t_init);
-			if((strcmpi(pSPARC->MDMeth,"NPT_NP") != 0) && (strcmpi(pSPARC->MDMeth,"NPH") != 0)){  // for NPT_NP and NPH, this instance is corresponding to time = t in positions and potential energies, but only time = t-dt/2 for momenta, velocities and kinetic energies, so the same function is called within NPT_NP or NPH subroutine, when all quantities are in-sync and belong to same time = t
-           		Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the .aimd file  
-			}
-        } if(check2 && !(Count % pSPARC->Printrestart_fq)) // printrestart_fq is the frequency at which the restart file is written
-			PrintMD(pSPARC, 1, print_restart_typ);
-        
-        if(access("SPARC.stop", F_OK ) != -1 ){ // If a .stop file exists in the folder then the run will be terminated
+			pSPARC->MDCount = -1;
+			Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the output_md file
 			pSPARC->MDCount++;
-			break;
-		}
-		if(check1)
-    		fclose(output_md);
-#ifdef DEBUG
-   		if (!rank) printf("Time taken by MDSTEP %d: %.3f s.\n", Count, (MPI_Wtime() - t_init));
-#endif
-		if(!rank){
-			output_fp = fopen(pSPARC->OutFilename,"a");
-		    if (output_fp == NULL) {
-	            printf("\nCannot open file \"%s\"\n",pSPARC->OutFilename);
-	            exit(EXIT_FAILURE);
-	        }
-	        fprintf(output_fp,"MD step time                       :  %.3f (sec)\n", (MPI_Wtime() - t_init));
-	        fclose(output_fp);
-	    }
 
-		pSPARC->MDCount ++;
-		Count ++;
-		t_acc += (MPI_Wtime() - t_init)/60;
-	} // end while loop
+			if(pSPARC->RestartFlag == 0){
+				fprintf(output_md,":MDSTEP: %d\n", 1);
+				fprintf(output_md,":MDTM: %.2f\n", (MPI_Wtime() - t_init));
+				MD_QOI(pSPARC, avgvel, maxvel, mindis); // calculates the quantities of interest in an MD simulation
+				Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the output_md file
+			}
+
+			fclose(output_md);
+		}
+
+		if (!rank && pSPARC->MD_Nstep > 0) {
+			output_fp = fopen(pSPARC->OutFilename,"a");
+			if (output_fp == NULL) {
+				printf("\nCannot open file \"%s\"\n",pSPARC->OutFilename);
+				exit(EXIT_FAILURE);
+			}
+			fprintf(output_fp,"MD step time                       :  %.3f (sec)\n", (MPI_Wtime() - t_init));
+			fclose(output_fp);
+		}
+
+		pSPARC->MDCount++;
+		pSPARC->elecgs_Count++;
+
+		// Perform MD until maxStep is reached or total walltime is hit
+		int Count = pSPARC->MDCount + pSPARC->restartCount + (pSPARC->RestartFlag == 0); // Count is the MD step no. to be performed
+		int check1 = (pSPARC->PrintMDout == 1 && !rank);
+		int check2 = (pSPARC->Printrestart == 1 && !rank);
+		t_acc = (MPI_Wtime() - t_init)/60;// tracks time in minutes
+		while(Count <= pSPARC->MD_maxStep && (t_acc + 1.0*(MPI_Wtime() - t_init)/60) < pSPARC->TWtime){
+			t_init = MPI_Wtime();
+			#ifdef DEBUG
+			if(!rank) printf(":MDSTEP: %d\n", Count);
+			#endif
+			if (check1){
+				output_md = fopen(pSPARC->MDFilename,"a+");
+				if (output_md == NULL) {
+					printf("\nCannot open file \"%s\"\n",pSPARC->MDFilename);
+					exit(EXIT_FAILURE);
+				}
+				fprintf(output_md,":MDSTEP: %d\n", Count);
+			}
+
+			if(strcmpi(pSPARC->MDMeth,"NVT_NH") == 0)
+				NVT_NH(pSPARC);
+			else if(strcmpi(pSPARC->MDMeth,"NVE") == 0)
+				NVE(pSPARC);
+			else if(strcmpi(pSPARC->MDMeth,"NVK_G") == 0)
+				NVK_G(pSPARC);
+			else if(strcmpi(pSPARC->MDMeth,"NPT_NH") == 0)
+				NPT_NH(pSPARC);
+			else{
+				if (!rank){
+					printf("\nCannot recognize MDMeth = \"%s\"\n",pSPARC->MDMeth);
+				}
+				exit(EXIT_FAILURE);
+			}
+
+			MD_QOI(pSPARC, avgvel, maxvel, mindis); // calculates the quantities of interest in an MD simulation
+
+			if(check1) {
+				fprintf(output_md,":MDTM: %.2f\n", MPI_Wtime() - t_init);
+				Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the .aimd file
+			} if(check2 && !(Count % pSPARC->Printrestart_fq)) // printrestart_fq is the frequency at which the restart file is written
+				PrintMD(pSPARC, 1, print_restart_typ);
+			
+			if(access("SPARC.stop", F_OK ) != -1 ){ // If a .stop file exists in the folder then the run will be terminated
+				pSPARC->MDCount++;
+				break;
+			}
+			if(check1)
+				fclose(output_md);
+			#ifdef DEBUG
+			if (!rank) printf("Time taken by MDSTEP %d: %.3f s.\n", Count, (MPI_Wtime() - t_init));
+			#endif
+			if(!rank){
+				output_fp = fopen(pSPARC->OutFilename,"a");
+				if (output_fp == NULL) {
+					printf("\nCannot open file \"%s\"\n",pSPARC->OutFilename);
+					exit(EXIT_FAILURE);
+				}
+				fprintf(output_fp,"MD step time                       :  %.3f (sec)\n", (MPI_Wtime() - t_init));
+				fclose(output_fp);
+			}
+
+			pSPARC->MDCount ++;
+			Count ++;
+			t_acc += (MPI_Wtime() - t_init)/60;
+		} // end while loop
+
+	} else {  // Carry out the above procedure in slightly modified printing manner for NPT_NP and NPH ensemble
+		// File output_md stores all the desirable properties from a MD run
+		FILE *output_md, *output_fp;
+		if (pSPARC->PrintMDout == 1 && !rank && pSPARC->MD_Nstep > 0){
+			output_md = fopen(pSPARC->MDFilename,"w");
+			if (output_md == NULL) {
+				printf("\nCannot open file \"%s\"\n",pSPARC->MDFilename);
+				exit(EXIT_FAILURE);
+			}
+			pSPARC->MDCount = -1;
+			Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the output_md file
+			pSPARC->MDCount++;
+
+			// if(pSPARC->RestartFlag == 0){
+			// 	fprintf(output_md,":MDSTEP: %d\n", 1);
+			// 	fprintf(output_md,":MDTM: %.2f\n", (MPI_Wtime() - t_init));
+			// 	MD_QOI(pSPARC, avgvel, maxvel, mindis); // calculates the quantities of interest in an MD simulation
+			// 	Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the output_md file
+			// }
+
+			fclose(output_md);
+		}
+
+		pSPARC->MDCount++
+		pSPARC->elecgs_Count++;
+
+		// Perform MD until maxStep is reached or total walltime is hit
+		int Count = pSPARC->MDCount + pSPARC->restartCount; // Count is the MD step no. to be performed
+		int check1 = (pSPARC->PrintMDout == 1 && !rank);
+		int check2 = (pSPARC->Printrestart == 1 && !rank);
+		t_acc = (MPI_Wtime() - t_init)/60;// tracks time in minutes
+		while(Count <= pSPARC->MD_maxStep && (t_acc + 1.0*(MPI_Wtime() - t_init)/60) < pSPARC->TWtime){
+			t_init = MPI_Wtime();
+			#ifdef DEBUG
+			if(!rank) printf(":MDSTEP: %d\n", Count);
+			#endif
+			if (check1){
+				output_md = fopen(pSPARC->MDFilename,"a+");
+				if (output_md == NULL) {
+					printf("\nCannot open file \"%s\"\n",pSPARC->MDFilename);
+					exit(EXIT_FAILURE);
+				}
+				fprintf(output_md,":MDSTEP: %d\n", Count);
+			}
+
+			NPT_NP_and_NPH(pSPARC, output_md, avgvel, maxvel, mindis);
+
+			// This is true, restart happens from the instance when position are at time = t,  whereas momenta are lagging behind by dt/2, so they belong to time = t-dt/2  (unlike printing all quantities to an MD file, which happens when all quantities belong to time = t,  and in-sync with each other)
+			if(check2 && !(Count % pSPARC->Printrestart_fq)) // printrestart_fq is the frequency at which the restart file is written
+				PrintMD(pSPARC, 1, print_restart_typ);
+			
+			// pSPARC->MDCount ++;  // This is incremented within 'NPT_NP_and_NPH_main' subroutine
+			Count ++;  // This should not be moved to 'NPT_NP_and_NPH_main' subroutine
+			t_acc += (MPI_Wtime() - t_init)/60;
+		}  // end while loop
+
+	}
+
+
 	if(check2){
 		pSPARC->MDCount --;
 		print_restart_typ = 1;
@@ -1934,28 +1990,6 @@ void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
 		}
 		pSPARC->Hamiltonian_NPH = pSPARC->SNOSE[0] * (sumAllHamilTerms - pSPARC->init_Hamil_NPH);  //Eqn. 8 in the Hernandez paper
 	}
-	
-	#ifdef DEBUG
-	if (rank == 0) {
-		printf("within init");
-    	printf("\n");
-    	printf("rank %d", rank);
-    	printf("ENERGY of time step %d\n", pSPARC->MDCount + 1);
-	    printf("kinetic energy (Ha)             : %12.9f\n", pSPARC->KE);
-	    printf("potential energy (Ha)           : %12.9f\n", pSPARC->Etot);
-	    printf("barostat kinetic energy (Ha)    : %12.9f\n", pSPARC->Kbaro);
-	    printf("thermostat kinetic energy (Ha)  : %12.9f\n", pSPARC->Kther);
-	    printf("barostat potential energy (Ha)  : %12.9f\n", pSPARC->Ubaro);
-	    printf("thermostat potential energy (Ha): %12.9f\n", pSPARC->Uther);
-	    printf("Sum of all energy terms (Ha)    : %12.9f\n", sumAllHamilTerms);
-		if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
-			printf("Hamiltonian (Ha)                : %12.9f\n", pSPARC->Hamiltonian_NPT_NP);
-		}
-		else {
-			printf("Hamiltonian (Ha)                : %12.9f\n", pSPARC->Hamiltonian_NPH);
-		}
-	}
-	#endif
 	// ------------------------------------- END: Calculating Hamiltonian (Eqn 10)----------------------------------//
 
 	//Initialize constraint stress to 0
@@ -2178,16 +2212,50 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasTrans, 3, 3, 3, 2.0, temp_mat, 3, pSPARC->full_lattice, 3, 0.0, pSPARC->constraint_stress, 3); 
 	
 
+	// ------------------------------------- END: Updating Momenta by half step (Eqns. 18g, 18h, 18i)----------------------------------//
+	
+
+	// ------------------------------------- BEGIN: PRINTING FOR NPT_NP OR NPH ENSEMBLE (this marks the end of one timestep) --------------------------------------//
 
 	// Obtain updated velocities in cartesian coordinates for use in MD_QOI function
 	cblas_dgemm(CblasRowMajor, CblasNoTrans, CblasNoTrans, pSPARC->n_atom, 3, 3, 1.0 / pSPARC->SNOSE[0], pSPARC->ion_vel_fractional, 3, pSPARC->full_lattice, 3, 0.0, pSPARC->ion_vel, 3); 
+	
+	
+	int Count = pSPARC->MDCount + pSPARC->restartCount; 
 	int check1 = (pSPARC->PrintMDout == 1 && !rank);
-	MD_QOI(pSPARC, avgvel, maxvel, mindis);
-	Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the .aimd file
+	int check2 = (pSPARC->Printrestart == 1 && !rank);
+	
+	MD_QOI(pSPARC, avgvel, maxvel, mindis); // calculates the quantities of interest in an MD simulation
+	if(check1) {
+		fprintf(output_md,":MDTM: %.2f\n", MPI_Wtime() - pSPARC->t_md);
+		Print_fullMD(pSPARC, output_md, avgvel, maxvel, mindis); // prints the QOI in the .aimd file
+	} 
 
-	// ------------------------------------- END: Updating Momenta by half step (Eqns. 18g, 18h, 18i)----------------------------------//
+	if(access("SPARC.stop", F_OK ) != -1 ){ // If a .stop file exists in the folder then the run will be terminated
+		pSPARC->MDCount++;
+		break;
+	}
+	if(check1)
+		fclose(output_md);
+	#ifdef DEBUG
+		if (!rank) printf("Time taken by MDSTEP %d: %.3f s.\n", Count, (MPI_Wtime() - pSPARC->t_md));
+	#endif
+	if(!rank){
+		output_fp = fopen(pSPARC->OutFilename,"a");
+		if (output_fp == NULL) {
+			printf("\nCannot open file \"%s\"\n",pSPARC->OutFilename);
+			exit(EXIT_FAILURE);
+		}
+		fprintf(output_fp,"MD step time       :  %.3f (sec)\n", (MPI_Wtime() - pSPARC->t_md));
+		fclose(output_fp);
+	}
+
+	//Increment MDCount by 1  (this marks the start of MDCount^{th} step )
+	pSPARC->MDCount++;
 	
 	
+	// ------------------------------------- END: PRINTING FOR NPT_NP OR NPH ENSEMBLE (this marks the beginning of new timestep) --------------------------------------//
+
 
 	// ------------------------------------- BEGIN: Updating Momenta by second half step (Eqns. 18a, 18b, 18c)	
 	//				   And updating the position variable of the themostat if doing NPT_NP emsemble (Eqn. 18d) ----------------------------------//
