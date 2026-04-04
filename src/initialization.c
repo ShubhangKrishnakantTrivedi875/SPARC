@@ -3011,7 +3011,7 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
             }
         }
         if (pSPARC->NPTspecialconstraint == 1){
-            if (pSPARC->NPTscaleVecs[0] == 0 || pSPARC->NPTscaleVecs[1] == 0 || pSPARC->NPTscaleVecs[2] != 0) { // a or b cannot be rescaled
+            if (pSPARC->NPTscaleVecs[0] == 0 || pSPARC->NPTscaleVecs[1] == 0 || pSPARC->NPTscaleVecs[2] != 0) { // a or b cannot be rescaled or c is being rescaled
                 if (!rank) {
                     printf("\nNPT_SPECIAL_CONSTRAINT has conflict with NPT_SCALE_VECS! Remember lattice vector a and b needs to be rescaled, lattice vector c has to remain fixed. Also lattice vector 'c' must be orthogonal to both lattice vector a and b.\n");
                 }
@@ -3019,7 +3019,7 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
             }
         }
         if (pSPARC->NPT_NP_ANGLES==1){
-            if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 || pSPARC_Input->NPTconstraintFlag != 0 || pSPARC_Input->NPTspecialconstrait != 0){
+            if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 || pSPARC_Input->NPTconstraintFlag != 0 || pSPARC_Input->NPTspecialconstraint != 0){
                     printf("Angle changing in NPT_NP ensemble is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints of any kind imposed on them.\n");
                     exit(EXIT_FAILURE);
                 }
@@ -3059,7 +3059,7 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
             }
         }
         if (pSPARC->NPHspecialconstraint == 1){
-            if (pSPARC->NPHscaleVecs[0] == 0 || pSPARC->NPHscaleVecs[1] == 0 || pSPARC->NPHscaleVecs[2] != 0) { // a or b cannot be rescaled
+            if (pSPARC->NPHscaleVecs[0] == 0 || pSPARC->NPHscaleVecs[1] == 0 || pSPARC->NPHscaleVecs[2] != 0) { // a or b cannot be rescaled or c is being rescaled
                 if (!rank) {
                     printf("\nNPH_SPECIAL_CONSTRAINT has conflict with NPH_SCALE_VECS! Remember lattice vector a and b needs to be rescaled, lattice vector c has to remain fixed. Also lattice vector 'c' must be orthogonal to both lattice vector a and b.\n");
                 }
@@ -3067,7 +3067,7 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
             }
         }
         if (pSPARC->NPH_ANGLES==1){
-            if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 || pSPARC_Input->NPHconstraintFlag != 0 || pSPARC_Input->NPTspecialconstrait != 0){
+            if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 || pSPARC_Input->NPHconstraintFlag != 0 || pSPARC_Input->NPHspecialconstraint != 0){
                     printf("Angle changing in NPH ensemble is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints of any kind imposed on them.\n");
                     exit(EXIT_FAILURE);
                 }

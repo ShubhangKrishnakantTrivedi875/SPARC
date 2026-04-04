@@ -1929,7 +1929,7 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 		NPT_NPHconstraintFlag = pSPARC->NPTconstraintFlag;
 		NPT_NPHscaleVecs[0] = pSPARC->NPTscaleVecs[0]; NPT_NPHscaleVecs[1] = pSPARC->NPTscaleVecs[1]; NPT_NPHscaleVecs[2] = pSPARC->NPTscaleVecs[2];
 		NPT_NPHspecialconstraint = pSPARC->NPTspecialconstraint;
-		
+
 		baro_const1 = pSPARC->NPT_NP_bmass * pSPARC->volumeCell * pSPARC->volumeCell; // M_G*det(G) in the Hernandez paper
 	}
 	else{
@@ -2041,9 +2041,26 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 		pSPARC->Pm_metric_tensor[5] = 0;
 		pSPARC->Pm_metric_tensor[2] = 0;
 	}
-	if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
 		pSPARC->Pm_metric_tensor[0] = 0; 
 		pSPARC->Pm_metric_tensor[4] = 0;
+	}
+	//Only |c| varies, |a| and |b| are fixed
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){ 
+		gpig[0] = 0; 
+		gpig[4] = 0;
+	}
+
+	//Only |a| varies, |b| and |c| are fixed
+	else if (NPT_NPHscaleVecs[0] == 1 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 0){
+		gpig[4] = 0; 
+		gpig[8] = 0;
+	}
+
+	//Only |b| varies, |a| and |c| are fixed
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 1 && NPT_NPHscaleVecs[2] == 0){
+		gpig[0] = 0; 
+		gpig[8] = 0;
 	}
 
 
@@ -2218,9 +2235,30 @@ void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *min
 		pSPARC->Pm_metric_tensor[5] = 0;
 		pSPARC->Pm_metric_tensor[2] = 0;
 	}
-	if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
 		pSPARC->Pm_metric_tensor[0] = 0; 
 		pSPARC->Pm_metric_tensor[4] = 0;
+	}
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){
+		pSPARC->Pm_metric_tensor[0] = 0; 
+		pSPARC->Pm_metric_tensor[4] = 0;
+	}
+	//Only |c| varies, |a| and |b| are fixed
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 1){ 
+		gpig[0] = 0; 
+		gpig[4] = 0;
+	}
+
+	//Only |a| varies, |b| and |c| are fixed
+	else if (NPT_NPHscaleVecs[0] == 1 && NPT_NPHscaleVecs[1] == 0 && NPT_NPHscaleVecs[2] == 0){
+		gpig[4] = 0; 
+		gpig[8] = 0;
+	}
+
+	//Only |b| varies, |a| and |c| are fixed
+	else if (NPT_NPHscaleVecs[0] == 0 && NPT_NPHscaleVecs[1] == 1 && NPT_NPHscaleVecs[2] == 0){
+		gpig[0] = 0; 
+		gpig[8] = 0;
 	}
 	
 

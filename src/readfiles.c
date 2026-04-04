@@ -780,7 +780,7 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
         } else if (strcmpi(str,"NPT_NP_ANGLES:") == 0){
             fscanf(input_fp,"%d",&pSPARC_Input->NPT_NP_ANGLES);
             fscanf(input_fp, "%*[^\n]\n");
-        } else if (strcmpi(str,"NPT_SPECIAL_CONSTRAINT:") == 0){
+        } else if (strcmpi(str,"NPT_NP_SPECIAL_CONSTRAINT:") == 0){
             fscanf(input_fp,"%d",&pSPARC_Input->NPTspecialconstraint);
             fscanf(input_fp, "%*[^\n]\n");
         } else if (strcmpi(str,"NPH_SCALE_VECS:") == 0) {
