@@ -780,9 +780,6 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
         } else if (strcmpi(str,"NPT_NP_ANGLES:") == 0){
             fscanf(input_fp,"%d",&pSPARC_Input->NPT_NP_ANGLES);
             fscanf(input_fp, "%*[^\n]\n");
-        } else if (strcmpi(str,"NPT_NP_SPECIAL_CONSTRAINT:") == 0){
-            fscanf(input_fp,"%d",&pSPARC_Input->NPTspecialconstraint);
-            fscanf(input_fp, "%*[^\n]\n");
         } else if (strcmpi(str,"NPH_SCALE_VECS:") == 0) {
             int dir[3] = {0, 0, 0};
             pSPARC_Input->NPHscaleVecs[0] = 0; pSPARC_Input->NPHscaleVecs[1] = 0; pSPARC_Input->NPHscaleVecs[2] = 0; 
@@ -825,9 +822,6 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
         } else if (strcmpi(str,"NPH_ANGLES:") == 0){
             fscanf(input_fp,"%d",&pSPARC_Input->NPH_ANGLES);
             fscanf(input_fp, "%*[^\n]\n");
-        } else if (strcmpi(str,"NPH_SPECIAL_CONSTRAINT:") == 0){
-            fscanf(input_fp,"%d",&pSPARC_Input->NPHspecialconstraint);
-            fscanf(input_fp, "%*[^\n]\n"); 
         } else if (strcmpi(str,"NPT_NH_QMASS:") == 0) { 
             fscanf(input_fp,"%d",&pSPARC_Input->NPT_NHnnos);
             for (int subscript_NPTNH_qmass = 0; subscript_NPTNH_qmass < pSPARC_Input->NPT_NHnnos; subscript_NPTNH_qmass++){

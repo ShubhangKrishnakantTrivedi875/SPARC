@@ -869,12 +869,9 @@ typedef struct _SPARC_OBJ{
     int NPTconstraintFlag; // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
     // 3: b:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
     int NPT_NP_ANGLES;      // Flag to decide whether changing of angles during NPT_NP ensemble is allowed
-    int NPTspecialconstraint; // these are special constraint. 1: Used for graphene which allows only 2D flexibility along a and b which forms 120 degree angles between them (no change along c direction, which forms 90 degree angles with a and with b).
-    // Currently only 1 special constraint is supported, others will be supported in future
     int NPHscaleVecs[3];     // Same as NPTscaleVecs, but meant for NPH
     int NPHconstraintFlag;   // Same as NPTconstraintFlag, but meant for NPH
     int NPH_ANGLES;          // Same as NPT_NP_ANGLES, but meant for NPH
-    int NPHspecialconstraint; // Same as NPTspecialconstraint, but meant for NPH
     int NPTisotropicFlag;   // whether it is an isotropic cell expansion; a:b:c keeps similar during NPT. 
     // For NPT_NH, if all 3 lattive vectors are scalable, it will be an isotropic expansion;
  
@@ -1465,15 +1462,11 @@ typedef struct _SPARC_INPUT_OBJ{
     // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
     int NPT_NP_ANGLES;          // whether to allow for changing angles in NPT_NP,  it can only be allowed (by setting to 1), when all lattice vectors can be rescaled using NPTscaleVecs: 1 2 3; 
     // and when there are NO constraints in length confinement (so no input in NPTconstraintFlag)
-    int NPTspecialconstraint; // these are special constraint. 1: Used for graphene which allows only 2D flexibility along a and b which forms 120 degree angles between them (no change along c direction, which forms 90 degree angles with a and with b).
-    // Currently only 1 special constraint is supported, others will be supported in future
     int NPHscaleVecs[3];        // which lattice vector can be rescaled in NPH? 
     int NPHconstraintFlag;      // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
     // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPH.
     int NPH_ANGLES;              // whether to allow for changing angles in NPH,  it can only be allowed (by setting to 1), when all lattice vectors can be rescaled using NPHscaleVecs: 1 2 3; 
     // and when there are NO constraints in length confinement (so no input in NPHconstraintFlag)
-    int NPHspecialconstraint;
-    
     double pressure_external;  // Externally applied hydrostatic pressure of NPT_NP or NPH system, UNIT on input file is GPa 
     double stress_external[6]; // Externally applied anisotropic stress tensor (applied separately from pressure_external) for NPT_NP or NPH system, UNIT on input file is GPa 
     //In NPT_NP and NPH,  the target_stress[i] = pr_external+stress_external[i];  in contrast to NPT_NH where there is just target_pressure.
