@@ -49,7 +49,7 @@ The systems in the testing suites are classified with a set of tags which descri
  * SCF Mixing and preconditioner: `potmix`,`denmix`,`kerker`.
  * Calculation type: `scf`,`relax_atom`,`relax_cell`,`relax_full`,`md`.
  * Relaxation type: `nlcg`,`lbfgs`,`fire`.
- * MD type: `nvtnh`,`nvkg`,`nve`,`npt`.
+ * MD type: `nvtnh`,`nvkg`,`nve`,`nptnh`,`nptnp`,`nph`.
  * K-point sampling: `gamma`,`kpt`.
  * Spin polarization: `spin`,`SOC`.
  * Methods: `highT`,`SQ3`.
