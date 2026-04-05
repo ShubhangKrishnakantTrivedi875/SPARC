@@ -153,33 +153,61 @@ void reinitialize_mesh_NPT(SPARC_OBJ *pSPARC);
 void hamiltonian_NPT_NH(SPARC_OBJ *pSPARC);
 
 /* 
-@ brief: Performs Molecular Dynamics using NPT_NP.
+@ brief: Performs Molecular Dynamics using NPT_NP or NPH.
 */
-
 void NPT_NP_and_NPH(SPARC_OBJ *pSPARC,  double *avgvel, double *maxvel, double *mindis);
 
-void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis);
-/* 
-@ brief: Calculates cell angles, reciprocal lattice vectors, metric and reciprocal metric tensors, for use in NPT_NP and NPH dynamics
+/*
+@ brief: Do one full step of 'NPT_NP' or 'NPH' ensemble i.e. Solve equation 18a to 18g of the Hernandez paper and calculate the Hamiltonian of the same system.
 */
-void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell);
-void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC);
+void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis);
 
+/*
+@ brief: function to calculate the initial hamiltonian in 'NPT_NP' or 'NPH'.
+*/
 void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC);
 
+/* 
+@ brief: Initializes cell ingredients during the start of 'NPT_NP' or 'NPH', or updates the cell after each step.
+         Cell ingredients include but not limited to: cell angles, reciprocal lattice vectors, metric tensor and reciprocal metric tensors, for use in NPT_NP and NPH dynamics
+*/
+void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell);
+
+/*
+@ brief: Initializes cell ingredients during the restart of 'NPT_NP' or 'NPH'. To be called only once in the first step after restart.
+*/
+void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC);
+
+/*
+@ brief: function to transpose a matrix and add to itself 
+*/
 void transpose_and_add(double *matrix1);
 
+/*
+@ brief: function to compute the kinetic energy of the ionic particles in 'NPT_NP' or 'NPH'
+*/
 void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC);
 
-void Calculate_Kinetic_stress_and_total_internal_pressure(SPARC_OBJ *pSPARC);
+/*
+@ brief: function to compute the kinetic stress of the ionic particles in 'NPT_NP' or 'NPH'
+*/
+void Calculate_Kinetic_stress(SPARC_OBJ *pSPARC);
 
-void Calculate_Kinetic_energy_and_Kinetic_stress(SPARC_OBJ *pSPARC);
-
+/*
+@brief: function to impose constraints on the flexibility of the cell in the 'NPT_NP' or 'NPH'
+*/
 void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int *NPT_NPHscaleVecs);
 
+/*
+@brief: function to update the components of the metric tensor in one full step iteratively in 'NPT_NP' or 'NPH'.
+*/
 void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new, int NPT_NPH_ANGLES, int NPT_NPHconstraintFlag);
 
+/*
+@brief: function to update the momentum of the metric tensor in one half step iteratively in 'NPT_NP' or 'NPH'.
+*/
 void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC);
+
 /**
  * @ brief: function to convert non cartesian to cartesian coordinates and velocities, from initialization.c
  */
