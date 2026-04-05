@@ -12,7 +12,7 @@
 #define MD_H
 
 #include "isddft.h"
-
+#include <stdbool.h>
 /**
 * @ brief Main function of molecular dynamics
 */
@@ -137,8 +137,8 @@ void VelocityParticle (SPARC_OBJ *pSPARC);
 */
 void PositionParticleCell(SPARC_OBJ *pSPARC);
 
-/**
- * @brief   Write the re-initialized parameters into the output file.
+/*
+ @brief   Write the re-initialized parameters into the output file.
  */
 void write_output_reinit_NPT(SPARC_OBJ *pSPARC);
 
@@ -153,36 +153,68 @@ void reinitialize_mesh_NPT(SPARC_OBJ *pSPARC);
 void hamiltonian_NPT_NH(SPARC_OBJ *pSPARC);
 
 /* 
-@ brief: Performs Molecular Dynamics using NPT_NP.
+@ brief: Performs Molecular Dynamics using NPT_NP or NPH.
 */
-void NPT_NP(SPARC_OBJ *pSPARC);
+void NPT_NP_and_NPH(SPARC_OBJ *pSPARC,  double *avgvel, double *maxvel, double *mindis);
+
+/*
+@ brief: Do one full step of 'NPT_NP' or 'NPH' ensemble i.e. Solve equation 18a to 18g of the Hernandez paper and calculate the Hamiltonian of the same system.
+*/
+void NPT_NPH_main(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis);
+
+/*
+@ brief: function to calculate the initial hamiltonian in 'NPT_NP' or 'NPH'.
+*/
+void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC);
 
 /* 
-@ brief: calculate Hamiltonian of the NPT_NP system.
+@ brief: Initializes cell ingredients during the start of 'NPT_NP' or 'NPH', or updates the cell after each step.
+         Cell ingredients include but not limited to: cell angles, reciprocal lattice vectors, metric tensor and reciprocal metric tensors, for use in NPT_NP and NPH dynamics
 */
-void initialize_Hamiltonian(SPARC_OBJ *pSPARC);
+void fetch_MD_cell_ingredients(SPARC_OBJ *pSPARC, bool update_cell);
 
-/* 
-@ brief: updating momentums of thermostat and barostat variables and particles in the first half step in NPT_NP.
+/*
+@ brief: Initializes cell ingredients during the restart of 'NPT_NP' or 'NPH'. To be called only once in the first step after restart.
 */
-void updateMomentum_FirstHalf(SPARC_OBJ *pSPARC);
+void fetch_MD_cell_ingredients_restart(SPARC_OBJ *pSPARC);
 
-/* 
-@ brief: updating momentums of thermostat and barostat variables and particles in the second half step in NPT_NP.
+/*
+@ brief: function to transpose a matrix and add to itself 
 */
-void updateMomentum_SecondHalf(SPARC_OBJ *pSPARC);
+void transpose_and_add(double *matrix1);
 
-/* 
-@ brief: updating value of thermostat variable and length of cell and positions of particles in NPT_NP.
+/*
+@ brief: function to compute the kinetic energy of the ionic particles in 'NPT_NP' or 'NPH'
 */
-void updatePosition(SPARC_OBJ *pSPARC);
+void Calculate_Ionic_particles_Kinetic_energy(SPARC_OBJ *pSPARC);
+
+/*
+@ brief: function to compute the kinetic stress of the ionic particles in 'NPT_NP' or 'NPH'
+*/
+void Calculate_Kinetic_stress(SPARC_OBJ *pSPARC);
+
+/*
+@brief: function to impose constraints on the flexibility of the cell in the 'NPT_NP' or 'NPH'
+*/
+void compute_constraint_stress(SPARC_OBJ *pSPARC, int NPT_NPHconstraintFlag, int *NPT_NPHscaleVecs);
+
+/*
+@brief: function to update the components of the metric tensor in one full step iteratively in 'NPT_NP' or 'NPH'.
+*/
+void Update_metric_tensor_components_iteratively_full_step(SPARC_OBJ *pSPARC, double S_new, int NPT_NPH_ANGLES, int NPT_NPHconstraintFlag);
+
+/*
+@brief: function to update the momentum of the metric tensor in one half step iteratively in 'NPT_NP' or 'NPH'.
+*/
+void Update_metric_tensor_momenta_iteratively_half_step(SPARC_OBJ *pSPARC);
 
 /**
  * @ brief: function to convert non cartesian to cartesian coordinates and velocities, from initialization.c
  */
 void nonCart2Cart(double *LatUVec, double *carCoord, double *nonCarCoord);
+//void Cart2nonCart_transformMat_MD(SPARC_OBJ *pSPARC);
 
-/**
+/*
  * @brief: function to convert cartesian to non cartesian coordinates and velocities, from initialization.c
  */
 void Cart2nonCart(double *gradT, double *carCoord, double *nonCarCoord);

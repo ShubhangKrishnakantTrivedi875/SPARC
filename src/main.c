@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     // Read files and initialize
     Initialize(&SPARC, argc, argv);
  
-    if (SPARC.MDFlag == 1)
+    if (SPARC.MDFlag == 1)  
         main_MD(&SPARC);
     else if (SPARC.RelaxFlag != 0)
         main_Relax(&SPARC);
