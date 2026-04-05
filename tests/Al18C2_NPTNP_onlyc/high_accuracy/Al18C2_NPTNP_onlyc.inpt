@@ -25,11 +25,11 @@ MD_METHOD: NPT_NP          # NVE, NVT_NH (Nose-Hoover), NVK_G (Gaussian)
 MD_TIMESTEP: 1              # fs
 MD_NSTEP: 10              # run MD for MD_NSTEP steps or TWTIME minutes, whichever comes first
 #TWTIME: 1400
-RESTART_FLAG: 1               # 1 = restart MD from .restart file if present, 0 = start new
+RESTART_FLAG: 0               # 1 = restart MD from .restart file if present, 0 = start new
 #ION_VEL_DSTR: 1               # Initial velocities: 1 = uniform, 2 = Maxwell-Boltzmann (default)
-TARGET_PRESSURE: 0.1 GPa
+EXTERNAL_PRESSURE: 0.1 GPa
 NPT_NP_QMASS: 20000
-NPT_NP_BMASS: 1000
+NPT_NP_BMASS: 10
 NPT_SCALE_VECS: 3
 
 NSTATES: 72

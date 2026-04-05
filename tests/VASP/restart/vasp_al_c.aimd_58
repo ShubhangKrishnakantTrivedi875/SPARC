@@ -1,0 +1,220 @@
+:Description: 
+
+:Desc_R: Atom positions in Cartesian coordinates. Unit=Bohr 
+:Desc_V: Atomic velocities in Cartesian coordinates. Unit=Bohr/atu 
+     where atu is the atomic unit of time, hbar/Ha 
+:Desc_F: Atomic forces in Cartesian coordinates. Unit=Ha/Bohr 
+:Desc_MDTM: MD time. Unit=second 
+:Desc_TEL: Electronic temperature. Unit=Kelvin 
+:Desc_TIO: Ionic temperature. Unit=Kelvin 
+:Desc_TEN: Total energy. TEN = KEN + FEN. Unit=Ha/atom 
+:Desc_KEN: Ionic kinetic energy. Unit=Ha/atom 
+:Desc_KENIG: Kinetic energy: 3/2 N k T of ideal gas at temperature T = TIO. Unit=Ha/atom 
+     where N = number of particles, k = Boltzmann constant
+:Desc_FEN: Free energy F = U - TS. FEN = UEN + TSEN. Unit=Ha/atom 
+:Desc_UEN: Internal energy. Unit=Ha/atom 
+:Desc_TSEN: Electronic entropic contribution -TS to free energy F = U - TS. Unit=Ha/atom 
+:Desc_ANGLES: angles between cell lattice vectors. Format: (angle between 1 and 2,  angle between 1 and 3,  angle between 2 and 3). Unit = Degree 
+:Desc_VOLUME: Volume of the full lattice. Unit = Bohr^3 
+:Desc_LATVEC_SCALE: ratio of length of cell lattice vectors over length of input lattice vectors. Unit = 1 
+:Desc_LatVec: Lattice vectors, purpose: only to represent change in angles during NPT_NP ensemble (has same magnitude as initial LatVec). Unit = Bohr 
+:Desc_NPT_NP_HAMIL: Hamiltonian of the NPT_NP system, formula (10) in (E. Hernandez, 2001). Unit = Ha 
+:Desc_SNOSE[0]: Position variable of the thermostat
+:Desc_SNOSE[1]: Velocity variable of the thermostat
+:Desc_STRESS: Stress, excluding ion-kinetic contribution. Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) 
+:Desc_STRIO: Ion-kinetic stress in cartesian coordinate. Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) 
+:Desc_CONSTRESS: Constraint stress (due to restricting cell's full flexibility) in cartesian coordinate. Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) 
+:Desc_TOTSTRESS: Total internal stress in cartesian coordinate (also accounting stresses due to any constraint on cell flexibility). Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) 
+:Desc_PRESIO: Ion-kinetic pressure in cartesian coordinate. Unit=GPa 
+:Desc_PRES: Pressure, excluding ion-kinetic contribution. Unit=GPa 
+:Desc_CONPRES: Constraint pressure (pressure due to restricting cell flexibility). Unit=GPa 
+:Desc_TOTPRES: Total internal pressure (also accounting pressure due to any constraint on cell flexibility). Unit=GPa 
+:Desc_PRESIG: Pressure N k T/V of ideal gas at temperature T = TIO. Unit=GPa 
+     where N = number of particles, k = Boltzmann constant, V = volume
+:Desc_ST: (DEBUG mode only) Tags ending in 'ST' describe statistics. Printed are the mean and standard deviation, respectively. 
+:Desc_AVGV: Average of the speed of all ions of the same type. Unit=Bohr/atu 
+:Desc_MAXV: Maximum of the speed of all ions of the same type. Unit=Bohr/atu 
+:Desc_MIND: Minimum of the distance of all ions of the same type. Unit=Bohr 
+
+
+:MDSTEP: 1
+:MDTM: 18.29
+:TWIST: 0
+:TEL: 2399.89018851091
+:TIO: 2400
+:TEN:  -2.6257895967E+00
+:KEN:   1.0830495547E-02
+:KENIG:  1.1400521628E-02
+:FEN:  -2.6366200922E+00
+:UEN:  -2.6336322837E+00
+:TSEN: -2.9878084916E-03
+:NPT_NP_HAMIL:  0.0000000000E+00 
+:SNOSE[0]:  1.0000000000E+00 
+:SNOSE[1]:  0.0000000000E+00 
+:R:
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00
+  0.0000000000E+00   0.0000000000E+00   4.5599954400E+00
+  0.0000000000E+00   0.0000000000E+00   9.1199908800E+00
+  0.0000000000E+00   4.5599954400E+00   0.0000000000E+00
+  0.0000000000E+00   4.5599954400E+00   4.5599954400E+00
+  0.0000000000E+00   4.5599954400E+00   9.1199908800E+00
+  0.0000000000E+00   9.1199908800E+00   0.0000000000E+00
+  0.0000000000E+00   9.1199908800E+00   4.5599954400E+00
+  0.0000000000E+00   9.1199908800E+00   9.1199908800E+00
+  4.5599954400E+00   0.0000000000E+00   0.0000000000E+00
+  4.5599954400E+00   0.0000000000E+00   4.5599954400E+00
+  4.5599954400E+00   0.0000000000E+00   9.1199908800E+00
+  4.5599954400E+00   4.5599954400E+00   0.0000000000E+00
+  4.5599954400E+00   4.5599954400E+00   4.5599954400E+00
+  4.5599954400E+00   4.5599954400E+00   9.1199908800E+00
+  4.5599954400E+00   9.1199908800E+00   0.0000000000E+00
+  4.5599954400E+00   9.1199908800E+00   4.5599954400E+00
+  4.5599954400E+00   9.1199908800E+00   9.1199908800E+00
+  9.1199908800E+00   0.0000000000E+00   0.0000000000E+00
+  9.1199908800E+00   0.0000000000E+00   4.5599954400E+00
+:V:
+ -5.4115710230E-06   6.8757508489E-04   4.3922444908E-04
+  3.8695013404E-05  -1.5727036708E-04   5.1733358736E-04
+  6.4493513662E-04  -4.5410617930E-04  -3.0784970661E-04
+ -3.2920350438E-04  -1.3619502369E-04  -4.4905691374E-04
+  2.8658598929E-04   4.0521888677E-04  -3.3919687472E-05
+ -1.7257167859E-04   3.6971502996E-04  -5.9862904599E-05
+ -7.9421446266E-04  -5.9309712818E-04   2.6589596609E-04
+  4.2828069203E-05   1.3096761157E-04   3.9314276282E-04
+  4.5465740436E-04  -4.7430300552E-04   1.4680563660E-04
+ -4.4755491535E-04  -2.7196382513E-05  -6.1824700743E-04
+  1.9833994710E-05   1.9314792639E-05  -3.0782213202E-04
+  9.7647174954E-05  -4.7512762501E-04   4.3477912555E-04
+  5.4955926641E-04  -4.6798721576E-05   3.8047927085E-04
+  7.8609553616E-04   3.4903255353E-04  -5.0995639144E-05
+ -6.9672183347E-04   5.7127175617E-04  -2.9842606041E-04
+  6.0936513894E-05  -8.3800662438E-04  -5.9302776824E-05
+ -3.2116549188E-04   5.9649575701E-04  -2.8067803409E-05
+ -1.4190757723E-04   9.6824592199E-06  -4.3002543668E-04
+  1.9870737414E-04   1.8288302881E-04   2.8360006920E-04
+ -3.6275202006E-04  -4.1743326776E-05  -1.3552292110E-04
+:F:
+ -7.1835796253E-02  -9.8089482505E-07   1.9661672862E-03
+ -7.1842322396E-02  -9.8691387470E-07  -2.0234597924E-03
+ -4.3205973485E-02  -9.9055695549E-07   3.8565519409E-05
+ -4.5148862939E-02  -1.0563761304E-03   8.4836000093E-04
+ -4.5153926050E-02  -1.0749409477E-03  -9.1276349135E-04
+ -3.7841066913E-02   4.6808675411E-03   6.1094405439E-05
+ -4.5149093690E-02   1.0573815393E-03   8.4837450203E-04
+ -4.5154166489E-02   1.0759511925E-03  -9.1279712007E-04
+ -3.7841315779E-02  -4.6798942916E-03   6.1109170362E-05
+  7.1842613001E-02  -9.8331842709E-07   1.9855682453E-03
+  7.1859108490E-02  -9.7572696879E-07  -2.0385037711E-03
+  4.3198530674E-02  -9.9257620196E-07   5.8857748495E-05
+  4.5151667612E-02  -1.0894606444E-03   8.5033597521E-04
+  4.5161548915E-02  -1.0889600597E-03  -9.2368921560E-04
+  3.7852128130E-02   4.6663186556E-03   6.9654549876E-05
+  4.5151902166E-02   1.0904621329E-03   8.5036471674E-04
+  4.5161789935E-02   1.0899725270E-03  -9.2370887165E-04
+  3.7852360178E-02  -4.6653485860E-03   6.9653115745E-05
+ -2.9078148346E-05  -2.7212888096E-08   2.3949549298E-02
+ -3.0046958243E-05  -3.5728503287E-08  -2.3922732272E-02
+:ANGLES:
+ 90.000 90.000 90.000
+:VOLUME:   2.5601080320E+03
+:LATVEC_SCALE:
+   1.3680000000E+01   1.3680000000E+01   1.3680000000E+01
+:LatVec:
+   1.0000000000E+00   0.0000000000E+00   0.0000000000E+00
+   0.0000000000E+00   1.0000000000E+00   0.0000000000E+00
+   0.0000000000E+00   0.0000000000E+00   1.0000000000E+00
+:STRIO:
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00 
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00 
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00
+:STRESS:
+ -5.7660731318E+00   2.3994180584E-07   1.2713288330E-03 
+  2.3994180584E-07  -2.2361637817E+01   8.2065924634E-08 
+  1.2713288330E-03   8.2065924634E-08  -2.2524248406E+01
+:CONSTRESS:
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00 
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00 
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00
+:TOTSTRESS:
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00 
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00 
+  0.0000000000E+00   0.0000000000E+00   0.0000000000E+00
+:PRESIO:    0.0000000000E+00
+:PRES:      0.0000000000E+00
+:CONPRES:   0.0000000000E+00
+:TOTPRES:   0.0000000000E+00
+:PRESIG:    1.7468790201E+00
+:TELST:                INF                NAN
+:TIOST:                INF                NAN
+:PREST:               -NAN                NAN
+:MEAN_TOTSTRESS:
+               -NAN               -NAN               -NAN
+               -NAN               -NAN               -NAN
+               -NAN               -NAN               -NAN
+:STD_TOTSTRESS:
+                NAN                NAN                NAN
+                NAN                NAN                NAN
+                NAN                NAN                NAN
+:TENST:               -INF                NAN
+:KENST:                INF                NAN
+:FENST:               -INF                NAN
+:UENST:               -INF                NAN
+:TSENST:               -INF                NAN
+:AVGV:
+   6.6567394538E-04
+   3.9054804717E-04
+:MAXV:
+   1.0262755385E-03
+   3.9161182568E-04
+:MIND:
+Al - Al:   4.5599954400E+00
+C - C:   4.5599954400E+00
+Al - C:   4.5599954400E+00
+
+
+:MDSTEP: 2
+:MDTM: 14.03
+
+
+:MDSTEP: 3
+:MDTM: 14.02
+
+
+:MDSTEP: 4
+:MDTM: 10.28
+
+
+:MDSTEP: 5
+:MDTM: 10.30
+
+
+:MDSTEP: 6
+:MDTM: 10.28
+
+
+:MDSTEP: 7
+:MDTM: 10.26
+
+
+:MDSTEP: 8
+:MDTM: 10.28
+
+
+:MDSTEP: 9
+:MDTM: 10.23
+
+
+:MDSTEP: 10
+:MDTM: 10.24
+
+
+:MDSTEP: 11
+:MDTM: 10.25
+
+
+:MDSTEP: 12
+:MDTM: 10.27
+
+
+:MDSTEP: 13
+:MDTM: 10.26

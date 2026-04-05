@@ -1,0 +1,76 @@
+MLFF object intialized. Time taken: 10.377 s
+--------------------------------------------------------------------------------------------
+Simulation step: 0
+Existing MLFF ref-atom file read. Time taken: 7026509.987 s
+MLFF ref-atom read data broadcasted. Time taken: 0.062 s
+--------------------------------------------------------------------------------------------
+Calculation: 0
+Neighbor list and soap descriptor done! Time taken: 0.031 s
+Kpredict calculation done done! Time taken: 0.346 s
+prediction and gather done! Time taken: 0.034 s
+Prediction from MLFF done! Time taken: 0.411 s
+--------------------------------------------------------------------------------------------
+MLFF model prediction for E, F, stress done. Time taken: 0.534 s
+--------------------------------------------------------------------------------------------
+Calculation: 1
+Neighbor list and soap descriptor done! Time taken: 0.004 s
+Kpredict calculation done done! Time taken: 0.315 s
+prediction and gather done! Time taken: 0.013 s
+Prediction from MLFF done! Time taken: 0.333 s
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Calculation: 2
+Neighbor list and soap descriptor done! Time taken: 0.005 s
+Kpredict calculation done done! Time taken: 0.336 s
+prediction and gather done! Time taken: 0.024 s
+Prediction from MLFF done! Time taken: 0.365 s
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Calculation: 3
+Neighbor list and soap descriptor done! Time taken: 0.005 s
+Kpredict calculation done done! Time taken: 0.314 s
+prediction and gather done! Time taken: 0.010 s
+Prediction from MLFF done! Time taken: 0.328 s
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Calculation: 4
+Neighbor list and soap descriptor done! Time taken: 0.005 s
+Kpredict calculation done done! Time taken: 0.358 s
+prediction and gather done! Time taken: 0.024 s
+Prediction from MLFF done! Time taken: 0.388 s
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Calculation: 5
+Neighbor list and soap descriptor done! Time taken: 0.023 s
+Kpredict calculation done done! Time taken: 0.339 s
+prediction and gather done! Time taken: 0.018 s
+Prediction from MLFF done! Time taken: 0.380 s
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Calculation: 6
+Neighbor list and soap descriptor done! Time taken: 0.005 s
+Kpredict calculation done done! Time taken: 0.358 s
+prediction and gather done! Time taken: 0.019 s
+Prediction from MLFF done! Time taken: 0.383 s
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Calculation: 7
+Neighbor list and soap descriptor done! Time taken: 0.023 s
+Kpredict calculation done done! Time taken: 0.339 s
+prediction and gather done! Time taken: 0.024 s
+Prediction from MLFF done! Time taken: 0.386 s
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Calculation: 8
+Neighbor list and soap descriptor done! Time taken: 0.023 s
+Kpredict calculation done done! Time taken: 0.331 s
+prediction and gather done! Time taken: 0.020 s
+Prediction from MLFF done! Time taken: 0.374 s
+--------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------
+Calculation: 9
+Neighbor list and soap descriptor done! Time taken: 0.023 s
+Kpredict calculation done done! Time taken: 0.332 s
+prediction and gather done! Time taken: 0.012 s
+Prediction from MLFF done! Time taken: 0.367 s
+--------------------------------------------------------------------------------------------

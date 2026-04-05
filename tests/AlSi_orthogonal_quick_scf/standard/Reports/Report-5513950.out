@@ -1,0 +1,24 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-26-2026 20:17:24
+Job ID:    5513950
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/AlSi_orthogonal_quick_scf/standard
+[2026-03-26T20:37:50.047] error: *** STEP 5513950.0 ON atl1-1-02-017-34-2 CANCELLED AT 2026-03-26T20:37:50 DUE TO TIME LIMIT ***
+[2026-03-26T20:37:50.048] error: *** JOB 5513950 ON atl1-1-02-017-34-2 CANCELLED AT 2026-03-26T20:37:50 DUE TO TIME LIMIT ***
+---------------------------------------
+Begin Slurm Epilog: Mar-26-2026 20:37:53
+Job ID:        5513950
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=2G,node=1
+Rsrc Used:     cput=00:20:27,vmem=0,walltime=00:20:27,mem=35796K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-017-34-2
+---------------------------------------

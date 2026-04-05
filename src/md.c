@@ -2894,10 +2894,11 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 				fprintf(output_md,":Desc_NPT_NP_HAMIL: Hamiltonian of the NPT_NP system, formula (10) in (E. Hernandez, 2001). Unit = Ha \n");
 				fprintf(output_md,":Desc_SNOSE[0]: Position variable of the thermostat\n");
 				fprintf(output_md,":Desc_SNOSE[1]: Velocity variable of the thermostat\n");
-			} else
+			} else{
 				fprintf(output_md,":Desc_NPH_HAMIL: Hamiltonian of the NPH system, formula (10) in (E. Hernandez, 2001) with M_s (thermostat Mass) = 0 and S = 1, so no thermostat contribution. Unit = Ha \n");
 				fprintf(output_md,":Desc_NPH_Enthalpy: Enthalpy of the NPH system (or generalized enthalpy in case of anisotropic stress). This quantity is same as NPH Hamiltonian (NPH_HAMIL) plus the initial NPH hamiltonian. Unit = Ha \n");	
 			}
+		}
     	if(pSPARC->Calc_stress == 1){
 	    	fprintf(output_md,":Desc_STRESS: Stress, excluding ion-kinetic contribution. Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) \n"); //Calculated different in NPT_NP and NPH ensemble (basically not explicitly subtracting center of mass velocity, but assuming it to be 0, as per the (E.Hernandez, 2001) paper formula)
 	    	fprintf(output_md,":Desc_STRIO: Ion-kinetic stress in cartesian coordinate. Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) \n"); //Calculated different in NPT_NP and NPH ensemble (basically not explicitly subtracting center of mass velocity, but assuming it to be 0, as per the (E.Hernandez, 2001) paper formula)
@@ -2948,10 +2949,10 @@ void Print_fullMD(SPARC_OBJ *pSPARC, FILE *output_md, double *avgvel, double *ma
 			fprintf(output_md,":NPT_NP_HAMIL:%18.10E \n", pSPARC->Hamiltonian_NPT_NP);
 			fprintf(output_md,":SNOSE[0]:%18.10E \n", pSPARC->SNOSE[0]);
 			fprintf(output_md,":SNOSE[1]:%18.10E \n", pSPARC->SNOSE[1]);
-		} if(strcmpi(pSPARC->MDMeth,"NPH") == 0)
+		} if(strcmpi(pSPARC->MDMeth,"NPH") == 0){
 			fprintf(output_md,":NPH_HAMIL:%18.10E \n", pSPARC->Hamiltonian_NPH); 
 			fprintf(output_md,":NPH_ENTHALPY:%18.10E \n", pSPARC->Hamiltonian_NPH +  pSPARC->init_Hamil_NPH); 
-
+		}
 	    // Print atomic position
 	    if(pSPARC->PrintAtomPosFlag){
 		    fprintf(output_md,":R:\n");

@@ -1,0 +1,23 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-26-2026 20:10:38
+Job ID:    5513884
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/AlSi_orthogonal_quick_scf/standard
+/var/lib/slurm/slurmd/job5513884/slurm_script: line 19: /storage/home/hcoda1/5/strivedi44: Is a directory
+---------------------------------------
+Begin Slurm Epilog: Mar-26-2026 20:14:06
+Job ID:        5513884
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=2G,node=1
+Rsrc Used:     cput=00:03:28,vmem=0,walltime=00:03:28,mem=18960K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-03-003-10-1
+---------------------------------------

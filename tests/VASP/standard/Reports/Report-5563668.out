@@ -1,0 +1,32 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-28-2026 23:28:57
+Job ID:    5563668
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+
+Lmod is automatically replacing "gcc/12.3.0" with
+"intel-oneapi-compilers/2023.1.0".
+
+
+Inactive Modules:
+  1) libpciaccess/0.17     2) mvapich2     3) pmix/4.2.6     4) slurm/23.11.1
+
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/VASP/standard
+[2026-03-28T23:30:32.981] error: *** JOB 5563668 ON atl1-1-02-015-15-1 CANCELLED AT 2026-03-28T23:30:32 DUE to SIGNAL Terminated ***
+[2026-03-28T23:30:32.982] error: *** STEP 5563668.0 ON atl1-1-02-015-15-1 CANCELLED AT 2026-03-28T23:30:32 DUE to SIGNAL Terminated ***
+---------------------------------------
+Begin Slurm Epilog: Mar-28-2026 23:30:37
+Job ID:        5563668
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=12,mem=24G,node=1
+Rsrc Used:     cput=00:19:00,vmem=0,walltime=00:01:35,mem=14108K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-015-15-1
+---------------------------------------

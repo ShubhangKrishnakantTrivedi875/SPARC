@@ -1,0 +1,24 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-30-2026 10:18:05
+Job ID:    5953298
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/VASP/standard
+[2026-03-30T10:23:41.571] error: *** JOB 5953298 ON atl1-1-02-019-29-1 CANCELLED AT 2026-03-30T10:23:41 DUE to SIGNAL Terminated ***
+[2026-03-30T10:23:41.571] error: *** STEP 5953298.0 ON atl1-1-02-019-29-1 CANCELLED AT 2026-03-30T10:23:41 DUE to SIGNAL Terminated ***
+---------------------------------------
+Begin Slurm Epilog: Mar-30-2026 10:23:46
+Job ID:        5953298
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=24,mem=48G,node=1
+Rsrc Used:     cput=02:14:24,vmem=0,walltime=00:05:36,mem=13236K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-019-29-1
+---------------------------------------

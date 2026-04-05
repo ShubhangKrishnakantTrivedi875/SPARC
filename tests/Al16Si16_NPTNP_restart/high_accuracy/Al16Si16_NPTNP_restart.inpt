@@ -4,7 +4,7 @@ LATVEC:
 1.0 0.0 0.0
 0.0 1.0 0.0
 0.0 0.0 1.0
-MESH_SPACING: 0.30
+MESH_SPACING: 0.25
 BC: P P P
 KPOINT_GRID: 1 1 1
 # SPIN_TYP: 1
@@ -28,7 +28,7 @@ MD_NSTEP: 10              # run MD for MD_NSTEP steps or TWTIME minutes, whichev
 #TWTIME: 1400
 RESTART_FLAG: 1               # 1 = restart MD from .restart file if present, 0 = start new
 #ION_VEL_DSTR: 1               # Initial velocities: 1 = uniform, 2 = Maxwell-Boltzmann (default)
-TARGET_PRESSURE: 0 GPa
+EXTERNAL_PRESSURE: 0 GPa
 NPT_NP_QMASS: 500.0
 NPT_NP_BMASS: 0.1
 NPT_SCALE_CONSTRAINTS: 123

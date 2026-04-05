@@ -1,0 +1,22 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-26-2026 21:04:01
+Job ID:    5514448
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/VASP/standard
+---------------------------------------
+Begin Slurm Epilog: Mar-26-2026 21:04:54
+Job ID:        5514448
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=8,mem=16G,node=3
+Rsrc Used:     cput=00:07:36,vmem=0,walltime=00:00:57,mem=13936K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-008-7-[1-2],atl1-1-02-008-9-1
+---------------------------------------

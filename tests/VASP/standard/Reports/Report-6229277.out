@@ -1,0 +1,30 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-02-2026 12:47:07
+Job ID:    6229277
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+
+Lmod is automatically replacing "gcc/12.3.0" with
+"intel-oneapi-compilers/2023.1.0".
+
+
+Inactive Modules:
+  1) libpciaccess/0.17     2) mvapich2     3) pmix/4.2.6     4) slurm/23.11.1
+
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/VASP/standard
+---------------------------------------
+Begin Slurm Epilog: Apr-02-2026 12:47:25
+Job ID:        6229277
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=60,mem=120G,node=3
+Rsrc Used:     cput=00:19:00,vmem=0,walltime=00:00:19,mem=13064K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-008-13-2,atl1-1-02-008-14-2,atl1-1-02-008-15-2
+---------------------------------------

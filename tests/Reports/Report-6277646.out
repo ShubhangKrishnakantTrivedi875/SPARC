@@ -1,0 +1,136 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-04-2026 21:41:04
+Job ID:    6277646
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+
+CondaError: Run 'conda init' before 'conda deactivate'
+
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1008: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no = float(re.findall("\d+",lines)[0])
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1018: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no[count1] = float(re.findall("\d+",lines)[0])
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run1': No such file or directory
+rm: cannot remove 'temp_run2': No such file or directory
+rm: cannot remove 'temp_run3': No such file or directory
+rm: cannot remove 'temp_run1': No such file or directory
+rm: cannot remove 'temp_run2': No such file or directory
+rm: cannot remove 'temp_run3': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run1': No such file or directory
+rm: cannot remove 'temp_run2': No such file or directory
+rm: cannot remove 'temp_run3': No such file or directory
+rm: cannot remove 'temp_run1': No such file or directory
+rm: cannot remove 'temp_run2': No such file or directory
+rm: cannot remove 'temp_run3': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+rm: cannot remove 'temp_run': No such file or directory
+Deleted the temp files
+---------------------------------------
+Begin Slurm Epilog: Apr-04-2026 21:41:13
+Job ID:        6277646
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=2G,node=1
+Rsrc Used:     cput=00:00:10,vmem=0,walltime=00:00:10,mem=53776K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-005-26-1
+---------------------------------------

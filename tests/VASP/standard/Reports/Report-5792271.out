@@ -1,0 +1,98 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-29-2026 22:03:57
+Job ID:    5792271
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+
+Lmod is automatically replacing "gcc/12.3.0" with
+"intel-oneapi-compilers/2023.1.0".
+
+
+Inactive Modules:
+  1) libpciaccess/0.17     2) mvapich2     3) pmix/4.2.6     4) slurm/23.11.1
+
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/VASP/standard
+[atl1-1-02-004-13-2:1487171:0:1487171] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487182:0:1487182] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487168:0:1487168] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487172:0:1487172] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487184:0:1487184] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487169:0:1487169] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487174:0:1487174] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487176:0:1487176] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487178:0:1487178] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487183:0:1487183] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487173:0:1487173] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487180:0:1487180] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487181:0:1487181] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487166:0:1487166] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487170:0:1487170] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487175:0:1487175] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487177:0:1487177] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487179:0:1487179] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487165:0:1487165] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+[atl1-1-02-004-13-2:1487167:0:1487167] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+==== backtrace (tid:1487180) ====
+ 0 0x000000000006141c ucs_callbackq_cleanup()  ???:0
+ 1 0x00000000000615da ucs_callbackq_cleanup()  ???:0
+ 2 0x000000000003ebf0 __GI___sigaction()  :0
+ 3 0x0000000000446a15 reinitialize_mesh_NPT()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1253
+ 4 0x00000000004505cc NPT_NP()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1413
+ 5 0x00000000004545b9 main_MD()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:151
+ 6 0x000000000040573c main()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/main.c:46
+ 7 0x00000000000295d0 __libc_start_call_main()  ???:0
+ 8 0x0000000000029680 __libc_start_main_alias_2()  :0
+ 9 0x0000000000405765 _start()  ???:0
+=================================
+==== backtrace (tid:1487178) ====
+ 0 0x000000000006141c ucs_callbackq_cleanup()  ???:0
+ 1 0x00000000000615da ucs_callbackq_cleanup()  ???:0
+ 2 0x000000000003ebf0 __GI___sigaction()  :0
+ 3 0x0000000000446a15 reinitialize_mesh_NPT()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1253
+ 4 0x00000000004505cc NPT_NP()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1413
+ 5 0x00000000004545b9 main_MD()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:151
+ 6 0x000000000040573c main()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/main.c:46
+ 7 0x00000000000295d0 __libc_start_call_main()  ???:0
+ 8 0x0000000000029680 __libc_start_main_alias_2()  :0
+ 9 0x0000000000405765 _start()  ???:0
+=================================
+==== backtrace (tid:1487172) ====
+ 0 0x000000000006141c ucs_callbackq_cleanup()  ???:0
+ 1 0x00000000000615da ucs_callbackq_cleanup()  ???:0
+ 2 0x000000000003ebf0 __GI___sigaction()  :0
+ 3 0x0000000000446a15 reinitialize_mesh_NPT()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1253
+ 4 0x00000000004505cc NPT_NP()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1413
+ 5 0x00000000004545b9 main_MD()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:151
+ 6 0x000000000040573c main()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/main.c:46
+ 7 0x00000000000295d0 __libc_start_call_main()  ???:0
+ 8 0x0000000000029680 __libc_start_main_alias_2()  :0
+ 9 0x0000000000405765 _start()  ???:0
+=================================
+==== backtrace (tid:1487168) ====
+ 0 0x000000000006141c ucs_callbackq_cleanup()  ???:0
+ 1 0x00000000000615da ucs_callbackq_cleanup()  ???:0
+ 2 0x000000000003ebf0 __GI___sigaction()  :0
+ 3 0x0000000000446a15 reinitialize_mesh_NPT()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1253
+ 4 0x00000000004505cc NPT_NP()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1413
+ 5 0x00000000004545b9 main_MD()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:151
+ 6 0x000000000040573c main()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/main.c:46
+ 7 0x00000000000295d0 __libc_start_call_main()  ???:0
+ 8 0x0000000000029680 __libc_start_main_alias_2()  :0
+ 9 0x0000000000405765 _start()  ???:0
+=================================
+---------------------------------------
+Begin Slurm Epilog: Mar-29-2026 22:04:07
+Job ID:        5792271
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=20,mem=40G,node=1
+Rsrc Used:     cput=00:03:40,vmem=0,walltime=00:00:11,mem=13332K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-004-13-2
+---------------------------------------

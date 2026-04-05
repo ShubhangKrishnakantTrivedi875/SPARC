@@ -1,0 +1,38 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-26-2026 14:06:54
+Job ID:    5507931
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/BN_primitive_quick_md/standard
+[atl1-1-02-015-19-1:2763879:0:2763879] Caught signal 11 (Segmentation fault: address not mapped to object at address (nil))
+==== backtrace (tid:2763879) ====
+ 0 0x000000000006141c ucs_callbackq_cleanup()  ???:0
+ 1 0x00000000000615da ucs_callbackq_cleanup()  ???:0
+ 2 0x000000000003ebf0 __GI___sigaction()  :0
+ 3 0x0000000000599c37 mkl_blas_avx512_xdscal()  ???:0
+ 4 0x00000000002da2ac dscal_()  ???:0
+ 5 0x0000000000339c18 cblas_dscal()  ???:0
+ 6 0x000000000044865a NPT_NP_and_NPH_init_hamiltonian()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:1727
+ 7 0x00000000004491d4 Initialize_MD()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:372
+ 8 0x0000000000452b28 main_MD()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/md.c:84
+ 9 0x000000000040572c main()  /storage/home/hcoda1/5/strivedi44/scratch/MD11/SPARC/src/main.c:46
+10 0x00000000000295d0 __libc_start_call_main()  ???:0
+11 0x0000000000029680 __libc_start_main_alias_2()  :0
+12 0x0000000000405755 _start()  ???:0
+=================================
+---------------------------------------
+Begin Slurm Epilog: Mar-26-2026 14:07:19
+Job ID:        5507931
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=2G,node=1
+Rsrc Used:     cput=00:00:24,vmem=0,walltime=00:00:24,mem=11872K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-015-19-1
+---------------------------------------

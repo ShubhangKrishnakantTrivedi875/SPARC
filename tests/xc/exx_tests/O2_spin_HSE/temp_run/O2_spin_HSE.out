@@ -1,0 +1,233 @@
+***************************************************************************
+*                       SPARC (version December 03, 2025)                 *
+*   Copyright (c) 2020 Material Physics & Mechanics Group, Georgia Tech   *
+*           Distributed under GNU General Public License 3 (GPL)          *
+*                   Start time: Sun Apr  5 15:56:13 2026                  *
+***************************************************************************
+                           Input parameters                                
+***************************************************************************
+CELL: 20 20 20 
+LATVEC:
+1.000000000000000 0.000000000000000 0.000000000000000 
+0.000000000000000 1.000000000000000 0.000000000000000 
+0.000000000000000 0.000000000000000 1.000000000000000 
+FD_GRID: 80 80 80
+FD_ORDER: 12
+BC: D D D
+SPIN_TYP: 1
+ELEC_TEMP_TYPE: Gaussian
+SMEARING: 0.001837466124
+EXCHANGE_CORRELATION: HSE
+EXX_RANGE_FOCK: 0.106000
+EXX_RANGE_PBE: 0.106000
+HUBBARD_FLAG: 0
+NSTATES: 12
+CHEB_DEGREE: 30
+CHEFSI_BOUND_FLAG: 0
+EXX_DIVERGENCE: AUXILIARY
+EXX_METHOD: FFT
+EXX_MEM: 20
+EXX_ACE_VALENCE_STATES: 3
+EXX_DOWNSAMPLING: 1 1 1
+CALC_STRESS: 0
+CALC_PRES: 0
+MAXIT_SCF: 50
+MINIT_SCF: 2
+MAXIT_POISSON: 3000
+TOL_SCF: 1.00E-06
+POISSON_SOLVER: AAR
+TOL_POISSON: 1.00E-08
+TOL_LANCZOS: 1.00E-02
+TOL_PSEUDOCHARGE: 1.00E-09
+EXX_ACC: 1
+EXX_FRAC: 0.25
+TOL_FOCK: 2.00E-07
+TOL_SCF_INIT: 1.00E-03
+MAXIT_FOCK: 20
+MINIT_FOCK: 2
+MIXING_VARIABLE: density
+MIXING_PRECOND: kerker
+MIXING_PRECOND_MAG: none
+TOL_PRECOND: 6.25E-05
+PRECOND_KERKER_KTF: 1
+PRECOND_KERKER_THRESH: 0.1
+MIXING_PARAMETER: 0.3
+MIXING_PARAMETER_MAG: 0.3
+MIXING_HISTORY: 7
+PULAY_FREQUENCY: 1
+PULAY_RESTART: 0
+REFERENCE_CUTOFF: 0.5
+RHO_TRIGGER: 4
+NUM_CHEFSI: 1
+FIX_RAND: 0
+VERBOSITY: 1
+PRINT_FORCES: 1
+PRINT_ATOMS: 1
+PRINT_EIGEN: 0
+PRINT_DENSITY: 0
+PRINT_ENERGY_DENSITY: 0
+OUTPUT_FILE: xc/exx_tests/O2_spin_HSE/temp_run/O2_spin_HSE
+***************************************************************************
+                                Cell                                       
+***************************************************************************
+Lattice vectors (Bohr):
+20.000000000000000 0.000000000000000 0.000000000000000 
+0.000000000000000 20.000000000000000 0.000000000000000 
+0.000000000000000 0.000000000000000 20.000000000000000 
+Volume: 8.0000000000E+03 (Bohr^3)
+Density: 3.9997500000E-03 (amu/Bohr^3), 4.4820690783E-02 (g/cc)
+***************************************************************************
+                           Parallelization                                 
+***************************************************************************
+NP_SPIN_PARAL: 1
+NP_KPOINT_PARAL: 1
+NP_BAND_PARAL: 12
+NP_DOMAIN_PARAL: 2 2 4
+NP_DOMAIN_PHI_PARAL: 5 5 8
+EIG_SERIAL_MAXNS: 1500
+WARNING: Default parallelization not used. This could result in degradation of performance.
+***************************************************************************
+                             Initialization                                
+***************************************************************************
+Number of processors               :  200
+Mesh spacing                       :  0.25 (Bohr)
+Output printed to                  :  xc/exx_tests/O2_spin_HSE/temp_run/O2_spin_HSE.out
+Total number of atom types         :  1
+Total number of atoms              :  2
+Total number of electrons          :  12
+Atom type 1  (valence electrons)   :  O 6
+Pseudopotential                    :  ../psps/08_O_6_1.2_1.4_pbe_n_v1.0.psp8
+Atomic mass                        :  15.999
+Pseudocharge radii of atom type 1  :  7.50 7.50 7.50 (x, y, z dir)
+Number of atoms of type 1          :  2
+Estimated total memory usage       :  3.91 GB
+Estimated memory per processor     :  20.03 MB
+========================================================================================
+                    Self Consistent Field (SCF#1)                     
+========================================================================================
+Iteration     Free Energy (Ha/atom)    Magnetization     SCF Error        Timing (sec)
+1            -1.6453857756E+01         2.0000E+00        1.184E-01        9.796
+2            -1.6457400376E+01         2.0000E+00        8.342E-02        3.098
+3            -1.6459324465E+01         2.0000E+00        1.651E-02        2.835
+4            -1.6459358654E+01         2.0000E+00        1.045E-02        2.908
+5            -1.6459377376E+01         2.0000E+00        2.503E-03        2.716
+6            -1.6459378040E+01         2.0000E+00        1.045E-03        2.860
+7            -1.6459383119E+01         2.0000E+00        3.527E-04        2.756
+Total number of SCF: 7     
+
+No.1 Exx outer loop. ACE timing: 2.284 (sec)
+1            -1.6298509177E+01         2.0000E+00        7.134E-03        8.150
+2            -1.6298738519E+01         2.0000E+00        9.423E-03        3.652
+3            -1.6298782014E+01         2.0000E+00        1.248E-02        3.969
+4            -1.6298697256E+01         2.0000E+00        2.758E-03        4.002
+5            -1.6298697660E+01         2.0000E+00        5.138E-04        3.647
+6            -1.6298698242E+01         2.0000E+00        3.162E-04        3.934
+7            -1.6298701883E+01         2.0000E+00        1.095E-04        3.812
+8            -1.6298704542E+01         2.0000E+00        7.358E-05        3.625
+9            -1.6298705073E+01         2.0000E+00        3.561E-05        3.750
+10           -1.6298706445E+01         2.0000E+00        1.441E-05        3.563
+11           -1.6298706966E+01         2.0000E+00        8.234E-06        3.492
+12           -1.6298707346E+01         2.0000E+00        5.117E-06        3.429
+13           -1.6298707486E+01         2.0000E+00        3.706E-06        3.501
+14           -1.6298707717E+01         2.0000E+00        2.095E-06        3.320
+15           -1.6298707743E+01         2.0000E+00        1.042E-06        3.311
+16           -1.6298707757E+01         2.0000E+00        6.455E-07        3.137
+Total number of SCF: 16    
+Exx outer loop error: 4.3103377965e-04 
+
+No.2 Exx outer loop. ACE timing: 1.747 (sec)
+1            -1.6298789697E+01         2.0000E+00        4.870E-04        7.826
+2            -1.6298792796E+01         2.0000E+00        9.260E-04        3.822
+3            -1.6298788564E+01         2.0000E+00        1.145E-03        3.819
+4            -1.6298789330E+01         2.0000E+00        3.653E-04        3.687
+5            -1.6298788378E+01         2.0000E+00        2.558E-04        3.586
+6            -1.6298787854E+01         2.0000E+00        2.513E-04        3.709
+7            -1.6298790189E+01         2.0000E+00        2.331E-04        3.733
+8            -1.6298791432E+01         2.0000E+00        2.437E-04        3.574
+9            -1.6298791365E+01         2.0000E+00        2.080E-04        3.555
+10           -1.6298791427E+01         2.0000E+00        1.399E-04        3.551
+11           -1.6298790145E+01         2.0000E+00        2.992E-05        3.475
+12           -1.6298790891E+01         2.0000E+00        2.229E-05        3.495
+13           -1.6298792091E+01         2.0000E+00        1.521E-05        3.533
+14           -1.6298792573E+01         2.0000E+00        1.113E-05        3.476
+15           -1.6298792634E+01         2.0000E+00        4.197E-06        3.428
+16           -1.6298792822E+01         2.0000E+00        2.740E-06        3.542
+17           -1.6298792884E+01         2.0000E+00        2.158E-06        3.320
+18           -1.6298792934E+01         2.0000E+00        1.252E-06        3.231
+19           -1.6298792950E+01         2.0000E+00        8.987E-07        3.387
+Total number of SCF: 19    
+Exx outer loop error: 7.1142777416e-05 
+
+No.3 Exx outer loop. ACE timing: 1.738 (sec)
+1            -1.6298794139E+01         2.0000E+00        6.392E-05        7.668
+2            -1.6298794215E+01         2.0000E+00        1.509E-04        3.433
+3            -1.6298794147E+01         2.0000E+00        1.790E-04        3.497
+4            -1.6298794044E+01         2.0000E+00        6.082E-05        3.508
+5            -1.6298793989E+01         2.0000E+00        3.064E-05        3.468
+6            -1.6298794086E+01         2.0000E+00        1.812E-05        3.355
+7            -1.6298794114E+01         2.0000E+00        1.419E-05        3.025
+8            -1.6298794177E+01         2.0000E+00        1.931E-06        3.137
+9            -1.6298794193E+01         2.0000E+00        9.927E-07        3.223
+Total number of SCF: 9     
+Exx outer loop error: 1.3045587484e-05 
+
+No.4 Exx outer loop. ACE timing: 1.623 (sec)
+1            -1.6298794265E+01         2.0000E+00        1.176E-05        7.629
+2            -1.6298794258E+01         2.0000E+00        2.806E-05        3.344
+3            -1.6298794245E+01         2.0000E+00        1.999E-05        3.297
+4            -1.6298794254E+01         2.0000E+00        2.131E-05        3.209
+5            -1.6298794260E+01         2.0000E+00        1.831E-05        3.249
+6            -1.6298794267E+01         2.0000E+00        1.697E-05        3.311
+7            -1.6298794257E+01         2.0000E+00        1.708E-05        3.176
+8            -1.6298794260E+01         2.0000E+00        1.533E-05        3.250
+9            -1.6298794267E+01         2.0000E+00        9.462E-06        3.286
+10           -1.6298794260E+01         2.0000E+00        1.418E-06        3.250
+11           -1.6298794261E+01         2.0000E+00        7.896E-07        3.259
+Total number of SCF: 11    
+Exx outer loop error: 2.3898973331e-06 
+
+No.5 Exx outer loop. ACE timing: 1.691 (sec)
+1            -1.6298794271E+01         2.0000E+00        2.188E-06        7.483
+2            -1.6298794265E+01         2.0000E+00        5.264E-06        3.053
+3            -1.6298794278E+01         2.0000E+00        3.186E-06        2.908
+4            -1.6298794277E+01         2.0000E+00        2.786E-06        3.101
+5            -1.6298794268E+01         2.0000E+00        1.664E-06        3.080
+6            -1.6298794270E+01         2.0000E+00        6.100E-07        3.218
+Total number of SCF: 6     
+Exx outer loop error: 4.5765990653e-07 
+
+No.6 Exx outer loop. ACE timing: 1.718 (sec)
+1            -1.6298794276E+01         2.0000E+00        5.328E-07        7.331
+2            -1.6298794276E+01         2.0000E+00        1.092E-06        3.116
+3            -1.6298794272E+01         2.0000E+00        9.388E-08        3.052
+Total number of SCF: 3     
+Exx outer loop error: 7.9426007438e-08 
+====================================================================
+                    Energy and force calculation                    
+====================================================================
+Free energy per atom               : -1.6298794113E+01 (Ha/atom)
+Total free energy                  : -3.2597588226E+01 (Ha)
+Band structure energy              : -8.0209524759E+00 (Ha)
+Exchange correlation energy        : -7.8299847255E+00 (Ha)
+Self and correction energy         : -4.8028233149E+01 (Ha)
+-Entropy*kb*T                      : -1.8660128305E-13 (Ha)
+Fermi level                        : -1.2982015845E-01 (Ha)
+Net magnetization                  :  2.0000000000E+00 (Bohr magneton)
+RMS force                          :  3.2310643895E-02 (Ha/Bohr)
+Maximum force                      :  3.2310643895E-02 (Ha/Bohr)
+Time for force calculation         :  0.048 (sec)
+***************************************************************************
+                               Timing info                                 
+***************************************************************************
+Total walltime                     :  287.775 sec
+___________________________________________________________________________
+
+***************************************************************************
+*             Material Physics & Mechanics Group, Georgia Tech            *
+*                       PI: Phanish Suryanarayana                         *
+*               List of contributors: See the documentation               *
+*         Citation: See README.md or the documentation for details        *
+*  Acknowledgements: U.S. DOE SC (DE-SC0019410), U.S. DOE NNSA (ASC)      *
+*      {Preliminary developments: U.S. NSF (1333500,1663244,1553212)}     *
+***************************************************************************
+                                                                           

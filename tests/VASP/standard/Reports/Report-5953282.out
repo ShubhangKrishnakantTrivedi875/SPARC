@@ -1,0 +1,23 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-30-2026 10:16:33
+Job ID:    5953282
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/VASP/standard
+[2026-03-30T10:16:46.236] error: *** JOB 5953282 ON atl1-1-02-019-29-1 CANCELLED AT 2026-03-30T10:16:46 DUE to SIGNAL Terminated ***
+---------------------------------------
+Begin Slurm Epilog: Mar-30-2026 10:16:49
+Job ID:        5953282
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=24,mem=48G,node=1
+Rsrc Used:     cput=00:05:12,vmem=0,walltime=00:00:13,mem=13076K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-019-29-1
+---------------------------------------

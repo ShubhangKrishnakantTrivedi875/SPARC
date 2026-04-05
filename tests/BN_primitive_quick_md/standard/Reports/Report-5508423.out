@@ -1,0 +1,23 @@
+---------------------------------------
+Begin Slurm Prolog: Mar-26-2026 14:38:24
+Job ID:    5508423
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/BN_primitive_quick_md/standard
+[2026-03-26T14:38:36.809] error: *** JOB 5508423 ON atl1-1-02-012-35-2 CANCELLED AT 2026-03-26T14:38:36 DUE to SIGNAL Terminated ***
+---------------------------------------
+Begin Slurm Epilog: Mar-26-2026 14:38:41
+Job ID:        5508423
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=2G,node=1
+Rsrc Used:     cput=00:00:12,vmem=0,walltime=00:00:12,mem=13344K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-012-35-2
+---------------------------------------

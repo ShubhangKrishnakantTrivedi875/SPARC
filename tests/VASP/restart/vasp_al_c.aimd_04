@@ -1,0 +1,37 @@
+:Description: 
+
+:Desc_R: Atom positions in Cartesian coordinates. Unit=Bohr 
+:Desc_V: Atomic velocities in Cartesian coordinates. Unit=Bohr/atu 
+     where atu is the atomic unit of time, hbar/Ha 
+:Desc_F: Atomic forces in Cartesian coordinates. Unit=Ha/Bohr 
+:Desc_MDTM: MD time. Unit=second 
+:Desc_TEL: Electronic temperature. Unit=Kelvin 
+:Desc_TIO: Ionic temperature. Unit=Kelvin 
+:Desc_TEN: Total energy. TEN = KEN + FEN. Unit=Ha/atom 
+:Desc_KEN: Ionic kinetic energy. Unit=Ha/atom 
+:Desc_KENIG: Kinetic energy: 3/2 N k T of ideal gas at temperature T = TIO. Unit=Ha/atom 
+     where N = number of particles, k = Boltzmann constant
+:Desc_FEN: Free energy F = U - TS. FEN = UEN + TSEN. Unit=Ha/atom 
+:Desc_UEN: Internal energy. Unit=Ha/atom 
+:Desc_TSEN: Electronic entropic contribution -TS to free energy F = U - TS. Unit=Ha/atom 
+:Desc_ANGLES: angles between cell lattice vectors. Format: (angle between 1 and 2,  angle between 1 and 3,  angle between 2 and 3). Unit = Degree 
+:Desc_VOLUME: Volume of the full lattice. Unit = Bohr^3 
+:Desc_LATVEC_SCALE: ratio of length of cell lattice vectors over length of input lattice vectors. Unit = 1 
+:Desc_LatVec: Lattice vectors, purpose: only to represent change in angles during NPT_NP ensemble (has same magnitude as initial LatVec). Unit = Bohr 
+:Desc_NPT_NP_HAMIL: Hamiltonian of the NPT_NP system, formula (10) in (E. Hernandez, 2001). Unit = Ha 
+:Desc_SNOSE[0]: Position variable of the thermostat
+:Desc_SNOSE[1]: Velocity variable of the thermostat
+:Desc_STRESS: Stress, excluding ion-kinetic contribution. Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) 
+:Desc_STRIO: Ion-kinetic stress in cartesian coordinate. Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) 
+:Desc_TOTSTRESS: Total internal stress in cartesian coordinate (also accounting stresses due to any constraint on cell expansion). Unit=GPa(all periodic),Ha/Bohr**2(surface),Ha/Bohr(wire) 
+:Desc_PRESIO: Ion-kinetic pressure in cartesian coordinate. Unit=GPa 
+:Desc_PRES: Pressure, excluding ion-kinetic contribution. Unit=GPa 
+:Desc_TOTSTRESS: Total internal pressure (also accounting pressure due to any constraint on cell expansion). Unit=GPa 
+:Desc_PRESIG: Pressure N k T/V of ideal gas at temperature T = TIO. Unit=GPa 
+     where N = number of particles, k = Boltzmann constant, V = volume
+:Desc_ST: (DEBUG mode only) Tags ending in 'ST' describe statistics. Printed are the mean and standard deviation, respectively. 
+:Desc_AVGV: Average of the speed of all ions of the same type. Unit=Bohr/atu 
+:Desc_MAXV: Maximum of the speed of all ions of the same type. Unit=Bohr/atu 
+:Desc_MIND: Minimum of the distance of all ions of the same type. Unit=Bohr 
+
+
