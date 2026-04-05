@@ -55,7 +55,7 @@
 #define min(x,y) ((x)<(y)?(x):(y))
 #define max(x,y) ((x)>(y)?(x):(y))
 
-#define N_MEMBR 219
+#define N_MEMBR 217
 
 
 /**
@@ -831,13 +831,11 @@ void set_defaults(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     pSPARC_Input->NPTscaleVecs[2] = 1;        // default lattice vectors to be rescaled in NPT
     pSPARC_Input->NPTconstraintFlag = 0;     // confinement on side length of cell. none: no length confinement (default)
     pSPARC_Input->NPT_NP_ANGLES = 0;        // default: no change in angles during NPT_NP ensemble
-    pSPARC_Input->NPTspecialconstraint = 0; // default: no special constraint during NPT_NP ensemble
     pSPARC_Input->NPHscaleVecs[0] = 1; 
     pSPARC_Input->NPHscaleVecs[1] = 1; 
     pSPARC_Input->NPHscaleVecs[2] = 1;        // default lattice vectors to be rescaled in NPH
     pSPARC_Input->NPHconstraintFlag = 0;     // confinement on side length of cell. none: no length confinement (default)
     pSPARC_Input->NPH_ANGLES = 0;        // default: no change in angles during NPH ensemble
-    pSPARC_Input->NPHspecialconstraint = 0;  // default: no special constraint during NPH ensemble
     pSPARC_Input->NPT_NHnnos = 0;                   // default amount of thermo variable for NPT_NH. If MDMeth is this but nnos is 0, program will stop
     for (int subscript_NPTNH_qmass = 0; subscript_NPTNH_qmass < L_QMASS; subscript_NPTNH_qmass++){
         pSPARC_Input->NPT_NHqmass[subscript_NPTNH_qmass] = 0.0;
@@ -1467,12 +1465,10 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
     pSPARC->NPTscaleVecs[2] = pSPARC_Input->NPTscaleVecs[2];
     pSPARC->NPTconstraintFlag = pSPARC_Input->NPTconstraintFlag;
     pSPARC->NPT_NP_ANGLES = pSPARC_Input->NPT_NP_ANGLES;
-    pSPARC->NPTspecialconstraint = pSPARC_Input->NPTspecialconstraint;
     pSPARC->NPHscaleVecs[0] = pSPARC_Input->NPHscaleVecs[0];
     pSPARC->NPHscaleVecs[1] = pSPARC_Input->NPHscaleVecs[1];
     pSPARC->NPHscaleVecs[2] = pSPARC_Input->NPHscaleVecs[2];
     pSPARC->NPHconstraintFlag = pSPARC_Input->NPHconstraintFlag;
-    pSPARC->NPHspecialconstraint = pSPARC_Input->NPHspecialconstraint;
     pSPARC->NPH_ANGLES = pSPARC_Input->NPH_ANGLES;
     pSPARC->NPT_NHnnos = pSPARC_Input->NPT_NHnnos;
     pSPARC->ion_elec_eqT = pSPARC_Input->ion_elec_eqT;
@@ -3010,16 +3006,8 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
                 exit(EXIT_FAILURE);
             }
         }
-        if (pSPARC->NPTspecialconstraint == 1){
-            if (pSPARC->NPTscaleVecs[0] == 0 || pSPARC->NPTscaleVecs[1] == 0 || pSPARC->NPTscaleVecs[2] != 0) { // a or b cannot be rescaled or c is being rescaled
-                if (!rank) {
-                    printf("\nNPT_SPECIAL_CONSTRAINT has conflict with NPT_SCALE_VECS! Remember lattice vector a and b needs to be rescaled, lattice vector c has to remain fixed. Also lattice vector 'c' must be orthogonal to both lattice vector a and b.\n");
-                }
-                exit(EXIT_FAILURE);
-            }
-        }
         if (pSPARC->NPT_NP_ANGLES==1){
-            if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 || pSPARC_Input->NPTconstraintFlag != 0 || pSPARC_Input->NPTspecialconstraint != 0){
+            if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 || pSPARC_Input->NPTconstraintFlag != 0){
                     printf("Angle changing in NPT_NP ensemble is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints of any kind imposed on them.\n");
                     exit(EXIT_FAILURE);
                 }
@@ -3058,16 +3046,8 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
                 exit(EXIT_FAILURE);
             }
         }
-        if (pSPARC->NPHspecialconstraint == 1){
-            if (pSPARC->NPHscaleVecs[0] == 0 || pSPARC->NPHscaleVecs[1] == 0 || pSPARC->NPHscaleVecs[2] != 0) { // a or b cannot be rescaled or c is being rescaled
-                if (!rank) {
-                    printf("\nNPH_SPECIAL_CONSTRAINT has conflict with NPH_SCALE_VECS! Remember lattice vector a and b needs to be rescaled, lattice vector c has to remain fixed. Also lattice vector 'c' must be orthogonal to both lattice vector a and b.\n");
-                }
-                exit(EXIT_FAILURE);
-            }
-        }
         if (pSPARC->NPH_ANGLES==1){
-            if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 || pSPARC_Input->NPHconstraintFlag != 0 || pSPARC_Input->NPHspecialconstraint != 0){
+            if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 || pSPARC_Input->NPHconstraintFlag != 0){
                     printf("Angle changing in NPH ensemble is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints of any kind imposed on them.\n");
                     exit(EXIT_FAILURE);
                 }
@@ -4000,7 +3980,6 @@ void write_output_init(SPARC_OBJ *pSPARC) {
             else if (pSPARC->NPTconstraintFlag == 3) fprintf(output_fp," 23\n");
             else if (pSPARC->NPTconstraintFlag == 4) fprintf(output_fp," 123\n");
             fprintf(output_fp,"NPT_NP_ANGLES: %d\n",pSPARC->NPT_NP_ANGLES);
-            fprintf(output_fp,"NPT_NP_SPECIAL_CONSTRAINT: %d\n",pSPARC->NPTspecialconstraint);
             fprintf(output_fp,"NPT_NP_QMASS: %.15g\n",pSPARC->NPT_NP_qmass);
             fprintf(output_fp,"NPT_NP_BMASS: %.15g\n",pSPARC->NPT_NP_bmass);
             fprintf(output_fp,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",pSPARC->pressure_external+pSPARC->stress_external[0]
@@ -4024,7 +4003,6 @@ void write_output_init(SPARC_OBJ *pSPARC) {
             else if (pSPARC->NPHconstraintFlag == 3) fprintf(output_fp," 23\n");
             else if (pSPARC->NPHconstraintFlag == 4) fprintf(output_fp," 123\n");
             fprintf(output_fp,"NPH_ANGLES: %d\n",pSPARC->NPH_ANGLES);
-            fprintf(output_fp,"NPH_SPECIAL_CONSTRAINT: %d\n",pSPARC->NPHspecialconstraint);
             fprintf(output_fp,"NPH_BMASS: %.15g\n",pSPARC->NPH_bmass);
             fprintf(output_fp,"TARGET_STRESS: %.15g %.15g %.15g %.15g %.15g %.15g GPa\n",pSPARC->pressure_external+pSPARC->stress_external[0]
                                                                                         ,pSPARC->pressure_external+pSPARC->stress_external[1]
@@ -4462,7 +4440,7 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
-                                         MPI_INT, MPI_INT, MPI_INT, MPI_INT, /* int */
+                                         MPI_INT, MPI_INT,  /* int */
 
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, /* double array */
@@ -4508,7 +4486,7 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
                           1, 1, 1, 1, 1,
                           1, 1, 1, 1, 1, 
                           1, 1, 1, 1, 1,
-                          1, 1, 1, 1, /* int */ 
+                          1, 1, /* int */ 
                           9, 3, L_QMASS, L_kpoint, L_kpoint,
                           L_kpoint, 6, 6,/* double array */
                           1, 1, 1, 1, 1, 
@@ -4621,8 +4599,6 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
     MPI_Get_address(&sparc_input_tmp.NPHconstraintFlag, addr + i++);
     MPI_Get_address(&sparc_input_tmp.NPT_NP_ANGLES, addr + i++);
     MPI_Get_address(&sparc_input_tmp.NPH_ANGLES, addr + i++);
-    MPI_Get_address(&sparc_input_tmp.NPTspecialconstraint, addr + i++);
-    MPI_Get_address(&sparc_input_tmp.NPHspecialconstraint, addr + i++);
     MPI_Get_address(&sparc_input_tmp.MAXIT_FOCK, addr + i++);    
     MPI_Get_address(&sparc_input_tmp.ExxAcc, addr + i++);
     MPI_Get_address(&sparc_input_tmp.ExxMemBatch, addr + i++);
