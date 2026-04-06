@@ -213,6 +213,14 @@ SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_t
 SYSTEMS["systemname"].append('Al18Si18_NPTNH_lat23')
 SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnh'])
+<<<<<<< HEAD
+=======
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+################################################################################################################
+SYSTEMS["systemname"].append('Al18Si18_NPTNP')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnp'])
+>>>>>>> 0a8992f22330224634f31003248d965674a3983f
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ################################################################################################################
 SYSTEMS["systemname"].append('Al16Si16_NPTNP_restart')
@@ -220,7 +228,33 @@ SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
+<<<<<<< HEAD
 SYSTEMS["systemname"].append('Al18C2_NPTNP_aeqb_ortho_c')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
+=======
+SYSTEMS["systemname"].append('Al18Si18_NPTNP_aeqb_c')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnp'])
+>>>>>>> 0a8992f22330224634f31003248d965674a3983f
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+##################################################################################################################
+SYSTEMS["systemname"].append('Al18C2_NPTNP_full_flex')
+SYSTEMS["directory"].append("./")
+<<<<<<< HEAD
+SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnp'])
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+################################################################################################################
+=======
+SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+##################################################################################################################
+SYSTEMS["systemname"].append('Al18C2_NPTNP_aeqb_ortho_c')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+##################################################################################################################
+SYSTEMS["systemname"].append('Al18C2_NPTNP_ortho_c')
 SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
@@ -230,11 +264,40 @@ SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnp'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ################################################################################################################
+SYSTEMS["systemname"].append('Al18Si18_NPH')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nph'])
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+################################################################################################################
+>>>>>>> 0a8992f22330224634f31003248d965674a3983f
 SYSTEMS["systemname"].append('Al16Si16_NPH_restart')
 SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
+<<<<<<< HEAD
+=======
+SYSTEMS["systemname"].append('Al18Si18_NPH_aeqc_b')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nph'])
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+##################################################################################################################
+SYSTEMS["systemname"].append('Al18C2_NPH_onlyb')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+##################################################################################################################
+SYSTEMS["systemname"].append('Al18C2_NPH_beqc_ortho_a')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+##################################################################################################################
+SYSTEMS["systemname"].append('Al18C2_NPH_ortho_a')
+SYSTEMS["directory"].append("./")
+SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
+SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+##################################################################################################################
+>>>>>>> 0a8992f22330224634f31003248d965674a3983f
 SYSTEMS["systemname"].append('Al18C2_NPH_full_flex')
 SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nph'])
