@@ -1,0 +1,67 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-06-2026 11:38:51
+Job ID:    6293729
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+
+Lmod is automatically replacing "gcc/12.3.0" with
+"intel-oneapi-compilers/2023.1.0".
+
+
+Inactive Modules:
+  1) libpciaccess/0.17     2) mvapich2     3) pmix/4.2.6     4) slurm/23.11.1
+
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1013: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no = float(re.findall("\d+",lines)[0])
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1023: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no[count1] = float(re.findall("\d+",lines)[0])
+Test Status: <#->Test Status: <##>
+
+
+--------------------------------------------------------------
+
+Total systems: 2
+
+[92mTests passed: 0[0m
+
+[91mTests failed: 2[0m
+
+Detailed report available in Report.txt file 
+
+--------------------------------------------------------------
+
+[91m[1mFailed test summary: [0m[0m
+
+[91m1. Al16Si16_NPTNP_restart: Test for this system  failed in: [0m
+
+[91m2. Al16Si16_NPH_restart: Test for this system  failed in: [0m
+
+--------------------------------------------------------------
+
+--------------------------------------------------------------
+
+[94m[1mWarning summary: [0m[0m
+
+[94m1. Al16Si16_NPTNP_restart:  Number of SCF iterations are larger (1.0/19.0) than the reference Walltime exceeded by 35.70939520730315%[0m
+
+[94m2. Al16Si16_NPH_restart:  Number of SCF iterations are larger (3.0/19.0) than the reference Walltime exceeded by 33.67738130345032%[0m
+
+--------------------------------------------------------------
+
+---------------------------------------
+Begin Slurm Epilog: Apr-06-2026 11:39:46
+Job ID:        6293729
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=1G,node=1
+Rsrc Used:     cput=00:00:53,vmem=0,walltime=00:00:53,mem=35088K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-003-16-2
+---------------------------------------

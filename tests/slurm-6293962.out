@@ -1,0 +1,25 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-06-2026 11:54:25
+Job ID:    6293962
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       inferno
+---------------------------------------
+/usr/local/pace-apps/lmod/lmod/init/bash: line 223: conda: command not found
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+[2026-04-06T12:03:11.857] error: *** JOB 6293962 ON atl1-1-02-006-14-2 CANCELLED AT 2026-04-06T12:03:11 DUE to SIGNAL Terminated ***
+[2026-04-06T12:03:11.922] error: *** STEP 6293962.0 ON atl1-1-02-006-14-2 CANCELLED AT 2026-04-06T12:03:11 DUE to SIGNAL Terminated ***
+---------------------------------------
+Begin Slurm Epilog: Apr-06-2026 12:03:15
+Job ID:        6293962
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=48,mem=336G,node=4
+Rsrc Used:     cput=07:01:36,vmem=0,walltime=00:08:47,mem=36760K,energy_used=0
+Partition:     cpu-small
+QOS:           inferno
+Nodes:         atl1-1-02-006-14-2,atl1-1-02-006-27-1,atl1-1-02-006-30-1,atl1-1-02-018-18-1
+---------------------------------------

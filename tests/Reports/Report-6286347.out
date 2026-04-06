@@ -1,0 +1,42 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-05-2026 17:54:51
+Job ID:    6286347
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+
+Lmod is automatically replacing "gcc/12.3.0" with
+"intel-oneapi-compilers/2023.1.0".
+
+
+Inactive Modules:
+  1) libpciaccess/0.17     2) mvapich2     3) pmix/4.2.6     4) slurm/23.11.1
+
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1058: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no = float(re.findall("\d+",lines)[0])
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1068: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no[count1] = float(re.findall("\d+",lines)[0])
+cp: cannot create regular file './sparc': Text file busy
+Traceback (most recent call last):
+  File "/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py", line 3291, in <module>
+    jobID = launchsystems(systems, dirs_sys, memcheck, procs_nodes_cluster, ismempbs, ifVHQ, isorient, not isparallel, ismlff_copy)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py", line 728, in launchsystems
+    os.chdir(syst)
+FileNotFoundError: [Errno 2] No such file or directory: 'Al18C2_NPTNP_aeqb_c'
+---------------------------------------
+Begin Slurm Epilog: Apr-05-2026 17:54:59
+Job ID:        6286347
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=1G,node=1
+Rsrc Used:     cput=00:00:09,vmem=0,walltime=00:00:09,mem=35468K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-008-6-2
+---------------------------------------

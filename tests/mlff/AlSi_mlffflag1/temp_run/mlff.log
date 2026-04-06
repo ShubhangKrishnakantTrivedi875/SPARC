@@ -1,621 +1,621 @@
-MLFF object intialized. Time taken: 10.438 s
+MLFF object intialized. Time taken: 5.863 s
 --------------------------------------------------------------------------------------------
 Simulation step: 0
-DFT call done for the first step. Time taken: 11.625 s
-neighbor list and descriptor done! Time taken: 0.005 s
-Covariance matrix updated! Time taken: 0.389 s
-Covariance matrices formed from first DFT data. Time taken: 0.394 s
+DFT call done for the first step. Time taken: 3.156 s
+neighbor list and descriptor done! Time taken: 0.015 s
+Covariance matrix updated! Time taken: 0.200 s
+Covariance matrices formed from first DFT data. Time taken: 0.215 s
 --------------------------------------------------------------------------------------------
 Calculation: 1
-DFT call made. Time taken: 7.395 s
-neighbor list and soap descriptor done! Time taken: 0.005 s
-Covariance matrix rows updated! Time taken: 0.117 s
-Sparsification done! Time taken: 0.217 s
-Covariance matrix columns updated! Time taken: 1.992 s
-The covariance matrix updated. Time taken: 2.333 s
+DFT call made. Time taken: 1.831 s
+neighbor list and soap descriptor done! Time taken: 0.015 s
+Covariance matrix rows updated! Time taken: 0.058 s
+Sparsification done! Time taken: 0.042 s
+Covariance matrix columns updated! Time taken: 0.148 s
+The covariance matrix updated. Time taken: 0.264 s
 --------------------------------------------------------------------------------------------
 Calculation: 2
-DFT call made. Time taken: 7.181 s
-neighbor list and soap descriptor done! Time taken: 0.005 s
-Covariance matrix rows updated! Time taken: 0.219 s
-Sparsification done! Time taken: 0.211 s
-Covariance matrix columns updated! Time taken: 2.152 s
-The covariance matrix updated. Time taken: 2.590 s
+DFT call made. Time taken: 1.832 s
+neighbor list and soap descriptor done! Time taken: 0.015 s
+Covariance matrix rows updated! Time taken: 0.115 s
+Sparsification done! Time taken: 0.042 s
+Covariance matrix columns updated! Time taken: 0.221 s
+The covariance matrix updated. Time taken: 0.395 s
 --------------------------------------------------------------------------------------------
 Calculation: 3
-DFT call made. Time taken: 6.086 s
-neighbor list and soap descriptor done! Time taken: 0.005 s
-Covariance matrix rows updated! Time taken: 0.344 s
-Sparsification done! Time taken: 0.215 s
-Covariance matrix columns updated! Time taken: 0.707 s
-The covariance matrix updated. Time taken: 1.272 s
+DFT call made. Time taken: 1.195 s
+neighbor list and soap descriptor done! Time taken: 0.015 s
+Covariance matrix rows updated! Time taken: 0.173 s
+Sparsification done! Time taken: 0.043 s
+Covariance matrix columns updated! Time taken: 0.293 s
+The covariance matrix updated. Time taken: 0.526 s
 For element 0, CUR removed 43 columns out of a total of 380 columns
-sparsification before training done! Time taken: 3.261 s
+sparsification before training done! Time taken: 0.657 s
 For element 1, CUR removed 1 columns out of a total of 52 columns
-sparsification before training done! Time taken: 3.307 s
+sparsification before training done! Time taken: 0.669 s
 Scaling K_train and b-vector done! Time taken: 0.000 s
-Calculation btb, AtA, Atb done! Time taken: 0.007 s
-Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.038 s
+Calculation btb, AtA, Atb done! Time taken: 0.012 s
+Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.002 s
 broadcasting weights and SVD done! Time taken: 0.001 s
-SVD of AtA done! Time taken: 0.173 s
+SVD of AtA done! Time taken: 0.037 s
 Regularization minimum: 1e-6.000000
 Loop for Bayesian regression hyperparameters optimization: 
 Initial guess; sigma_v0: 0.100000, sigma_w0: 100.000000
-Saving and other initialization before hyperparamter done! Time taken: 0.106 s
+Saving and other initialization before hyperparamter done! Time taken: 0.023 s
 Gamma calculation done! It took 0.000 s.
 Iter number: 0
-Gamma: 36.927348
+Gamma: 36.962569
 Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.088 s.
+Linear system solving took 0.015 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 130.637238, M_total_rows: 1324, gamma: 36.927348
-sigma_v: 0.318590 and sigma_w: 809.892955 before check for cond
+norm_er2: 129.183307, M_total_rows: 1324, gamma: 36.962569
+sigma_v: 0.316816 and sigma_w: 801.123605 before check for cond
 regularization: 0.000000 is too small as computed from the loop
-After condK: sigma_v: 0.318590, sigma_w: 318.589870
+After condK: sigma_v: 0.316816, sigma_w: 316.816368
 Gamma calculation done! It took 0.000 s.
 Iter number: 1
-Gamma: 36.927348
+Gamma: 36.962569
 Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.037 s.
+Linear system solving took 0.013 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 130.637238, M_total_rows: 1324, gamma: 36.927348
-sigma_v: 0.318590 and sigma_w: 809.892955 before check for cond
+norm_er2: 129.183307, M_total_rows: 1324, gamma: 36.962569
+sigma_v: 0.316816 and sigma_w: 801.123605 before check for cond
 regularization: 0.000000 is too small as computed from the loop
-After condK: sigma_v: 0.318590, sigma_w: 318.589870
-Hyperparameter SCF loop took 0.125 s.
+After condK: sigma_v: 0.316816, sigma_w: 316.816368
+Hyperparameter SCF loop took 0.028 s.
 sigma_v and sigma_w converged in 2 iteration
-hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.537 s
-Training errors done! Time taken: 0.029 s
-mlff_train_Bayesian done! Time taken: 0.029 s
-Bayesian linear regression done. Time taken: 4.772 s
+hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.092 s
+Training errors done! Time taken: 0.001 s
+mlff_train_Bayesian done! Time taken: 0.001 s
+Bayesian linear regression done. Time taken: 0.944 s
 --------------------------------------------------------------------------------------------
 Calculation: 4
-Neighbor list and soap descriptor done! Time taken: 0.004 s
-Kpredict calculation done done! Time taken: 0.360 s
-prediction and gather done! Time taken: 0.022 s
-MLFF prediction made for the current step. Time taken: 0.386 s
-max_pred_error: 2.094166281E-03, F_tol_SOAP: 2.096260447E-03.
+Neighbor list and soap descriptor done! Time taken: 0.014 s
+Kpredict calculation done done! Time taken: 0.201 s
+prediction and gather done! Time taken: 0.002 s
+MLFF prediction made for the current step. Time taken: 0.216 s
+max_pred_error: 2.083006253E-03, F_tol_SOAP: 2.085089260E-03.
 Skipped DFT for this step!
 --------------------------------------------------------------------------------------------
 Calculation: 5
-Neighbor list and soap descriptor done! Time taken: 0.005 s
-Kpredict calculation done done! Time taken: 0.363 s
-prediction and gather done! Time taken: 0.019 s
-MLFF prediction made for the current step. Time taken: 0.386 s
-max_pred_error: 2.117316535E-03, F_tol_SOAP: 2.096260447E-03.
+Neighbor list and soap descriptor done! Time taken: 0.017 s
+Kpredict calculation done done! Time taken: 0.201 s
+prediction and gather done! Time taken: 0.001 s
+MLFF prediction made for the current step. Time taken: 0.219 s
+max_pred_error: 2.106024468E-03, F_tol_SOAP: 2.085089260E-03.
 Error prediction in ML Model is too large!
-DFT call made. Time taken: 8.640 s
-Error Energy: 0.000106310 (Ha/atom)
-Stress[0]: Error (GPa) = 0.457592386, Error(percent) = 120.627383794
-Stress[1]: Error (GPa) = 0.083351858, Error(percent) = 23.925212871
-Stress[2]: Error (GPa) = 0.000114108, Error(percent) = 0.033829952
-Stress[3]: Error (GPa) = 0.679389522, Error(percent) = 63.648168070
-Stress[4]: Error (GPa) = 0.104345450, Error(percent) = 36.689959976
-Stress[5]: Error (GPa) = 0.084763910, Error(percent) = 17.098231824
+DFT call made. Time taken: 2.238 s
+Error Energy: 0.000105046 (Ha/atom)
+Stress[0]: Error (GPa) = 0.465555942, Error(percent) = 122.230389394
+Stress[1]: Error (GPa) = 0.079585372, Error(percent) = 22.839973939
+Stress[2]: Error (GPa) = 0.000006171, Error(percent) = 0.001828652
+Stress[3]: Error (GPa) = 0.700836400, Error(percent) = 65.593483137
+Stress[4]: Error (GPa) = 0.109562902, Error(percent) = 38.518244848
+Stress[5]: Error (GPa) = 0.071005992, Error(percent) = 14.301223354
 Force Error atom-wise: 
-0.000274154 0.000583801 -0.001784858
--0.000439711 0.000948958 -0.001024588
--0.000306206 0.000117607 0.000006232
--0.000742978 0.000769011 -0.001779603
--0.003452698 -0.003039737 -0.001925377
--0.002206608 -0.000438481 0.002354941
-0.001991232 -0.000534991 -0.002370105
-0.001937458 -0.001153307 -0.000920604
--0.001801201 -0.000110831 -0.000506169
-0.001097185 0.001546371 0.002228473
--0.000536630 -0.001324157 -0.001624260
-0.001008070 0.004786274 -0.002901840
--0.001189775 -0.001226314 -0.002292098
--0.000255779 -0.008843400 0.002377042
-0.002228433 0.001851967 0.000146836
--0.001615776 0.003244296 0.001228490
-0.000372405 -0.000599317 -0.000874398
--0.001312184 -0.002536731 0.001728968
--0.001836137 0.000157819 -0.004307880
-0.002267453 0.002523297 0.002715343
-0.001211317 0.000840909 -0.002105436
--0.000311257 -0.001465745 -0.000459403
-0.001280646 -0.001106103 0.000018367
--0.001504205 -0.000476622 -0.000094270
--0.000144010 0.002003278 -0.001811893
--0.002336284 -0.000734672 -0.002980631
--0.000099358 0.001302863 -0.001285496
--0.000981531 -0.001329424 0.003205168
-0.000535185 0.001254812 -0.000095184
--0.000147269 -0.001957114 0.004482580
--0.003845079 -0.000770081 0.001674878
--0.000755547 0.005198562 -0.000075549
--0.001422213 -0.002282345 -0.000775288
-0.002387904 0.002703546 -0.000309708
-0.002918105 0.002871235 0.000677468
--0.001069126 -0.000624296 -0.000586306
--0.001487507 -0.001939760 0.000036455
--0.000668285 -0.000348521 0.000364259
-0.001006357 0.000755988 0.000777548
--0.002013598 -0.001457570 -0.000034825
--0.001085453 -0.003590994 -0.001955401
-0.000377643 -0.000404528 0.000278076
--0.000489052 -0.000981216 -0.000718681
--0.003062275 -0.002121210 -0.001767888
--0.000651503 0.005711835 -0.002326574
-0.005136853 -0.002445241 -0.001197388
--0.000563262 0.001867334 0.003444428
-0.003276470 -0.000787280 -0.002138542
--0.007373277 -0.000435000 -0.001841993
--0.000000675 -0.002357365 0.001494067
--0.001224916 0.000459340 -0.000086856
-0.003797324 -0.001044711 0.000694743
--0.002909673 0.003409596 0.003588747
-0.001723077 0.000166053 -0.000367998
-0.001178369 -0.001382167 0.001756975
-0.000952311 0.000689915 -0.001033166
-0.004031219 -0.000265148 0.003859136
--0.000609459 0.000248125 -0.000338290
-0.003066634 0.001930871 0.002750759
-0.000903609 0.003333158 -0.001795479
-0.001589628 0.002679910 -0.000813929
--0.002069414 0.000711165 -0.000819716
-0.001063979 0.001628649 -0.000674913
--0.001244263 -0.000726162 0.000060894
-0.001373729 0.000477031 -0.001693002
--0.007013687 -0.010959302 0.000544060
-0.002549553 0.000341622 0.001626401
--0.005851907 0.001310870 -0.002728473
--0.003270921 0.003311809 0.001199468
--0.000395812 -0.002965235 -0.000071133
-0.005230439 0.005325994 -0.000051207
-0.001927820 0.002588949 -0.001939719
-0.001305174 -0.003961804 -0.000918633
--0.000832999 -0.001806813 0.001339827
-0.000629021 -0.001561990 0.001374050
--0.000798303 -0.000594607 0.001043734
--0.000388414 0.001823058 0.001002527
-0.001497805 0.000418050 0.001149270
--0.000522582 -0.002902840 -0.000920719
-0.001598550 0.002113482 -0.000673893
--0.000348361 -0.002736187 0.000876720
-0.003649731 0.000438306 0.000204600
--0.003493637 -0.000491922 0.000761678
--0.000677252 0.003369626 -0.001253962
--0.000619545 -0.002178647 0.001361927
-0.000554013 0.003910174 -0.004387745
--0.002187981 0.000194204 0.004656988
--0.000550341 -0.000934948 0.000694955
--0.001389319 -0.000608561 0.001689166
--0.000896145 -0.005023214 -0.001605550
-0.000151230 0.002002567 -0.000187194
-0.000612225 0.001479069 0.000070324
--0.001135859 -0.001735684 0.002916691
--0.000575110 0.000293127 -0.003287267
-0.001074679 0.003024416 0.000344896
--0.003142413 -0.003442869 0.006651434
-0.007592181 0.003199985 0.003628983
--0.000439346 0.000892358 -0.002379590
--0.000890796 -0.000309940 0.001997454
--0.003086177 -0.002172003 -0.000007258
-0.005295003 0.001244939 0.001178914
-0.006370116 -0.003433544 -0.002327733
-0.006079108 0.006976696 0.003442703
--0.000064061 -0.002260180 -0.004564726
--0.000749703 -0.001856301 -0.001053625
--0.001500755 0.000552714 -0.000069497
-0.002326543 0.000641928 0.000166012
--0.002844335 0.000549615 -0.000950148
-Error Force (max): 0.010959302 (Ha/Bohr)
-Error Force (RMS): 0.002359574 (Ha/Bohr)
-Error Force Train (max): 0.005596493 (Ha/Bohr)
-Error Energy Train (max): 0.000008938 (Ha/atom)
-neighbor list and soap descriptor done! Time taken: 0.005 s
-Covariance matrix rows updated! Time taken: 0.364 s
-Sparsification done! Time taken: 0.009 s
-Covariance matrix columns updated! Time taken: 0.025 s
-Covariance matrices updated! Time taken: 0.404 s
-For element 0, CUR removed 15 columns out of a total of 337 columns
-sparsification before training done! Time taken: 2.533 s
+0.000379200 0.000698951 -0.001689090
+-0.000477476 0.000934941 -0.001002848
+-0.000189643 0.000071347 -0.000164005
+-0.000768643 0.000728507 -0.001882396
+-0.003375929 -0.002931627 -0.001949783
+-0.002196265 -0.000504603 0.002439909
+0.002005738 -0.000631936 -0.002217121
+0.001930572 -0.001151630 -0.000823529
+-0.001740171 -0.000110884 -0.000456478
+0.001048957 0.001492212 0.002132216
+-0.000480854 -0.001276213 -0.001640962
+0.001011036 0.004784909 -0.002913393
+-0.001177834 -0.001198158 -0.002317956
+-0.000147165 -0.008754727 0.002283756
+0.002285911 0.001852038 0.000131272
+-0.001632349 0.003189879 0.001202601
+0.000245672 -0.000650497 -0.000772551
+-0.001243503 -0.002454548 0.001689348
+-0.001846359 0.000225589 -0.004251389
+0.002271633 0.002484847 0.002744736
+0.001230867 0.000938419 -0.002089379
+-0.000291171 -0.001418529 -0.000430517
+0.001245492 -0.001093554 0.000003518
+-0.001434015 -0.000455996 -0.000129329
+-0.000220727 0.002050003 -0.001820624
+-0.002344659 -0.000792846 -0.002930812
+-0.000029563 0.001297527 -0.001266801
+-0.000919904 -0.001342625 0.003213474
+0.000547299 0.001307037 -0.000065212
+-0.000135121 -0.001981281 0.004488296
+-0.003782468 -0.000740241 0.001749250
+-0.000769087 0.005138602 -0.000095141
+-0.001434726 -0.002294193 -0.000766939
+0.002364863 0.002656916 -0.000369953
+0.002878430 0.002866762 0.000707787
+-0.000991964 -0.000621174 -0.000631396
+-0.001461946 -0.001981408 -0.000010048
+-0.000674652 -0.000296977 0.000449973
+0.001043069 0.000690939 0.000781714
+-0.001942353 -0.001539301 -0.000084151
+-0.001089803 -0.003661590 -0.001928459
+0.000297347 -0.000452491 0.000308343
+-0.000484016 -0.000911906 -0.000702894
+-0.003088934 -0.002079127 -0.001778165
+-0.000650904 0.005750533 -0.002409848
+0.005107631 -0.002473912 -0.001176208
+-0.000459939 0.001879505 0.003395635
+0.003271500 -0.000745433 -0.002176905
+-0.007446652 -0.000391817 -0.001850205
+-0.000038499 -0.002381931 0.001479850
+-0.001147208 0.000469956 -0.000071405
+0.003785271 -0.001039459 0.000716984
+-0.002978335 0.003486074 0.003653764
+0.001746083 0.000190137 -0.000400482
+0.001175682 -0.001414340 0.001791693
+0.000951160 0.000688172 -0.001013006
+0.004088806 -0.000246374 0.003781036
+-0.000634387 0.000237213 -0.000320114
+0.003136599 0.001909411 0.002742930
+0.000906046 0.003300970 -0.001800438
+0.001605683 0.002648504 -0.000749108
+-0.002044742 0.000737119 -0.000832924
+0.001129375 0.001689780 -0.000664512
+-0.001253278 -0.000765151 0.000024830
+0.001329016 0.000534406 -0.001668375
+-0.007038820 -0.010942292 0.000503201
+0.002488268 0.000334262 0.001572905
+-0.005781990 0.001233283 -0.002781486
+-0.003330466 0.003369749 0.001216018
+-0.000531217 -0.002921852 -0.000014420
+0.005004053 0.005183339 -0.000005798
+0.001942388 0.002531806 -0.001875073
+0.001375789 -0.004008002 -0.000999029
+-0.000776162 -0.001888090 0.001388623
+0.000592168 -0.001548513 0.001348456
+-0.000848727 -0.000557722 0.001026108
+-0.000413744 0.001856219 0.000999344
+0.001481794 0.000498360 0.001162511
+-0.000596151 -0.002822487 -0.001004096
+0.001536951 0.002079244 -0.000709105
+-0.000434415 -0.002764590 0.000876101
+0.003614832 0.000453727 0.000267211
+-0.003493394 -0.000492018 0.000782380
+-0.000636377 0.003445717 -0.001179476
+-0.000712223 -0.002173215 0.001379950
+0.000578755 0.003903816 -0.004398696
+-0.002180642 0.000181198 0.004606199
+-0.000543574 -0.000968766 0.000707050
+-0.001425935 -0.000654875 0.001692279
+-0.000769576 -0.004947147 -0.001630616
+0.000127236 0.002052148 -0.000239815
+0.000563358 0.001537340 0.000094369
+-0.001071362 -0.001681614 0.003023405
+-0.000653118 0.000346317 -0.003299752
+0.001039300 0.002995591 0.000352968
+-0.003128143 -0.003521007 0.006570657
+0.007582785 0.003189743 0.003603471
+-0.000544043 0.000879431 -0.002361461
+-0.000849741 -0.000313987 0.001980178
+-0.003063091 -0.002162395 -0.000097619
+0.005319820 0.001278030 0.001120433
+0.006403477 -0.003520816 -0.002248183
+0.006090637 0.006921584 0.003411823
+-0.000073129 -0.002356059 -0.004570936
+-0.000777995 -0.001863808 -0.000996837
+-0.001472395 0.000509865 -0.000030006
+0.002330916 0.000622445 0.000187387
+-0.002919791 0.000561319 -0.001028686
+Error Force (max): 0.010942292 (Ha/Bohr)
+Error Force (RMS): 0.002353960 (Ha/Bohr)
+Error Force Train (max): 0.005737173 (Ha/Bohr)
+Error Energy Train (max): 0.000008863 (Ha/atom)
+neighbor list and soap descriptor done! Time taken: 0.015 s
+Covariance matrix rows updated! Time taken: 0.205 s
+Sparsification done! Time taken: 0.002 s
+Covariance matrix columns updated! Time taken: 0.002 s
+Covariance matrices updated! Time taken: 0.225 s
+For element 0, CUR removed 16 columns out of a total of 337 columns
+sparsification before training done! Time taken: 0.511 s
 For element 1, CUR removed 0 columns out of a total of 52 columns
-sparsification before training done! Time taken: 2.584 s
+sparsification before training done! Time taken: 0.523 s
 Scaling K_train and b-vector done! Time taken: 0.000 s
-Calculation btb, AtA, Atb done! Time taken: 0.015 s
-Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.032 s
+Calculation btb, AtA, Atb done! Time taken: 0.001 s
+Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.002 s
 broadcasting weights and SVD done! Time taken: 0.001 s
-SVD of AtA done! Time taken: 0.162 s
+SVD of AtA done! Time taken: 0.034 s
 Regularization minimum: 1e-6.000000
 Loop for Bayesian regression hyperparameters optimization: 
-Initial guess; sigma_v0: 0.318590, sigma_w0: 318.589870
-Saving and other initialization before hyperparamter done! Time taken: 0.096 s
+Initial guess; sigma_v0: 0.316816, sigma_w0: 316.816368
+Saving and other initialization before hyperparamter done! Time taken: 0.020 s
 Gamma calculation done! It took 0.000 s.
 Iter number: 0
-Gamma: 54.685610
+Gamma: 54.636930
 Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.057 s.
+Linear system solving took 0.012 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 93.572290, M_total_rows: 1655, gamma: 54.685610
-sigma_v: 0.241808 and sigma_w: 569.642824 before check for cond
+norm_er2: 93.642715, M_total_rows: 1655, gamma: 54.636930
+sigma_v: 0.241895 and sigma_w: 564.777728 before check for cond
 regularization: 0.000000 is too small as computed from the loop
-After condK: sigma_v: 0.241808, sigma_w: 241.808172
+After condK: sigma_v: 0.241895, sigma_w: 241.895472
 Gamma calculation done! It took 0.000 s.
 Iter number: 1
-Gamma: 54.685610
+Gamma: 54.636930
 Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.056 s.
+Linear system solving took 0.012 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 93.572290, M_total_rows: 1655, gamma: 54.685610
-sigma_v: 0.241808 and sigma_w: 569.642824 before check for cond
+norm_er2: 93.642715, M_total_rows: 1655, gamma: 54.636930
+sigma_v: 0.241895 and sigma_w: 564.777728 before check for cond
 regularization: 0.000000 is too small as computed from the loop
-After condK: sigma_v: 0.241808, sigma_w: 241.808172
-Hyperparameter SCF loop took 0.113 s.
+After condK: sigma_v: 0.241895, sigma_w: 241.895472
+Hyperparameter SCF loop took 0.025 s.
 sigma_v and sigma_w converged in 2 iteration
-hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.507 s
-Training errors done! Time taken: 0.027 s
-mlff_train_Bayesian done! Time taken: 0.027 s
-Bayesian linear regression done! Time taken: 3.991 s
+hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.082 s
+Training errors done! Time taken: 0.000 s
+mlff_train_Bayesian done! Time taken: 0.000 s
+Bayesian linear regression done! Time taken: 0.771 s
 --------------------------------------------------------------------------------------------
 Calculation: 6
-Neighbor list and soap descriptor done! Time taken: 0.004 s
-Kpredict calculation done done! Time taken: 0.349 s
-prediction and gather done! Time taken: 0.019 s
-MLFF prediction made for the current step. Time taken: 0.372 s
-max_pred_error: 1.782449376E-03, F_tol_SOAP: 1.784231826E-03.
+Neighbor list and soap descriptor done! Time taken: 0.014 s
+Kpredict calculation done done! Time taken: 0.188 s
+prediction and gather done! Time taken: 0.002 s
+MLFF prediction made for the current step. Time taken: 0.204 s
+max_pred_error: 1.783398324E-03, F_tol_SOAP: 1.785181723E-03.
 Skipped DFT for this step!
 --------------------------------------------------------------------------------------------
 Calculation: 7
-Neighbor list and soap descriptor done! Time taken: 0.005 s
-Kpredict calculation done done! Time taken: 0.339 s
-prediction and gather done! Time taken: 0.020 s
-MLFF prediction made for the current step. Time taken: 0.364 s
-max_pred_error: 1.812508145E-03, F_tol_SOAP: 1.784231826E-03.
+Neighbor list and soap descriptor done! Time taken: 0.016 s
+Kpredict calculation done done! Time taken: 0.188 s
+prediction and gather done! Time taken: 0.002 s
+MLFF prediction made for the current step. Time taken: 0.206 s
+max_pred_error: 1.813501899E-03, F_tol_SOAP: 1.785181723E-03.
 Error prediction in ML Model is too large!
-DFT call made. Time taken: 6.312 s
-Error Energy: 0.000230876 (Ha/atom)
-Stress[0]: Error (GPa) = 0.553365696, Error(percent) = 46.072721537
-Stress[1]: Error (GPa) = 0.157454716, Error(percent) = 36.380470264
-Stress[2]: Error (GPa) = 0.021423646, Error(percent) = 5.972948509
-Stress[3]: Error (GPa) = 0.732097803, Error(percent) = 41.918445361
-Stress[4]: Error (GPa) = 0.025891567, Error(percent) = 12.832584069
-Stress[5]: Error (GPa) = 0.130200131, Error(percent) = 10.122846722
+DFT call made. Time taken: 1.619 s
+Error Energy: 0.000229145 (Ha/atom)
+Stress[0]: Error (GPa) = 0.558961048, Error(percent) = 46.531783908
+Stress[1]: Error (GPa) = 0.153267385, Error(percent) = 35.431808050
+Stress[2]: Error (GPa) = 0.020857025, Error(percent) = 5.812777001
+Stress[3]: Error (GPa) = 0.746207510, Error(percent) = 42.719911910
+Stress[4]: Error (GPa) = 0.033235223, Error(percent) = 16.469086479
+Stress[5]: Error (GPa) = 0.122428661, Error(percent) = 9.517753766
 Force Error atom-wise: 
-0.000800355 0.000977716 -0.001271440
--0.000018005 0.000268141 -0.000476152
--0.001101515 -0.000751445 -0.000615308
--0.000099861 0.001613256 -0.001060711
--0.005073714 -0.005968034 0.000255223
--0.002260246 -0.000913423 0.002530481
-0.004529013 0.001152475 -0.003907445
-0.000439412 -0.001755036 -0.000981281
--0.003215255 0.000575899 -0.001356119
-0.004127994 0.000363809 0.002721102
--0.000026715 -0.001313795 -0.001596977
-0.000594443 0.004990758 -0.004208792
--0.001975314 -0.001541743 -0.002373528
--0.001600930 -0.008152958 0.005227025
-0.002364817 0.002711793 0.002690004
--0.001837116 0.007626972 0.000120698
-0.002041323 -0.001873129 -0.000510878
--0.000741740 -0.004403474 0.001310763
--0.000625828 -0.000021289 -0.003148510
-0.001660868 0.001943658 0.002004457
-0.001983200 0.001745226 -0.002608745
--0.000770020 -0.002548661 -0.001423705
-0.001325029 -0.001732007 -0.000968308
--0.001316742 0.000195938 0.001372420
-0.000665078 0.001662554 -0.001779429
--0.001109147 -0.001612025 -0.002622846
--0.000273383 0.001401127 -0.001331559
--0.000508844 0.000102010 0.003183188
--0.000211045 0.002308863 0.000018010
-0.001123112 -0.000645140 0.004410634
--0.002091918 -0.001865945 0.002498021
--0.000351805 0.005899196 -0.000174842
--0.001078760 -0.002086654 -0.000124826
-0.002364604 0.002532155 -0.000306712
-0.001022239 0.000916616 0.001245950
-0.000380761 -0.000320870 -0.001799248
-0.000136842 -0.000654268 -0.000774027
--0.000525939 -0.001059816 0.001628335
-0.001158006 0.001158486 0.001194271
--0.002415188 -0.001959726 -0.000307982
--0.000817743 -0.002504470 -0.002030809
-0.001363305 -0.000774188 0.000601324
--0.000979896 -0.000521383 -0.001086558
--0.002069887 -0.002676509 -0.001101616
--0.001701234 0.007803023 -0.001199719
-0.006063245 -0.002781762 -0.001138203
--0.000371499 0.002347371 0.003597191
-0.002769059 -0.000155038 -0.003280612
--0.009375191 0.000303427 -0.001016037
-0.000320262 -0.001876846 0.000793096
--0.000482490 0.002293905 0.000433726
-0.004373820 -0.001623605 0.000483052
--0.003805774 0.002410712 0.003939697
-0.001985686 0.001123238 -0.000397904
-0.000757385 -0.001194356 0.000724890
-0.001784403 0.000879971 -0.001251256
-0.002784061 -0.001833467 0.003915270
--0.000523241 0.001664834 -0.000364503
-0.004356731 0.001649525 0.002399858
--0.000081114 0.002487468 -0.001961136
-0.001712645 0.001655613 -0.001437820
--0.003529050 -0.000447854 -0.001197972
-0.001404481 0.000324604 -0.001534173
--0.000526468 -0.000445865 0.000441460
-0.000921742 0.000225619 -0.001516880
--0.013410389 -0.017113855 -0.001584181
-0.001208112 0.001103875 0.001854663
--0.005427944 0.001349318 -0.003738539
--0.002240398 0.002758530 0.001410652
--0.001246843 -0.003751500 0.000066522
-0.007002523 0.006272099 -0.000474048
-0.000131555 0.002188182 -0.001152193
--0.001070635 -0.002979803 0.000168917
--0.001189132 -0.000690337 0.001925539
--0.000697613 -0.001444363 0.002150670
--0.000067322 -0.001159008 0.000589725
--0.000596430 0.001941964 0.001679131
-0.001527903 0.000775389 0.000804951
--0.001168521 -0.002235542 -0.001471214
-0.001851440 0.000707024 -0.000980463
--0.001128280 -0.000302607 0.000522667
-0.005337437 0.000079072 -0.002040398
--0.004497939 -0.001718988 0.003754921
--0.001552329 0.002407598 -0.001901954
--0.001066840 -0.002261469 0.001021827
-0.002788930 0.002971909 -0.002750269
--0.003216231 -0.000195996 0.003359736
--0.000139771 -0.000091896 0.000487218
--0.001815518 0.000449183 0.002274518
--0.002286898 -0.005986388 -0.001755358
-0.000561737 0.001413821 -0.000426977
--0.000005742 0.001010078 0.000510457
--0.003086561 -0.002219194 0.001311105
--0.001020694 0.000695415 -0.003567299
-0.001623914 0.001753502 -0.000089092
--0.001988918 -0.001598019 0.006959862
-0.005149090 0.003856091 0.003824394
--0.002553405 0.000230194 0.001322776
--0.001079986 0.002639709 0.000028220
--0.003328579 -0.002409736 -0.001936529
-0.004920026 -0.000321926 -0.000154779
-0.006658448 -0.002621074 -0.001060134
-0.014127522 0.012158877 0.003003318
-0.001090749 -0.002472997 -0.005089755
--0.000799657 -0.000475124 -0.000279260
--0.002282826 -0.000368704 -0.002130177
-0.002488373 -0.000688105 -0.000770111
--0.001323658 -0.000956383 0.000825364
-Error Force (max): 0.017113855 (Ha/Bohr)
-Error Force (RMS): 0.002855501 (Ha/Bohr)
-Error Force Train (max): 0.007790295 (Ha/Bohr)
-Error Energy Train (max): 0.000057902 (Ha/atom)
-neighbor list and soap descriptor done! Time taken: 0.020 s
-Covariance matrix rows updated! Time taken: 0.345 s
-Sparsification done! Time taken: 0.009 s
-Covariance matrix columns updated! Time taken: 0.026 s
-Covariance matrices updated! Time taken: 0.401 s
-For element 0, CUR removed 7 columns out of a total of 322 columns
-sparsification before training done! Time taken: 2.307 s
+0.000765831 0.001142701 -0.001213352
+-0.000097123 0.000297232 -0.000501733
+-0.000985730 -0.000751013 -0.000634155
+-0.000191508 0.001594256 -0.001080974
+-0.005119461 -0.005925240 0.000113242
+-0.002294639 -0.000904182 0.002628143
+0.004481625 0.001129824 -0.003804674
+0.000454453 -0.001711771 -0.000962710
+-0.003201541 0.000627803 -0.001329778
+0.004103413 0.000282893 0.002716841
+0.000012419 -0.001306930 -0.001627726
+0.000554464 0.005028386 -0.004190243
+-0.001957951 -0.001516523 -0.002360600
+-0.001516960 -0.008189681 0.005173694
+0.002393295 0.002639530 0.002725573
+-0.001844952 0.007571227 0.000114951
+0.001944152 -0.001879584 -0.000469376
+-0.000732006 -0.004341321 0.001249372
+-0.000633962 0.000041378 -0.003179156
+0.001703061 0.001921848 0.001975469
+0.002009252 0.001795094 -0.002583695
+-0.000838383 -0.002578384 -0.001342698
+0.001308613 -0.001740757 -0.000929134
+-0.001290516 0.000217705 0.001349690
+0.000565375 0.001725230 -0.001747883
+-0.001146477 -0.001648269 -0.002583373
+-0.000247450 0.001330490 -0.001314620
+-0.000461079 0.000049509 0.003153536
+-0.000245122 0.002338879 -0.000069009
+0.001050707 -0.000716754 0.004363661
+-0.002089676 -0.001867095 0.002563583
+-0.000312017 0.005877000 -0.000226819
+-0.001093868 -0.002080375 -0.000129788
+0.002354033 0.002580782 -0.000288194
+0.001081178 0.000969473 0.001253573
+0.000459095 -0.000370249 -0.001838311
+0.000150223 -0.000697911 -0.000826392
+-0.000483249 -0.000937047 0.001665430
+0.001215918 0.001138462 0.001151398
+-0.002365660 -0.002005761 -0.000329396
+-0.000837560 -0.002523221 -0.002048834
+0.001254101 -0.000800438 0.000644924
+-0.000997717 -0.000530979 -0.001047656
+-0.002076893 -0.002631123 -0.001109286
+-0.001746565 0.007817847 -0.001276297
+0.006046234 -0.002829663 -0.001094922
+-0.000368619 0.002324015 0.003577209
+0.002801879 -0.000115465 -0.003348492
+-0.009473715 0.000328128 -0.001016875
+0.000294897 -0.001908272 0.000755947
+-0.000440337 0.002277931 0.000433720
+0.004365729 -0.001658759 0.000505796
+-0.003866918 0.002446676 0.003981833
+0.001998172 0.001090044 -0.000413856
+0.000735997 -0.001225619 0.000767802
+0.001845110 0.000904655 -0.001244772
+0.002819416 -0.001759321 0.003914925
+-0.000525744 0.001667691 -0.000354962
+0.004363939 0.001575422 0.002429242
+-0.000044542 0.002512582 -0.001978831
+0.001709851 0.001708708 -0.001384146
+-0.003492941 -0.000436390 -0.001227801
+0.001455081 0.000362326 -0.001574411
+-0.000511036 -0.000452081 0.000442610
+0.000925811 0.000230095 -0.001507627
+-0.013413795 -0.017115620 -0.001585350
+0.001147666 0.001115790 0.001852093
+-0.005436851 0.001302100 -0.003717750
+-0.002227081 0.002873657 0.001438305
+-0.001255027 -0.003716808 0.000157268
+0.006889019 0.006158972 -0.000473077
+0.000105490 0.002236116 -0.001132826
+-0.001016599 -0.003043200 0.000063611
+-0.001134231 -0.000714828 0.001953376
+-0.000727123 -0.001428916 0.002129518
+-0.000080334 -0.001094311 0.000605810
+-0.000614913 0.001924288 0.001720498
+0.001590732 0.000811512 0.000798538
+-0.001215359 -0.002226427 -0.001466530
+0.001768058 0.000662358 -0.001017706
+-0.001158247 -0.000374010 0.000490811
+0.005270597 0.000095381 -0.001992180
+-0.004474424 -0.001759280 0.003698804
+-0.001489020 0.002435988 -0.001882351
+-0.001083849 -0.002244380 0.001063350
+0.002818821 0.002994785 -0.002803914
+-0.003221821 -0.000211648 0.003340055
+-0.000121075 -0.000130208 0.000540589
+-0.001774452 0.000432057 0.002237307
+-0.002231638 -0.005948920 -0.001745006
+0.000562158 0.001449681 -0.000521636
+0.000049722 0.001031497 0.000477237
+-0.003001432 -0.002216173 0.001402776
+-0.001022697 0.000758326 -0.003591119
+0.001616320 0.001743130 -0.000082608
+-0.001967763 -0.001728642 0.006980900
+0.005168621 0.003922669 0.003894086
+-0.002669246 0.000230963 0.001203757
+-0.001080365 0.002626586 0.000029133
+-0.003297120 -0.002481304 -0.001920550
+0.004982202 -0.000244539 -0.000263666
+0.006752413 -0.002704659 -0.001051207
+0.014138894 0.012161415 0.003037177
+0.001054557 -0.002484278 -0.005087864
+-0.000797553 -0.000546722 -0.000235597
+-0.002242762 -0.000328682 -0.002089159
+0.002487497 -0.000665409 -0.000727110
+-0.001339396 -0.001063950 0.000812600
+Error Force (max): 0.017115620 (Ha/Bohr)
+Error Force (RMS): 0.002856225 (Ha/Bohr)
+Error Force Train (max): 0.007812547 (Ha/Bohr)
+Error Energy Train (max): 0.000057297 (Ha/atom)
+neighbor list and soap descriptor done! Time taken: 0.015 s
+Covariance matrix rows updated! Time taken: 0.193 s
+Sparsification done! Time taken: 0.002 s
+Covariance matrix columns updated! Time taken: 0.003 s
+Covariance matrices updated! Time taken: 0.214 s
+For element 0, CUR removed 7 columns out of a total of 321 columns
+sparsification before training done! Time taken: 0.464 s
 For element 1, CUR removed 1 columns out of a total of 53 columns
-sparsification before training done! Time taken: 2.369 s
+sparsification before training done! Time taken: 0.476 s
 Scaling K_train and b-vector done! Time taken: 0.000 s
-Calculation btb, AtA, Atb done! Time taken: 0.007 s
-Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.029 s
+Calculation btb, AtA, Atb done! Time taken: 0.001 s
+Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.002 s
 broadcasting weights and SVD done! Time taken: 0.001 s
-SVD of AtA done! Time taken: 0.159 s
+SVD of AtA done! Time taken: 0.033 s
 Regularization minimum: 1e-6.000000
 Loop for Bayesian regression hyperparameters optimization: 
-Initial guess; sigma_v0: 0.241808, sigma_w0: 241.808172
-Saving and other initialization before hyperparamter done! Time taken: 0.091 s
+Initial guess; sigma_v0: 0.241895, sigma_w0: 241.895472
+Saving and other initialization before hyperparamter done! Time taken: 0.019 s
 Gamma calculation done! It took 0.000 s.
 Iter number: 0
-Gamma: 67.798962
+Gamma: 67.743367
 Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.057 s.
+Linear system solving took 0.012 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 82.417921, M_total_rows: 1986, gamma: 67.798962
-sigma_v: 0.207283 and sigma_w: 499.444275 before check for cond
+norm_er2: 82.811312, M_total_rows: 1986, gamma: 67.743367
+sigma_v: 0.207774 and sigma_w: 499.941202 before check for cond
 regularization: 0.000000 is too small as computed from the loop
-After condK: sigma_v: 0.207283, sigma_w: 207.283039
+After condK: sigma_v: 0.207774, sigma_w: 207.774133
 Gamma calculation done! It took 0.000 s.
 Iter number: 1
-Gamma: 67.798962
+Gamma: 67.743367
 Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.055 s.
+Linear system solving took 0.012 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 82.417921, M_total_rows: 1986, gamma: 67.798962
-sigma_v: 0.207283 and sigma_w: 499.444275 before check for cond
+norm_er2: 82.811312, M_total_rows: 1986, gamma: 67.743367
+sigma_v: 0.207774 and sigma_w: 499.941202 before check for cond
 regularization: 0.000000 is too small as computed from the loop
-After condK: sigma_v: 0.207283, sigma_w: 207.283039
-Hyperparameter SCF loop took 0.112 s.
+After condK: sigma_v: 0.207774, sigma_w: 207.774133
+Hyperparameter SCF loop took 0.024 s.
 sigma_v and sigma_w converged in 2 iteration
-hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.465 s
-Training errors done! Time taken: 0.026 s
-mlff_train_Bayesian done! Time taken: 0.026 s
-Bayesian linear regression done! Time taken: 3.682 s
+hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.079 s
+Training errors done! Time taken: 0.000 s
+mlff_train_Bayesian done! Time taken: 0.000 s
+Bayesian linear regression done! Time taken: 0.717 s
 --------------------------------------------------------------------------------------------
 Calculation: 8
-Neighbor list and soap descriptor done! Time taken: 0.004 s
-Kpredict calculation done done! Time taken: 0.337 s
-prediction and gather done! Time taken: 0.016 s
-MLFF prediction made for the current step. Time taken: 0.357 s
-max_pred_error: 1.786778089E-03, F_tol_SOAP: 1.788564867E-03.
+Neighbor list and soap descriptor done! Time taken: 0.014 s
+Kpredict calculation done done! Time taken: 0.178 s
+prediction and gather done! Time taken: 0.002 s
+MLFF prediction made for the current step. Time taken: 0.195 s
+max_pred_error: 1.791152502E-03, F_tol_SOAP: 1.792943654E-03.
 Skipped DFT for this step!
 --------------------------------------------------------------------------------------------
 Calculation: 9
-Neighbor list and soap descriptor done! Time taken: 0.005 s
-Kpredict calculation done done! Time taken: 0.331 s
-prediction and gather done! Time taken: 0.020 s
-MLFF prediction made for the current step. Time taken: 0.356 s
-max_pred_error: 1.831099868E-03, F_tol_SOAP: 1.788564867E-03.
+Neighbor list and soap descriptor done! Time taken: 0.015 s
+Kpredict calculation done done! Time taken: 0.179 s
+prediction and gather done! Time taken: 0.002 s
+MLFF prediction made for the current step. Time taken: 0.196 s
+max_pred_error: 1.835535945E-03, F_tol_SOAP: 1.792943654E-03.
 Error prediction in ML Model is too large!
-DFT call made. Time taken: 6.340 s
-Error Energy: 0.000251579 (Ha/atom)
-Stress[0]: Error (GPa) = 0.591162478, Error(percent) = 26.282246461
-Stress[1]: Error (GPa) = 0.216144817, Error(percent) = 41.219047606
-Stress[2]: Error (GPa) = 0.026311211, Error(percent) = 7.486887851
-Stress[3]: Error (GPa) = 0.612491444, Error(percent) = 24.043006534
-Stress[4]: Error (GPa) = 0.022474292, Error(percent) = 46.469573121
-Stress[5]: Error (GPa) = 0.087714333, Error(percent) = 3.799029893
+DFT call made. Time taken: 1.625 s
+Error Energy: 0.000250376 (Ha/atom)
+Stress[0]: Error (GPa) = 0.598769049, Error(percent) = 26.617790510
+Stress[1]: Error (GPa) = 0.213248825, Error(percent) = 40.678489867
+Stress[2]: Error (GPa) = 0.026384567, Error(percent) = 7.504775097
+Stress[3]: Error (GPa) = 0.622808381, Error(percent) = 24.447076585
+Stress[4]: Error (GPa) = 0.020617174, Error(percent) = 42.641206218
+Stress[5]: Error (GPa) = 0.087123378, Error(percent) = 3.774051007
 Force Error atom-wise: 
-0.000722215 0.002230578 0.000579571
--0.000941905 -0.000213205 0.000406862
--0.000714642 -0.001736876 -0.000920373
-0.000032544 0.001305051 -0.001346378
--0.006852165 -0.007819758 0.001973187
--0.001854702 -0.000273193 0.002147655
-0.007064552 0.002840745 -0.005413240
-0.000503566 -0.002139177 -0.001280764
--0.003399691 0.000194382 -0.002657364
-0.005724503 -0.001783221 0.003594707
-0.000829899 -0.000693991 -0.001542800
-0.000166847 0.005021914 -0.004555696
--0.001572048 -0.002075986 -0.002580387
--0.001633178 -0.005604542 0.006369217
-0.000472429 0.002568320 0.004023409
--0.001203206 0.010763144 -0.000320046
-0.001902143 -0.001011455 -0.000597715
--0.000573055 -0.005008143 0.001454391
-0.000792527 -0.000051999 -0.003090948
-0.001703454 0.002119290 0.001128890
-0.002603465 0.002486281 -0.002251073
--0.001246259 -0.002985103 -0.002495164
-0.000791961 -0.002147034 -0.000903421
--0.000705479 0.001420522 0.001908430
-0.000944381 0.001800038 -0.001805289
--0.000286430 -0.002908642 -0.002974487
--0.000501948 0.001241509 -0.001170406
--0.000129735 0.000655461 0.003457121
--0.000517412 0.002256248 0.000576293
-0.001690531 -0.000336619 0.002949419
--0.001611120 -0.001257338 0.002612844
-0.000543381 0.005130513 0.000447848
--0.001142912 -0.001331914 0.000337939
-0.002602178 0.002877353 -0.000426648
--0.000233130 -0.000588698 0.002340562
-0.001776680 0.000357147 -0.002239115
-0.001266574 -0.000216428 -0.001881937
--0.001050817 -0.001715260 0.002374477
-0.000917505 0.001669461 0.001917605
--0.001469222 -0.001892455 -0.001116877
--0.000670035 -0.001627676 -0.001653180
-0.000986798 -0.001040560 0.000491248
--0.001270840 0.000440566 -0.001257160
--0.001180743 -0.002513247 -0.000396364
--0.002420946 0.008468110 -0.001228190
-0.006309729 -0.003821338 -0.001075448
--0.000204747 0.002337133 0.003599541
-0.003224987 0.000532776 -0.004850291
--0.010112247 0.002040120 0.000214532
-0.000395917 -0.002301519 -0.000272882
--0.000269540 0.002988291 0.001419089
-0.004903603 -0.001911099 0.000769745
--0.003625995 0.000830967 0.004400529
-0.001144295 0.002016068 -0.000707112
--0.000903767 -0.000825737 0.000138993
-0.002388070 0.001570223 -0.000771576
-0.001728086 -0.003042354 0.003277807
--0.000784613 0.001926127 -0.000101360
-0.004630647 0.001937533 0.002136228
-0.000025099 0.002753732 -0.001742168
-0.002438033 0.000306135 -0.002238296
--0.004616114 -0.001338976 -0.001296716
-0.001251931 -0.000318177 -0.001971474
--0.000030460 -0.000259084 0.000626347
-0.000760122 -0.000030093 -0.001183089
--0.021162477 -0.024232415 -0.003281526
-0.000274986 0.000472201 0.002400389
--0.002113989 -0.000108383 -0.003950492
--0.001266404 0.001354809 0.002324062
--0.001169886 -0.003753021 0.000749095
-0.006185500 0.007159977 -0.001195053
-0.000147944 0.000766473 -0.002467035
--0.002947652 -0.002537844 0.000660039
--0.001112997 -0.000222804 0.001916878
--0.001399375 -0.000206048 0.003349953
-0.000100880 -0.001457412 0.000029622
-0.000051472 0.001779073 0.002269368
-0.001333517 0.000951267 0.000004193
--0.001322187 -0.002142847 -0.001158218
-0.001671771 0.000131510 -0.001147775
--0.001810395 0.000155734 0.000390606
-0.007135568 0.000577050 -0.005019653
--0.005564435 -0.002424731 0.006962804
--0.002703101 0.001449327 -0.003069485
--0.001283105 -0.002589542 0.000818245
-0.004595379 0.001962634 -0.001089897
--0.003685577 -0.000573133 0.002210445
-0.000055369 0.000311057 0.000131676
--0.002334835 0.000929550 0.002587476
--0.002006858 -0.005411218 -0.002332305
-0.000763702 0.000975835 0.000150562
--0.000454451 0.000979995 0.001114083
--0.003808374 -0.002625937 0.001960028
--0.001458889 0.000695696 -0.004533045
-0.002369620 0.002119119 -0.000605633
--0.002469581 0.000337479 0.006917355
-0.002258370 0.005327743 0.004138737
--0.004043316 -0.001149653 0.001840334
--0.000119199 0.002832218 -0.000930384
--0.002883296 -0.003293282 -0.002655483
-0.005048589 -0.002869825 -0.000307017
-0.006657935 -0.002241761 -0.000879106
-0.020397019 0.020162161 0.003835059
-0.000638428 -0.002045022 -0.004620229
--0.001792197 -0.000201430 0.001048719
--0.002345180 -0.000798614 -0.003242325
-0.002812517 -0.000967370 -0.002021790
--0.000750356 -0.001843454 0.001337671
-Error Force (max): 0.024232415 (Ha/Bohr)
-Error Force (RMS): 0.003558313 (Ha/Bohr)
-Error Force Train (max): 0.012449567 (Ha/Bohr)
-Error Energy Train (max): 0.000137336 (Ha/atom)
-neighbor list and soap descriptor done! Time taken: 0.005 s
-Covariance matrix rows updated! Time taken: 0.350 s
-Sparsification done! Time taken: 0.009 s
-Covariance matrix columns updated! Time taken: 0.022 s
-Covariance matrices updated! Time taken: 0.386 s
-For element 0, CUR removed 3 columns out of a total of 315 columns
-sparsification before training done! Time taken: 2.214 s
+0.000671187 0.002268064 0.000569605
+-0.000924368 -0.000201394 0.000371539
+-0.000697939 -0.001751345 -0.000914428
+0.000013371 0.001314077 -0.001344650
+-0.006876661 -0.007807685 0.001917491
+-0.001880524 -0.000254000 0.002137211
+0.006961704 0.002863380 -0.005315189
+0.000519948 -0.002136747 -0.001298031
+-0.003434041 0.000232950 -0.002628636
+0.005711040 -0.001826628 0.003592795
+0.000819327 -0.000685842 -0.001572160
+0.000141271 0.005043709 -0.004529271
+-0.001552886 -0.002101257 -0.002565563
+-0.001600008 -0.005643724 0.006379450
+0.000494349 0.002469805 0.004043730
+-0.001289156 0.010754545 -0.000333991
+0.001832487 -0.000983015 -0.000560218
+-0.000588034 -0.004963793 0.001416043
+0.000769315 -0.000019264 -0.003097568
+0.001712333 0.002126253 0.001135009
+0.002621771 0.002491546 -0.002266569
+-0.001253842 -0.003015517 -0.002420497
+0.000781202 -0.002151963 -0.000912039
+-0.000702238 0.001444644 0.001914980
+0.000870509 0.001841914 -0.001805092
+-0.000301058 -0.002938675 -0.002967453
+-0.000480623 0.001249062 -0.001176560
+-0.000078611 0.000634197 0.003448990
+-0.000532651 0.002278099 0.000513744
+0.001722035 -0.000320449 0.002929212
+-0.001616513 -0.001277061 0.002627255
+0.000573620 0.005130751 0.000422504
+-0.001147735 -0.001364030 0.000329478
+0.002640043 0.002898778 -0.000409364
+-0.000243109 -0.000548935 0.002303084
+0.001859640 0.000293740 -0.002237981
+0.001273514 -0.000223904 -0.001885795
+-0.000989985 -0.001680790 0.002401449
+0.000940603 0.001623468 0.001935661
+-0.001462655 -0.001917002 -0.001130172
+-0.000655418 -0.001647092 -0.001670719
+0.000945753 -0.001070158 0.000493749
+-0.001253262 0.000409194 -0.001234041
+-0.001183192 -0.002524013 -0.000399733
+-0.002419061 0.008473896 -0.001211243
+0.006306039 -0.003819450 -0.001086947
+-0.000228301 0.002315617 0.003593891
+0.003253874 0.000554798 -0.004877415
+-0.010136774 0.002035359 0.000221740
+0.000402965 -0.002306256 -0.000263127
+-0.000265428 0.002973322 0.001411312
+0.004910334 -0.001910843 0.000757410
+-0.003637477 0.000851548 0.004394671
+0.001142724 0.002019407 -0.000696435
+-0.000886127 -0.000825502 0.000140793
+0.002425275 0.001570541 -0.000782399
+0.001730238 -0.002989536 0.003290287
+-0.000759150 0.001942326 -0.000115125
+0.004684260 0.001903381 0.002158295
+0.000041712 0.002760901 -0.001756749
+0.002391251 0.000363390 -0.002203974
+-0.004589530 -0.001324067 -0.001298260
+0.001298057 -0.000305933 -0.001979374
+-0.000020815 -0.000226281 0.000636601
+0.000768337 -0.000013732 -0.001176557
+-0.021179309 -0.024302386 -0.003273523
+0.000248607 0.000467673 0.002396424
+-0.002144416 -0.000111218 -0.003903477
+-0.001234456 0.001450986 0.002313473
+-0.001213887 -0.003746242 0.000767509
+0.006155240 0.007021896 -0.001197792
+0.000105107 0.000788320 -0.002428784
+-0.002925488 -0.002567342 0.000615002
+-0.001092093 -0.000233726 0.001916885
+-0.001420718 -0.000209633 0.003328980
+0.000073140 -0.001399545 0.000055096
+0.000030228 0.001758942 0.002308126
+0.001367891 0.000968278 0.000033605
+-0.001347173 -0.002111047 -0.001176753
+0.001632943 0.000120595 -0.001161228
+-0.001803677 0.000152718 0.000361089
+0.007068960 0.000569318 -0.004958191
+-0.005555501 -0.002447429 0.006916435
+-0.002659850 0.001441920 -0.003105201
+-0.001284727 -0.002588741 0.000821660
+0.004583889 0.002016302 -0.001130242
+-0.003697547 -0.000560694 0.002210928
+0.000066449 0.000280059 0.000191540
+-0.002301003 0.000923205 0.002583382
+-0.001976352 -0.005378047 -0.002334041
+0.000758888 0.000999972 0.000105185
+-0.000445927 0.000978170 0.001095379
+-0.003785230 -0.002605305 0.001938207
+-0.001481099 0.000755401 -0.004557805
+0.002365297 0.002108814 -0.000592663
+-0.002429873 0.000285208 0.006945440
+0.002340771 0.005349303 0.004101771
+-0.004159706 -0.001163146 0.001786478
+-0.000153515 0.002844497 -0.000963903
+-0.002901981 -0.003314118 -0.002632971
+0.005047012 -0.002791839 -0.000364804
+0.006722057 -0.002276749 -0.000850743
+0.020431927 0.020159631 0.003861570
+0.000682570 -0.002113370 -0.004702832
+-0.001736642 -0.000284033 0.001128151
+-0.002294978 -0.000791137 -0.003186481
+0.002825925 -0.000919338 -0.001964895
+-0.000824671 -0.001882900 0.001339364
+Error Force (max): 0.024302386 (Ha/Bohr)
+Error Force (RMS): 0.003559008 (Ha/Bohr)
+Error Force Train (max): 0.012491922 (Ha/Bohr)
+Error Energy Train (max): 0.000136845 (Ha/atom)
+neighbor list and soap descriptor done! Time taken: 0.015 s
+Covariance matrix rows updated! Time taken: 0.186 s
+Sparsification done! Time taken: 0.002 s
+Covariance matrix columns updated! Time taken: 0.003 s
+Covariance matrices updated! Time taken: 0.208 s
+For element 0, CUR removed 3 columns out of a total of 314 columns
+sparsification before training done! Time taken: 0.442 s
 For element 1, CUR removed 0 columns out of a total of 53 columns
-sparsification before training done! Time taken: 2.266 s
+sparsification before training done! Time taken: 0.454 s
 Scaling K_train and b-vector done! Time taken: 0.000 s
-Calculation btb, AtA, Atb done! Time taken: 0.010 s
-Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.035 s
+Calculation btb, AtA, Atb done! Time taken: 0.008 s
+Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.002 s
 broadcasting weights and SVD done! Time taken: 0.001 s
-SVD of AtA done! Time taken: 0.159 s
+SVD of AtA done! Time taken: 0.028 s
 Regularization minimum: 1e-6.000000
 Loop for Bayesian regression hyperparameters optimization: 
-Initial guess; sigma_v0: 0.207283, sigma_w0: 207.283039
-Saving and other initialization before hyperparamter done! Time taken: 0.096 s
+Initial guess; sigma_v0: 0.207774, sigma_w0: 207.774133
+Saving and other initialization before hyperparamter done! Time taken: 0.019 s
 Gamma calculation done! It took 0.000 s.
 Iter number: 0
-Gamma: 77.268828
+Gamma: 77.202739
 Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.055 s.
+Linear system solving took 0.012 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 85.805990, M_total_rows: 2317, gamma: 77.268828
-sigma_v: 0.195732 and sigma_w: 465.666328 before check for cond
+norm_er2: 86.007512, M_total_rows: 2317, gamma: 77.202739
+sigma_v: 0.195958 and sigma_w: 466.819904 before check for cond
 regularization: 0.000000 is too small as computed from the loop
-After condK: sigma_v: 0.195732, sigma_w: 195.731560
+After condK: sigma_v: 0.195958, sigma_w: 195.958379
 Gamma calculation done! It took 0.000 s.
 Iter number: 1
-Gamma: 77.268828
+Gamma: 77.202739
 Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.053 s.
+Linear system solving took 0.012 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 85.805990, M_total_rows: 2317, gamma: 77.268828
-sigma_v: 0.195732 and sigma_w: 465.666328 before check for cond
+norm_er2: 86.007512, M_total_rows: 2317, gamma: 77.202739
+sigma_v: 0.195958 and sigma_w: 466.819904 before check for cond
 regularization: 0.000000 is too small as computed from the loop
-After condK: sigma_v: 0.195732, sigma_w: 195.731560
-Hyperparameter SCF loop took 0.108 s.
+After condK: sigma_v: 0.195958, sigma_w: 195.958379
+Hyperparameter SCF loop took 0.024 s.
 sigma_v and sigma_w converged in 2 iteration
-hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.497 s
-Training errors done! Time taken: 0.027 s
-mlff_train_Bayesian done! Time taken: 0.027 s
-Bayesian linear regression done! Time taken: 3.632 s
+hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.074 s
+Training errors done! Time taken: 0.000 s
+mlff_train_Bayesian done! Time taken: 0.000 s
+Bayesian linear regression done! Time taken: 0.697 s

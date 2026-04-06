@@ -1,0 +1,25 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-05-2026 18:07:55
+Job ID:    6286385
+User ID:   strivedi44
+Account:   gts-phanish6-coda20
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       inferno
+---------------------------------------
+/usr/local/pace-apps/lmod/lmod/init/bash: line 223: conda: command not found
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+[2026-04-05T19:08:03.507] error: *** JOB 6286385 ON atl1-1-02-012-1-1 CANCELLED AT 2026-04-05T19:08:03 DUE TO TIME LIMIT ***
+[2026-04-05T19:08:03.555] error: *** STEP 6286385.0 ON atl1-1-02-012-1-1 CANCELLED AT 2026-04-05T19:08:03 DUE TO TIME LIMIT ***
+---------------------------------------
+Begin Slurm Epilog: Apr-05-2026 19:08:08
+Job ID:        6286385
+User ID:       strivedi44
+Account:       gts-phanish6-coda20
+Job name:      SPARC_testsuite
+Resources:     cpu=48,mem=336G,node=4
+Rsrc Used:     cput=2-00:07:12,vmem=0,walltime=01:00:09,mem=36696K,energy_used=0
+Partition:     cpu-small
+QOS:           inferno
+Nodes:         atl1-1-02-012-1-1,atl1-1-02-012-3-1,atl1-1-02-012-13-1,atl1-1-02-012-14-1
+---------------------------------------

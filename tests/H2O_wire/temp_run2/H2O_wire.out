@@ -2,7 +2,7 @@
 *                       SPARC (version December 03, 2025)                 *
 *   Copyright (c) 2020 Material Physics & Mechanics Group, Georgia Tech   *
 *           Distributed under GNU General Public License 3 (GPL)          *
-*                   Start time: Sun Apr  5 15:54:15 2026                  *
+*                   Start time: Mon Apr  6 11:06:19 2026                  *
 ***************************************************************************
                            Input parameters                                
 ***************************************************************************
@@ -68,13 +68,13 @@ Density: 1.5319175170E-02 (amu/Bohr^3), 1.7166473238E-01 (g/cc)
 NP_SPIN_PARAL: 1
 NP_KPOINT_PARAL: 1
 NP_BAND_PARAL: 8
-NP_DOMAIN_PARAL: 5 1 5
-NP_DOMAIN_PHI_PARAL: 5 4 10
+NP_DOMAIN_PARAL: 2 1 3
+NP_DOMAIN_PHI_PARAL: 4 2 6
 EIG_SERIAL_MAXNS: 1500
 ***************************************************************************
                              Initialization                                
 ***************************************************************************
-Number of processors               :  200
+Number of processors               :  48
 Mesh spacing                       :  0.2 (Bohr)
 Number of symmetry adapted k-points:  1
 Output printed to                  :  H2O_wire/temp_run2/H2O_wire.out
@@ -91,51 +91,52 @@ Pseudopotential                    :  ../psps/08_O_6_1.2_1.4_pbe_n_v1.0.psp8
 Atomic mass                        :  15.9994
 Pseudocharge radii of atom type 2  :  7.20 7.20 7.20 (x, y, z dir)
 Number of atoms of type 2          :  1
-Estimated total memory usage       :  101.57 MB
-Estimated memory per processor     :  520.06 kB
+Estimated total memory usage       :  101.54 MB
+Estimated memory per processor     :  2.12 MB
 ===================================================================
                     Self Consistent Field (SCF#1)                     
 ===================================================================
 Iteration     Free Energy (Ha/atom)   SCF Error        Timing (sec)
-1            -5.9030540901E+00        1.287E-01        4.330
-2            -5.8975037682E+00        7.748E-02        1.514
-3            -5.8955544100E+00        4.875E-02        1.636
-4            -5.8949219790E+00        8.722E-03        1.598
-5            -5.8949171350E+00        5.351E-03        1.612
-6            -5.8949552472E+00        1.799E-03        1.506
-7            -5.8949787804E+00        1.340E-03        1.466
-8            -5.8949900439E+00        6.731E-04        1.534
-9            -5.8950046729E+00        2.421E-04        1.615
-10           -5.8950074707E+00        1.810E-04        1.606
-11           -5.8950116859E+00        6.782E-05        1.449
-12           -5.8950122106E+00        4.388E-05        1.452
-13           -5.8950128326E+00        1.985E-05        1.354
-14           -5.8950128915E+00        1.026E-05        1.320
-15           -5.8950129257E+00        1.019E-05        1.197
-16           -5.8950129386E+00        3.706E-06        1.284
-17           -5.8950129396E+00        1.700E-06        1.198
-18           -5.8950129402E+00        9.032E-07        1.140
-Total number of SCF: 18    
+1            -5.9039069071E+00        1.243E-01        0.146
+2            -5.8977985680E+00        7.833E-02        0.080
+3            -5.8954248288E+00        4.631E-02        0.085
+4            -5.8950207261E+00        1.213E-02        0.079
+5            -5.8949090236E+00        5.319E-03        0.081
+6            -5.8949767530E+00        1.805E-03        0.073
+7            -5.8949785774E+00        1.366E-03        0.081
+8            -5.8949885982E+00        6.197E-04        0.078
+9            -5.8950008921E+00        4.620E-04        0.075
+10           -5.8950070821E+00        1.706E-04        0.073
+11           -5.8950117649E+00        6.330E-05        0.062
+12           -5.8950122316E+00        4.200E-05        0.065
+13           -5.8950128170E+00        3.029E-05        0.063
+14           -5.8950128802E+00        1.100E-05        0.063
+15           -5.8950129197E+00        6.210E-06        0.060
+16           -5.8950129324E+00        4.420E-06        0.061
+17           -5.8950129389E+00        1.973E-06        0.054
+18           -5.8950129390E+00        1.252E-06        0.055
+19           -5.8950129379E+00        7.823E-07        0.054
+Total number of SCF: 19    
 ====================================================================
                     Energy and force calculation                    
 ====================================================================
-Free energy per atom               : -5.8950129402E+00 (Ha/atom)
-Total free energy                  : -1.7685038821E+01 (Ha)
-Band structure energy              : -4.2455034381E+00 (Ha)
-Exchange correlation energy        : -4.8893191222E+00 (Ha)
+Free energy per atom               : -5.8950129379E+00 (Ha/atom)
+Total free energy                  : -1.7685038814E+01 (Ha)
+Band structure energy              : -4.2454993763E+00 (Ha)
+Exchange correlation energy        : -4.8893194059E+00 (Ha)
 Self and correction energy         : -2.6913568059E+01 (Ha)
--Entropy*kb*T                      : -3.7422670913E-09 (Ha)
-Fermi level                        : -1.5311953583E-01 (Ha)
-RMS force                          :  1.9649882999E-02 (Ha/Bohr)
-Maximum force                      :  2.3570331715E-02 (Ha/Bohr)
-Time for force calculation         :  0.074 (sec)
-Maximum stress                     :  2.0064621885E-02 (Ha/Bohr)
-Maximum stress equiv. to periodic  :  3.0118446705E+00 (GPa)
-Time for stress calculation        :  0.143 (sec)
+-Entropy*kb*T                      : -3.7422659774E-09 (Ha)
+Fermi level                        : -1.5311865562E-01 (Ha)
+RMS force                          :  1.9649884833E-02 (Ha/Bohr)
+Maximum force                      :  2.3570289104E-02 (Ha/Bohr)
+Time for force calculation         :  0.015 (sec)
+Maximum stress                     :  2.0064743260E-02 (Ha/Bohr)
+Maximum stress equiv. to periodic  :  3.0118628899E+00 (GPa)
+Time for stress calculation        :  0.044 (sec)
 ***************************************************************************
                                Timing info                                 
 ***************************************************************************
-Total walltime                     :  31.307 sec
+Total walltime                     :  1.835 sec
 ___________________________________________________________________________
 
 ***************************************************************************

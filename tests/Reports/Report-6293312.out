@@ -1,0 +1,74 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-06-2026 11:24:22
+Job ID:    6293312
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+
+Lmod is automatically replacing "gcc/12.3.0" with
+"intel-oneapi-compilers/2023.1.0".
+
+
+Inactive Modules:
+  1) libpciaccess/0.17     2) mvapich2     3) pmix/4.2.6     4) slurm/23.11.1
+
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1013: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no = float(re.findall("\d+",lines)[0])
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1023: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no[count1] = float(re.findall("\d+",lines)[0])
+cp: cannot create regular file './sparc': Text file busy
+Test Status: <#------->Test Status: <##------>Test Status: <###----->Test Status: <####---->Test Status: <#####--->Test Status: <######-->Test Status: <#######->Test Status: <########>
+
+
+--------------------------------------------------------------
+
+Total systems: 8
+
+[92mTests passed: 8[0m
+
+[91mTests failed: 0[0m
+
+Detailed report available in Report.txt file 
+
+--------------------------------------------------------------
+
+--------------------------------------------------------------
+
+--------------------------------------------------------------
+
+[94m[1mWarning summary: [0m[0m
+
+[94m1. AlSi_orthogonal_quick_scf:  Walltime exceeded by 67.80626780626781%[0m
+
+[94m2. AlSi_primitive_quick_relax:  Walltime exceeded by 45.43663821405121%[0m
+
+[94m3. BN_primitive_quick_md:  Walltime exceeded by 42.36124730339282%[0m
+
+[94m4. LiNbO2_primitive_quick_scf:  Walltime is smaller than the reference[0m
+
+[94m5. SiC_orthogonal_quick_relax:  Walltime exceeded by 33.929747530186624%[0m
+
+[94m6. TiO2_orthogonal_quick_md:  Walltime exceeded by 67.73675762439805%[0m
+
+[94m7. BaTiO3_rscan:  Walltime exceeded by 47.89735099337748%[0m
+
+[94m8. BaTiO3_r2scan:  Walltime exceeded by 19.91334777537076%[0m
+
+--------------------------------------------------------------
+
+---------------------------------------
+Begin Slurm Epilog: Apr-06-2026 11:25:44
+Job ID:        6293312
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=1G,node=1
+Rsrc Used:     cput=00:01:22,vmem=0,walltime=00:01:22,mem=34976K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-003-16-2
+---------------------------------------

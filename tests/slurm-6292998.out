@@ -1,0 +1,23 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-06-2026 11:02:53
+Job ID:    6292998
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       inferno
+---------------------------------------
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+/var/lib/slurm/slurmd/job6292998/slurm_script: line 20: ././Al16Si16_NPH_restart/temp_run/Al16Si16_NPH_restart.log: No such file or directory
+---------------------------------------
+Begin Slurm Epilog: Apr-06-2026 11:02:54
+Job ID:        6292998
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=48,mem=336G,node=4
+Rsrc Used:     cput=00:02:24,vmem=0,walltime=00:00:03,mem=9008K,energy_used=0
+Partition:     cpu-small
+QOS:           inferno
+Nodes:         atl1-1-02-014-27-1,atl1-1-02-017-16-2,atl1-1-02-017-29-1,atl1-1-02-017-33-1
+---------------------------------------

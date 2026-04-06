@@ -1,0 +1,39 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-05-2026 20:47:25
+Job ID:    6288214
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       embers
+---------------------------------------
+
+Lmod is automatically replacing "gcc/12.3.0" with
+"intel-oneapi-compilers/2023.1.0".
+
+
+Inactive Modules:
+  1) libpciaccess/0.17     2) mvapich2     3) pmix/4.2.6     4) slurm/23.11.1
+
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1058: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no = float(re.findall("\d+",lines)[0])
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py:1068: SyntaxWarning: invalid escape sequence '\d'
+  SCF_no[count1] = float(re.findall("\d+",lines)[0])
+Traceback (most recent call last):
+  File "/storage/scratch1/5/strivedi44/MD11/SPARC/tests/SPARC_testing_script.py", line 3212, in <module>
+    elif ("md_nve" in tags_sys[i]) or ("md_nvtnh" in tags_sys[i]) or ("md_nvkg" in tags_sys[i]) or ("md_nptnh" in tags_sys[i]) ("md_nptnp" in tags_sys[i]) or ("md_nph" in tags_sys[i]):
+                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'bool' object is not callable
+---------------------------------------
+Begin Slurm Epilog: Apr-05-2026 20:47:28
+Job ID:        6288214
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=1,mem=1G,node=1
+Rsrc Used:     cput=00:00:03,vmem=0,walltime=00:00:03,mem=34936K,energy_used=0
+Partition:     cpu-small
+QOS:           embers
+Nodes:         atl1-1-02-003-16-1
+---------------------------------------

@@ -12,12 +12,12 @@ from shutil import copyfile
 import math
 
 # Other parameters to run the test (can be changed by the user)
-nprocs_tests = 20  # In default tests are run with 24 processors per node
-nnodes_tests = 10  # In default tests are run with 1 node
+nprocs_tests = 12  # In default tests are run with 24 processors per node
+nnodes_tests = 3  # In default tests are run with 1 node
 npbs = 10  # By default (number of script files the tests are distributed to)
 launch_cluster_extension = ".sbatch"   # extension of the file used to launch the jobs on the cluster by default it is .sbatch
 command_launch_extension = "sbatch"   # Command to launch the script to ask for resources on the cluster (example: qsub launch.pbs)
-MPI_command = "mpirun -np 200"  # MPI command to run the executable on the given cluster
+MPI_command = "mpirun -np 48"  # MPI command to run the executable on the given cluster
 
 
 
@@ -215,22 +215,7 @@ SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnh'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ################################################################################################################
-SYSTEMS["systemname"].append('Al18Si18_NPTNP')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnp'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-################################################################################################################
 SYSTEMS["systemname"].append('Al16Si16_NPTNP_restart')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-##################################################################################################################
-SYSTEMS["systemname"].append('Al18C2_NPTNP_aeqb_c')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-##################################################################################################################
-SYSTEMS["systemname"].append('Al18C2_NPTNP_onlyc')
 SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
@@ -240,42 +225,12 @@ SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
-SYSTEMS["systemname"].append('Al18C2_NPTNP_ortho_c')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-##################################################################################################################
 SYSTEMS["systemname"].append('Al18C2_NPTNP_full_flex')
 SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnp'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ################################################################################################################
-SYSTEMS["systemname"].append('Al18Si18_NPH')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nph'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-################################################################################################################
 SYSTEMS["systemname"].append('Al16Si16_NPH_restart')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-##################################################################################################################
-SYSTEMS["systemname"].append('Al18C2_NPH_aeqc_b')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-##################################################################################################################
-SYSTEMS["systemname"].append('Al18C2_NPH_onlyb')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-##################################################################################################################
-SYSTEMS["systemname"].append('Al18C2_NPH_beqc_ortho_a')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
-##################################################################################################################
-SYSTEMS["systemname"].append('Al18C2_NPH_ortho_a')
 SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
@@ -738,7 +693,7 @@ def launchsystems(systems, dirs_sys, memcheck, procs_nodes_cluster, ismempbs, if
 					# os.system("cp *.psp8 temp_run")
 					if ismlff_copy[countx] == True:
 						os.system("cp ./high_accuracy/MLFF* ./temp_run")
-					if syst == "Al16Si16_NPTNH_restart" or syst == "Al16Si16_NPTNP_restart":
+					if syst == "Al16Si16_NPTNH_restart" or syst == "Al16Si16_NPTNP_restart" or syst == "Al16Si16_NPH_restart":
 						os.system("cp ./standard/*.restart ./temp_run")
 				if ifVHQ == False:
 					os.system("cp ./standard/*.inpt ./temp_run")
@@ -746,7 +701,7 @@ def launchsystems(systems, dirs_sys, memcheck, procs_nodes_cluster, ismempbs, if
 					# os.system("cp *.psp8 temp_run")
 					if ismlff_copy[countx] == True:
 						os.system("cp ./standard/MLFF* ./temp_run")
-					if syst == "Al16Si16_NPTNH_restart" or syst == "Al16Si16_NPTNP_restart":
+					if syst == "Al16Si16_NPTNH_restart" or syst == "Al16Si16_NPTNP_restart" or syst == "Al16Si16_NPH_restart":
 						os.system("cp ./standard/*.restart ./temp_run")
 			else:
 				os.mkdir("temp_run")
@@ -757,7 +712,7 @@ def launchsystems(systems, dirs_sys, memcheck, procs_nodes_cluster, ismempbs, if
 					# os.system("cp *.psp8 temp_run")
 					if ismlff_copy[countx] == True:
 						os.system("cp ./high_accuracy/MLFF* ./temp_run")
-					if syst == "Al16Si16_NPTNH_restart" or syst == "Al16Si16_NPTNP_restart":
+					if syst == "Al16Si16_NPTNH_restart" or syst == "Al16Si16_NPTNP_restart" or syst == "Al16Si16_NPH_restart":
 						os.system("cp ./standard/*.restart ./temp_run")
 				if ifVHQ == False:
 					os.system("cp ./standard/*.inpt ./temp_run")
@@ -765,7 +720,7 @@ def launchsystems(systems, dirs_sys, memcheck, procs_nodes_cluster, ismempbs, if
 					# os.system("cp *.psp8 temp_run")
 					if ismlff_copy[countx] == True:
 						os.system("cp ./standard/MLFF* ./temp_run")
-					if syst == "Al16Si16_NPTNH_restart" or syst == "Al16Si16_NPTNP_restart":
+					if syst == "Al16Si16_NPTNH_restart" or syst == "Al16Si16_NPTNP_restart" or syst == "Al16Si16_NPH_restart":
 						os.system("cp ./standard/*.restart ./temp_run")
 		else:
 			if os.path.isdir("temp_run1"):
@@ -2573,7 +2528,11 @@ def WriteReport(data_info, systems, isparallel, ifVHQ, isorient):
 					text1="Memory leak check valgrind: "+"\n"+"Total memory lost: "+str(memlost)+" Bytes \n"
 			if len(info_run["energy"]) != len(info_ref["energy"]):
 				test_status.append("failed")
-				text = "System name: "+systems[i]+"\n"+"different number of MD iterations from the hence failed!"
+				text = "System name: "+systems[i]+"\n"+"different number of MD iterations from reference hence failed!"
+				texttoprint.append(text)
+				Error_message_global.append("MD iteration count mismatch with reference")
+				Warning_message_global.append("")
+
 			else:
 				E_ref = info_ref["energy"]
 				E_run = info_run["energy"]
@@ -3209,7 +3168,7 @@ if __name__ == '__main__':
 		elif ("relax_total_nlcg" in tags_sys[i]) or ("relax_total_lbfgs" in tags_sys[i]) or ("relax_total_fire" in tags_sys[i]):
 			singlept.append(False)
 			Type.append("relax_total")
-		elif ("md_nve" in tags_sys[i]) or ("md_nvtnh" in tags_sys[i]) or ("md_nvkg" in tags_sys[i]) or ("md_npt" in tags_sys[i]):
+		elif ("md_nve" in tags_sys[i]) or ("md_nvtnh" in tags_sys[i]) or ("md_nvkg" in tags_sys[i]) or ("md_nptnh" in tags_sys[i]) or ("md_nptnp" in tags_sys[i]) or ("md_nph" in tags_sys[i]):
 			singlept.append(False)
 			Type.append("MD")
 		else:

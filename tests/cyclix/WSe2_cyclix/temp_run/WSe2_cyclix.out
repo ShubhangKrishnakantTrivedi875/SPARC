@@ -2,7 +2,7 @@
 *                       SPARC (version December 03, 2025)                 *
 *   Copyright (c) 2020 Material Physics & Mechanics Group, Georgia Tech   *
 *           Distributed under GNU General Public License 3 (GPL)          *
-*                   Start time: Sun Apr  5 15:57:41 2026                  *
+*                   Start time: Mon Apr  6 11:07:33 2026                  *
 ***************************************************************************
                            Input parameters                                
 ***************************************************************************
@@ -56,15 +56,15 @@ Density: 3.3064435589E-01 (amu/Bohr^3), 3.7051586810E+00 (g/cc)
                            Parallelization                                 
 ***************************************************************************
 NP_SPIN_PARAL: 1
-NP_KPOINT_PARAL: 1
-NP_BAND_PARAL: 33
-NP_DOMAIN_PARAL: 3 2 1
-NP_DOMAIN_PHI_PARAL: 10 5 4
+NP_KPOINT_PARAL: 7
+NP_BAND_PARAL: 6
+NP_DOMAIN_PARAL: 1 1 1
+NP_DOMAIN_PHI_PARAL: 8 3 2
 EIG_SERIAL_MAXNS: 1500
 ***************************************************************************
                              Initialization                                
 ***************************************************************************
-Number of processors               :  200
+Number of processors               :  48
 Mesh spacing in x-direction        :  0.252916 (Bohr)
 Mesh spacing in y-direction        :  0.00712379 (Bohr)
 Mesh spacing in z-direction        :  0.125436 (Bohr)
@@ -82,45 +82,45 @@ Pseudopotential                    :  ../psps/34_Se_16_1.9_2.1_pbe_n_v1.0.psp8
 Atomic mass                        :  78.971
 Pseudocharge radii of atom type 2  :  7.33 0.36 7.15 (x, y, z dir)
 Number of atoms of type 2          :  2
-Estimated total memory usage       :  883.01 MB
-Estimated memory per processor     :  4.42 MB
+Estimated total memory usage       :  3.06 GB
+Estimated memory per processor     :  65.31 MB
 ===================================================================
                     Self Consistent Field (SCF#1)                     
 ===================================================================
 Iteration     Free Energy (Ha/atom)   SCF Error        Timing (sec)
-1            -1.0183251825E+02        7.669E-02        105.862
-2            -1.0183426699E+02        5.261E-02        28.255
-3            -1.0183502155E+02        3.738E-02        28.093
-4            -1.0183546636E+02        1.238E-02        27.260
-5            -1.0183544463E+02        1.341E-02        28.853
-6            -1.0183551658E+02        2.062E-03        29.278
-7            -1.0183552067E+02        4.396E-04        27.289
-8            -1.0183552093E+02        8.900E-05        24.734
-9            -1.0183552093E+02        3.650E-05        24.168
-10           -1.0183552093E+02        1.071E-05        23.666
-11           -1.0183552093E+02        5.574E-06        22.187
-12           -1.0183552093E+02        8.830E-07        22.636
+1            -1.0183254290E+02        7.651E-02        46.674
+2            -1.0183430026E+02        5.100E-02        7.982
+3            -1.0183501872E+02        3.752E-02        7.919
+4            -1.0183546533E+02        1.251E-02        7.908
+5            -1.0183544329E+02        1.352E-02        7.998
+6            -1.0183551627E+02        2.420E-03        8.012
+7            -1.0183552075E+02        3.890E-04        7.910
+8            -1.0183552093E+02        8.963E-05        7.534
+9            -1.0183552093E+02        2.878E-05        7.533
+10           -1.0183552094E+02        9.113E-06        7.475
+11           -1.0183552092E+02        7.377E-06        7.380
+12           -1.0183552094E+02        6.402E-07        7.381
 Total number of SCF: 12    
 ====================================================================
                     Energy and force calculation                    
 ====================================================================
-Free energy per atom               : -1.0183552093E+02 (Ha/atom)
-Total free energy                  : -3.0550656280E+02 (Ha)
-Band structure energy              : -6.1063590120E+01 (Ha)
-Exchange correlation energy        : -5.8895902571E+01 (Ha)
+Free energy per atom               : -1.0183552094E+02 (Ha/atom)
+Total free energy                  : -3.0550656283E+02 (Ha)
+Band structure energy              : -6.1063577297E+01 (Ha)
+Exchange correlation energy        : -5.8895903040E+01 (Ha)
 Self and correction energy         : -2.9306005079E+02 (Ha)
--Entropy*kb*T                      : -3.1649322427E-11 (Ha)
-Fermi level                        : -1.7845632620E-01 (Ha)
-RMS force                          :  6.4468730426E-03 (Ha/Bohr)
-Maximum force                      :  1.5321679337E-02 (Ha/Bohr)
-Time for force calculation         :  1.356 (sec)
-Maximum stress                     :  5.9636194103E-01 (Ha/Bohr)
-Maximum stress equiv. to periodic  :  2.5346811943E+00 (GPa)
-Time for stress calculation        :  2.496 (sec)
+-Entropy*kb*T                      : -3.1370408212E-11 (Ha)
+Fermi level                        : -1.7844663416E-01 (Ha)
+RMS force                          :  6.4462533195E-03 (Ha/Bohr)
+Maximum force                      :  1.5322691439E-02 (Ha/Bohr)
+Time for force calculation         :  0.457 (sec)
+Maximum stress                     :  5.9634639536E-01 (Ha/Bohr)
+Maximum stress equiv. to periodic  :  2.5346151215E+00 (GPa)
+Time for stress calculation        :  0.781 (sec)
 ***************************************************************************
                                Timing info                                 
 ***************************************************************************
-Total walltime                     :  409.128 sec
+Total walltime                     :  135.011 sec
 ___________________________________________________________________________
 
 ***************************************************************************

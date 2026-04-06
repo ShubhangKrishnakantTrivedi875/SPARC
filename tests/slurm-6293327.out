@@ -1,0 +1,23 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-06-2026 11:25:24
+Job ID:    6293327
+User ID:   strivedi44
+Account:   gts-phanish6
+Job name:  SPARC_testsuite
+Partition: cpu-small
+QOS:       inferno
+---------------------------------------
+/usr/local/pace-apps/lmod/lmod/init/bash: line 223: conda: command not found
+/storage/scratch1/5/strivedi44/MD11/SPARC/tests
+---------------------------------------
+Begin Slurm Epilog: Apr-06-2026 11:25:32
+Job ID:        6293327
+User ID:       strivedi44
+Account:       gts-phanish6
+Job name:      SPARC_testsuite
+Resources:     cpu=48,mem=336G,node=4
+Rsrc Used:     cput=00:07:12,vmem=0,walltime=00:00:09,mem=36480K,energy_used=0
+Partition:     cpu-small
+QOS:           inferno
+Nodes:         atl1-1-02-003-8-[1-2],atl1-1-02-003-11-[1-2]
+---------------------------------------

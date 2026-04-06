@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH -J SPARC_testsuite
+#SBATCH -A gts-phanish6-coda20                    # Account name
+#SBATCH -p inferno
+#SBATCH -N 4 --ntasks-per-node=12
+#SBATCH --mem-per-cpu=7G
+#SBATCH -t1:00:00
+cd $SLURM_SUBMIT_DIR
+
+module purge
+ml intel-oneapi-compilers intel-oneapi-mkl intel-oneapi-mpi
+
+echo $PWD
+mpirun -np 36  ./sparc -name ././xc/vdW_tests/Si8_atom_geopt_d3/temp_run/Si8_atom_geopt_d3 -log_summary > ././xc/vdW_tests/Si8_atom_geopt_d3/temp_run/Si8_atom_geopt_d3.log
+
+
+mpirun -np 36  ./sparc -name ././xc/vdW_tests/Si8_cell_geopt_d3/temp_run/Si8_cell_geopt_d3 -log_summary > ././xc/vdW_tests/Si8_cell_geopt_d3/temp_run/Si8_cell_geopt_d3.log
+
+
+mpirun -np 36  ./sparc -name ././xc/vdW_tests/SnO_bulk_d3/temp_run/SnO_bulk_d3 -log_summary > ././xc/vdW_tests/SnO_bulk_d3/temp_run/SnO_bulk_d3.log
+
+

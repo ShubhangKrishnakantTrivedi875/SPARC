@@ -2,7 +2,7 @@
 *                       SPARC (version December 03, 2025)                 *
 *   Copyright (c) 2020 Material Physics & Mechanics Group, Georgia Tech   *
 *           Distributed under GNU General Public License 3 (GPL)          *
-*                   Start time: Sun Apr  5 15:53:42 2026                  *
+*                   Start time: Mon Apr  6 11:20:02 2026                  *
 ***************************************************************************
                            Input parameters                                
 ***************************************************************************
@@ -70,13 +70,13 @@ Density: 4.8756824820E+00 (amu/Bohr^3), 5.4636278988E+01 (g/cc)
 NP_SPIN_PARAL: 2
 NP_KPOINT_PARAL: 1
 NP_BAND_PARAL: 24
-NP_DOMAIN_PARAL: 1 2 2
+NP_DOMAIN_PARAL: 1 1 1
 NP_DOMAIN_PHI_PARAL: 2 2 2
 EIG_SERIAL_MAXNS: 1500
 ***************************************************************************
                              Initialization                                
 ***************************************************************************
-Number of processors               :  200
+Number of processors               :  48
 Mesh spacing                       :  0.236671 (Bohr)
 Number of symmetry adapted k-points:  1
 Output printed to                  :  xc/vdW_tests/Fe2_spin_gamma_ortho_vdWDF1/temp_run/Fe2_spin_gamma_ortho_vdWDF1.out
@@ -88,22 +88,22 @@ Pseudopotential                    :  ../psps/26_Fe_16_2.0_2.5_pbe_n_v1.0.psp8
 Atomic mass                        :  55.845
 Pseudocharge radii of atom type 1  :  7.10 7.10 7.10 (x, y, z dir)
 Number of atoms of type 1          :  2
-Estimated total memory usage       :  5.34 MB
-Estimated memory per processor     :  27.32 kB
+Estimated total memory usage       :  5.29 MB
+Estimated memory per processor     :  112.92 kB
 ========================================================================================
                     Self Consistent Field (SCF#1)                     
 ========================================================================================
 Iteration     Free Energy (Ha/atom)    Magnetization     SCF Error        Timing (sec)
-1            -1.1414952812E+02         2.0000E+00        6.658E-02        0.919
-2            -1.1415381155E+02         2.0000E+00        4.185E-02        0.278
-3            -1.1415668704E+02         2.0000E+00        6.713E-03        0.326
-4            -1.1415672228E+02         2.0000E+00        3.147E-03        0.262
-5            -1.1415673202E+02         2.0000E+00        6.239E-04        0.287
-6            -1.1415673257E+02         2.0000E+00        8.189E-05        0.300
-7            -1.1415673259E+02         2.0000E+00        2.178E-05        0.267
-8            -1.1415673259E+02         2.0000E+00        9.696E-06        0.251
-9            -1.1415673259E+02         2.0000E+00        6.346E-06        0.306
-10           -1.1415673259E+02         2.0000E+00        7.350E-07        0.263
+1            -1.1414952812E+02         2.0000E+00        6.658E-02        0.049
+2            -1.1415381155E+02         2.0000E+00        4.185E-02        0.014
+3            -1.1415668704E+02         2.0000E+00        6.713E-03        0.015
+4            -1.1415672228E+02         2.0000E+00        3.147E-03        0.015
+5            -1.1415673202E+02         2.0000E+00        6.239E-04        0.014
+6            -1.1415673257E+02         2.0000E+00        8.189E-05        0.014
+7            -1.1415673259E+02         2.0000E+00        2.178E-05        0.014
+8            -1.1415673259E+02         2.0000E+00        9.696E-06        0.014
+9            -1.1415673259E+02         2.0000E+00        6.346E-06        0.014
+10           -1.1415673259E+02         2.0000E+00        7.350E-07        0.014
 Total number of SCF: 10    
 ====================================================================
                     Energy and force calculation                    
@@ -119,14 +119,14 @@ Net magnetization                  :  1.9999999999E+00 (Bohr magneton)
 vdWDF energy                       :  9.0239198169E-02 (Ha)
 RMS force                          :  1.2372169884E+00 (Ha/Bohr)
 Maximum force                      :  1.2372169884E+00 (Ha/Bohr)
-Time for force calculation         :  2.109 (sec)
+Time for force calculation         :  0.184 (sec)
 Pressure                           :  1.5503415577E+04 (GPa)
 Maximum stress                     :  1.5623309313E+04 (GPa)
-Time for stress calculation        :  4.002 (sec)
+Time for stress calculation        :  0.792 (sec)
 ***************************************************************************
                                Timing info                                 
 ***************************************************************************
-Total walltime                     :  11.686 sec
+Total walltime                     :  1.598 sec
 ___________________________________________________________________________
 
 ***************************************************************************

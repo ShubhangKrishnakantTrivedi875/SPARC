@@ -1,626 +1,626 @@
-MLFF object intialized. Time taken: 10.186 s
+MLFF object intialized. Time taken: 5.644 s
 --------------------------------------------------------------------------------------------
 Simulation step: 0
-DFT call done for the first step. Time taken: 81.554 s
+DFT call done for the first step. Time taken: 41.471 s
 neighbor list and descriptor done! Time taken: 0.002 s
-Covariance matrix updated! Time taken: 0.091 s
-Covariance matrices formed from first DFT data. Time taken: 0.093 s
+Covariance matrix updated! Time taken: 0.010 s
+Covariance matrices formed from first DFT data. Time taken: 0.012 s
 --------------------------------------------------------------------------------------------
 Calculation: 1
-DFT call made. Time taken: 58.363 s
+DFT call made. Time taken: 28.789 s
 neighbor list and soap descriptor done! Time taken: 0.001 s
-Covariance matrix rows updated! Time taken: 0.039 s
+Covariance matrix rows updated! Time taken: 0.001 s
 Sparsification done! Time taken: 0.001 s
-Covariance matrix columns updated! Time taken: 0.181 s
-The covariance matrix updated. Time taken: 0.225 s
+Covariance matrix columns updated! Time taken: 0.002 s
+The covariance matrix updated. Time taken: 0.006 s
 --------------------------------------------------------------------------------------------
 Calculation: 2
-DFT call made. Time taken: 57.955 s
+DFT call made. Time taken: 28.411 s
 neighbor list and soap descriptor done! Time taken: 0.001 s
-Covariance matrix rows updated! Time taken: 0.039 s
+Covariance matrix rows updated! Time taken: 0.001 s
 Sparsification done! Time taken: 0.001 s
-Covariance matrix columns updated! Time taken: 0.171 s
-The covariance matrix updated. Time taken: 0.214 s
+Covariance matrix columns updated! Time taken: 0.003 s
+The covariance matrix updated. Time taken: 0.007 s
 --------------------------------------------------------------------------------------------
 Calculation: 3
-DFT call made. Time taken: 30.783 s
+DFT call made. Time taken: 15.783 s
 neighbor list and soap descriptor done! Time taken: 0.001 s
-Covariance matrix rows updated! Time taken: 0.019 s
+Covariance matrix rows updated! Time taken: 0.002 s
 Sparsification done! Time taken: 0.001 s
-Covariance matrix columns updated! Time taken: 0.197 s
-The covariance matrix updated. Time taken: 0.219 s
+Covariance matrix columns updated! Time taken: 0.004 s
+The covariance matrix updated. Time taken: 0.008 s
 For element 0, CUR removed 0 columns out of a total of 16 columns
 sparsification before training done! Time taken: 0.001 s
 For element 1, CUR removed 0 columns out of a total of 32 columns
-sparsification before training done! Time taken: 0.008 s
+sparsification before training done! Time taken: 0.006 s
 Scaling K_train and b-vector done! Time taken: 0.000 s
-Calculation btb, AtA, Atb done! Time taken: 0.003 s
-Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.020 s
+Calculation btb, AtA, Atb done! Time taken: 0.000 s
+Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.000 s
 broadcasting weights and SVD done! Time taken: 0.000 s
-SVD of AtA done! Time taken: 0.004 s
+SVD of AtA done! Time taken: 0.002 s
 Regularization minimum: 1e-11.000000
 Loop for Bayesian regression hyperparameters optimization: 
 Initial guess; sigma_v0: 0.100000, sigma_w0: 100.000000
-Saving and other initialization before hyperparamter done! Time taken: 0.005 s
+Saving and other initialization before hyperparamter done! Time taken: 0.001 s
 Gamma calculation done! It took 0.000 s.
 Iter number: 0
-Gamma: 12.914309
+Gamma: 12.914369
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 93.661927, M_total_rows: 152, gamma: 12.914309
-sigma_v: 0.820617 and sigma_w: 810.515192 before check for cond
-After condK: sigma_v: 0.820617, sigma_w: 810.515192
+norm_er2: 93.660930, M_total_rows: 152, gamma: 12.914369
+sigma_v: 0.820612 and sigma_w: 810.506456 before check for cond
+After condK: sigma_v: 0.820612, sigma_w: 810.506456
 Gamma calculation done! It took 0.000 s.
 Iter number: 1
-Gamma: 12.878668
+Gamma: 12.878711
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 93.849431, M_total_rows: 152, gamma: 12.878668
-sigma_v: 0.821332 and sigma_w: 802.728157 before check for cond
-After condK: sigma_v: 0.821332, sigma_w: 802.728157
+norm_er2: 93.848516, M_total_rows: 152, gamma: 12.878711
+sigma_v: 0.821329 and sigma_w: 802.716006 before check for cond
+After condK: sigma_v: 0.821329, sigma_w: 802.716006
 Gamma calculation done! It took 0.000 s.
 Iter number: 2
-Gamma: 12.848403
+Gamma: 12.848433
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 94.008766, M_total_rows: 152, gamma: 12.848403
-sigma_v: 0.821940 and sigma_w: 796.190346 before check for cond
-After condK: sigma_v: 0.821940, sigma_w: 796.190346
+norm_er2: 94.007919, M_total_rows: 152, gamma: 12.848433
+sigma_v: 0.821936 and sigma_w: 796.175408 before check for cond
+After condK: sigma_v: 0.821936, sigma_w: 796.175408
 Gamma calculation done! It took 0.000 s.
 Iter number: 3
-Gamma: 12.822781
+Gamma: 12.822799
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 94.143759, M_total_rows: 152, gamma: 12.822781
-sigma_v: 0.822454 and sigma_w: 790.707809 before check for cond
-After condK: sigma_v: 0.822454, sigma_w: 790.707809
+norm_er2: 94.142969, M_total_rows: 152, gamma: 12.822799
+sigma_v: 0.822451 and sigma_w: 790.690606 before check for cond
+After condK: sigma_v: 0.822451, sigma_w: 790.690606
 Gamma calculation done! It took 0.000 s.
 Iter number: 4
-Gamma: 12.801141
+Gamma: 12.801151
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 94.257845, M_total_rows: 152, gamma: 12.801141
-sigma_v: 0.822888 and sigma_w: 786.114450 before check for cond
-After condK: sigma_v: 0.822888, sigma_w: 786.114450
+norm_er2: 94.257101, M_total_rows: 152, gamma: 12.801151
+sigma_v: 0.822885 and sigma_w: 786.095411 before check for cond
+After condK: sigma_v: 0.822885, sigma_w: 786.095411
 Gamma calculation done! It took 0.000 s.
 Iter number: 5
-Gamma: 12.782903
+Gamma: 12.782905
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 94.354061, M_total_rows: 152, gamma: 12.782903
-sigma_v: 0.823254 and sigma_w: 782.268847 before check for cond
-After condK: sigma_v: 0.823254, sigma_w: 782.268847
+norm_er2: 94.353356, M_total_rows: 152, gamma: 12.782905
+sigma_v: 0.823251 and sigma_w: 782.248323 before check for cond
+After condK: sigma_v: 0.823251, sigma_w: 782.248323
 Gamma calculation done! It took 0.000 s.
 Iter number: 6
-Gamma: 12.767557
+Gamma: 12.767552
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 94.435067, M_total_rows: 152, gamma: 12.767557
-sigma_v: 0.823562 and sigma_w: 779.051118 before check for cond
-After condK: sigma_v: 0.823562, sigma_w: 779.051118
+norm_er2: 94.434394, M_total_rows: 152, gamma: 12.767552
+sigma_v: 0.823559 and sigma_w: 779.029397 before check for cond
+After condK: sigma_v: 0.823559, sigma_w: 779.029397
 Gamma calculation done! It took 0.000 s.
 Iter number: 7
-Gamma: 12.754662
+Gamma: 12.754652
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 94.503171, M_total_rows: 152, gamma: 12.754662
-sigma_v: 0.823821 and sigma_w: 776.359975 before check for cond
-After condK: sigma_v: 0.823821, sigma_w: 776.359975
+norm_er2: 94.502523, M_total_rows: 152, gamma: 12.754652
+sigma_v: 0.823818 and sigma_w: 776.337290 before check for cond
+After condK: sigma_v: 0.823818, sigma_w: 776.337290
 Gamma calculation done! It took 0.000 s.
 Iter number: 8
-Gamma: 12.743838
+Gamma: 12.743825
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 94.560357, M_total_rows: 152, gamma: 12.743838
-sigma_v: 0.824038 and sigma_w: 774.110059 before check for cond
-After condK: sigma_v: 0.824038, sigma_w: 774.110059
+norm_er2: 94.559731, M_total_rows: 152, gamma: 12.743825
+sigma_v: 0.824035 and sigma_w: 774.086601 before check for cond
+After condK: sigma_v: 0.824035, sigma_w: 774.086601
 Gamma calculation done! It took 0.000 s.
 Iter number: 9
-Gamma: 12.734763
+Gamma: 12.734745
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 94.608330, M_total_rows: 152, gamma: 12.734763
-sigma_v: 0.824220 and sigma_w: 772.229577 before check for cond
-After condK: sigma_v: 0.824220, sigma_w: 772.229577
+norm_er2: 94.607720, M_total_rows: 152, gamma: 12.734745
+sigma_v: 0.824218 and sigma_w: 772.205498 before check for cond
+After condK: sigma_v: 0.824218, sigma_w: 772.205498
 Hyperparameter SCF loop took 0.003 s.
-hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.024 s
-Training errors done! Time taken: 0.003 s
-mlff_train_Bayesian done! Time taken: 0.003 s
-Bayesian linear regression done. Time taken: 0.174 s
+hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.006 s
+Training errors done! Time taken: 0.000 s
+mlff_train_Bayesian done! Time taken: 0.000 s
+Bayesian linear regression done. Time taken: 0.044 s
 --------------------------------------------------------------------------------------------
 Calculation: 4
 Neighbor list and soap descriptor done! Time taken: 0.001 s
-Kpredict calculation done done! Time taken: 0.010 s
-prediction and gather done! Time taken: 0.021 s
-MLFF prediction made for the current step. Time taken: 0.032 s
-max_pred_error: 4.504874420E-03, F_tol_SOAP: 4.509379294E-03.
+Kpredict calculation done done! Time taken: 0.001 s
+prediction and gather done! Time taken: 0.000 s
+MLFF prediction made for the current step. Time taken: 0.002 s
+max_pred_error: 4.504850710E-03, F_tol_SOAP: 4.509355561E-03.
 Skipped DFT for this step!
 --------------------------------------------------------------------------------------------
 Calculation: 5
 Neighbor list and soap descriptor done! Time taken: 0.001 s
 Kpredict calculation done done! Time taken: 0.001 s
-prediction and gather done! Time taken: 0.001 s
-MLFF prediction made for the current step. Time taken: 0.003 s
-max_pred_error: 4.570606400E-03, F_tol_SOAP: 4.509379294E-03.
+prediction and gather done! Time taken: 0.000 s
+MLFF prediction made for the current step. Time taken: 0.002 s
+max_pred_error: 4.570583139E-03, F_tol_SOAP: 4.509355561E-03.
 Error prediction in ML Model is too large!
-DFT call made. Time taken: 45.800 s
-Error Energy: 0.000214126 (Ha/atom)
-Stress[5]: Error (Ha/Bohr^n) = 0.314012819, Error(percent) = 6.321144973
+DFT call made. Time taken: 22.361 s
+Error Energy: 0.000214124 (Ha/atom)
+Stress[5]: Error (Ha/Bohr^n) = 0.314022114, Error(percent) = 6.321328727
 Force Error atom-wise: 
--0.005613738 -0.004302940 -0.000768104
--0.001892843 0.004849529 0.001686772
--0.011150166 -0.001177195 0.009087611
--0.003001492 0.001966476 0.016095982
--0.006036302 0.003826552 -0.011850776
-0.004522167 -0.007599713 0.001638279
--0.001435897 -0.002050351 0.002693737
-0.006304498 -0.000952290 -0.002500249
-0.005314640 0.000372537 -0.004738750
-0.001354040 -0.005460432 -0.002405587
-0.001397747 0.003320634 -0.007044751
-0.009521359 0.006805535 -0.001894164
-Error Force (max): 0.016095982 (Ha/Bohr)
-Error Force (RMS): 0.005737547 (Ha/Bohr)
-Error Force Train (max): 0.013740849 (Ha/Bohr)
-Error Energy Train (max): 0.000044918 (Ha/atom)
+-0.005613841 -0.004302930 -0.000768039
+-0.001892917 0.004849394 0.001686853
+-0.011149991 -0.001177235 0.009087686
+-0.003001519 0.001966317 0.016096118
+-0.006036534 0.003826551 -0.011850926
+0.004522059 -0.007599555 0.001638114
+-0.001435796 -0.002050157 0.002693779
+0.006304742 -0.000952310 -0.002500620
+0.005314546 0.000372423 -0.004738752
+0.001353842 -0.005460262 -0.002405466
+0.001398025 0.003320733 -0.007044896
+0.009521467 0.006805483 -0.001893852
+Error Force (max): 0.016096118 (Ha/Bohr)
+Error Force (RMS): 0.005737566 (Ha/Bohr)
+Error Force Train (max): 0.013740748 (Ha/Bohr)
+Error Energy Train (max): 0.000044919 (Ha/atom)
 neighbor list and soap descriptor done! Time taken: 0.001 s
-Covariance matrix rows updated! Time taken: 0.007 s
+Covariance matrix rows updated! Time taken: 0.001 s
 Sparsification done! Time taken: 0.000 s
-Covariance matrix columns updated! Time taken: 0.027 s
-Covariance matrices updated! Time taken: 0.036 s
+Covariance matrix columns updated! Time taken: 0.001 s
+Covariance matrices updated! Time taken: 0.004 s
 For element 0, CUR removed 0 columns out of a total of 18 columns
 sparsification before training done! Time taken: 0.001 s
 For element 1, CUR removed 0 columns out of a total of 32 columns
-sparsification before training done! Time taken: 0.011 s
+sparsification before training done! Time taken: 0.006 s
 Scaling K_train and b-vector done! Time taken: 0.000 s
 Calculation btb, AtA, Atb done! Time taken: 0.000 s
-Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.036 s
-broadcasting weights and SVD done! Time taken: 0.000 s
-SVD of AtA done! Time taken: 0.001 s
-Regularization minimum: 1e-12.000000
-Loop for Bayesian regression hyperparameters optimization: 
-Initial guess; sigma_v0: 0.824220, sigma_w0: 772.229577
-Saving and other initialization before hyperparamter done! Time taken: 0.003 s
-Gamma calculation done! It took 0.000 s.
-Iter number: 0
-Gamma: 15.242429
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 92.643528, M_total_rows: 190, gamma: 15.242429
-sigma_v: 0.728098 and sigma_w: 725.762255 before check for cond
-After condK: sigma_v: 0.728098, sigma_w: 725.762255
-Gamma calculation done! It took 0.000 s.
-Iter number: 1
-Gamma: 15.429037
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 91.473167, M_total_rows: 190, gamma: 15.429037
-sigma_v: 0.723870 and sigma_w: 768.933604 before check for cond
-After condK: sigma_v: 0.723870, sigma_w: 768.933604
-Gamma calculation done! It took 0.000 s.
-Iter number: 2
-Gamma: 15.623044
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 90.252472, M_total_rows: 190, gamma: 15.623044
-sigma_v: 0.719424 and sigma_w: 816.527987 before check for cond
-After condK: sigma_v: 0.719424, sigma_w: 816.527987
-Gamma calculation done! It took 0.000 s.
-Iter number: 3
-Gamma: 15.828056
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 88.962870, M_total_rows: 190, gamma: 15.828056
-sigma_v: 0.714686 and sigma_w: 869.711907 before check for cond
-After condK: sigma_v: 0.714686, sigma_w: 869.711907
-Gamma calculation done! It took 0.000 s.
-Iter number: 4
-Gamma: 16.047747
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 87.587915, M_total_rows: 190, gamma: 16.047747
-sigma_v: 0.709589 and sigma_w: 929.780815 before check for cond
-After condK: sigma_v: 0.709589, sigma_w: 929.780815
-Gamma calculation done! It took 0.000 s.
-Iter number: 5
-Gamma: 16.285742
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 86.115391, M_total_rows: 190, gamma: 16.285742
-sigma_v: 0.704081 and sigma_w: 998.087274 before check for cond
-After condK: sigma_v: 0.704081, sigma_w: 998.087274
-Gamma calculation done! It took 0.000 s.
-Iter number: 6
-Gamma: 16.545305
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 84.540623, M_total_rows: 190, gamma: 16.545305
-sigma_v: 0.698135 and sigma_w: 1075.885280 before check for cond
-After condK: sigma_v: 0.698135, sigma_w: 1075.885280
-Gamma calculation done! It took 0.000 s.
-Iter number: 7
-Gamma: 16.828768
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 82.870606, M_total_rows: 190, gamma: 16.828768
-sigma_v: 0.691771 and sigma_w: 1164.070741 before check for cond
-After condK: sigma_v: 0.691771, sigma_w: 1164.070741
-Gamma calculation done! It took 0.000 s.
-Iter number: 8
-Gamma: 17.136709
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 81.127582, M_total_rows: 190, gamma: 17.136709
-sigma_v: 0.685067 and sigma_w: 1262.841485 before check for cond
-After condK: sigma_v: 0.685067, sigma_w: 1262.841485
-Gamma calculation done! It took 0.000 s.
-Iter number: 9
-Gamma: 17.467031
-Copying AtA and regularizing took 0.000 s.
-Linear system solving took 0.000 s.
-Copying weights and calculating norm_w2 took 0.000 s.
-Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 79.349689, M_total_rows: 190, gamma: 17.467031
-sigma_v: 0.678167 and sigma_w: 1371.379845 before check for cond
-After condK: sigma_v: 0.678167, sigma_w: 1371.379845
-Hyperparameter SCF loop took 0.003 s.
-hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.022 s
-Training errors done! Time taken: 0.026 s
-mlff_train_Bayesian done! Time taken: 0.026 s
-Bayesian linear regression done! Time taken: 0.204 s
---------------------------------------------------------------------------------------------
-Calculation: 6
-Neighbor list and soap descriptor done! Time taken: 0.001 s
-Kpredict calculation done done! Time taken: 0.001 s
-prediction and gather done! Time taken: 0.001 s
-MLFF prediction made for the current step. Time taken: 0.003 s
-max_pred_error: 4.555250449E-03, F_tol_SOAP: 4.559805700E-03.
-Skipped DFT for this step!
---------------------------------------------------------------------------------------------
-Calculation: 7
-Neighbor list and soap descriptor done! Time taken: 0.001 s
-Kpredict calculation done done! Time taken: 0.014 s
-prediction and gather done! Time taken: 0.004 s
-MLFF prediction made for the current step. Time taken: 0.019 s
-max_pred_error: 4.720183705E-03, F_tol_SOAP: 4.559805700E-03.
-Error prediction in ML Model is too large!
-DFT call made. Time taken: 45.759 s
-Error Energy: 0.000217482 (Ha/atom)
-Stress[5]: Error (Ha/Bohr^n) = 0.397018595, Error(percent) = 7.724305289
-Force Error atom-wise: 
--0.006644112 -0.001697172 -0.002086141
--0.000840813 0.006304192 -0.001247129
--0.019368132 -0.002189653 0.012618445
--0.003367817 0.003011268 0.013502605
--0.006158898 0.001416209 -0.012094877
-0.003878638 -0.008229591 0.000811234
-0.001755913 -0.004666724 -0.001788833
-0.005718382 -0.003171394 -0.002109179
-0.009126189 -0.003793119 -0.002175135
-0.000942202 -0.004837839 -0.004405996
-0.003796353 0.007853190 0.001365709
-0.010383376 0.009417706 -0.002390703
-Error Force (max): 0.019368132 (Ha/Bohr)
-Error Force (RMS): 0.006680113 (Ha/Bohr)
-Error Force Train (max): 0.012650983 (Ha/Bohr)
-Error Energy Train (max): 0.000082550 (Ha/atom)
-neighbor list and soap descriptor done! Time taken: 0.001 s
-Covariance matrix rows updated! Time taken: 0.019 s
-Sparsification done! Time taken: 0.001 s
-Covariance matrix columns updated! Time taken: 0.025 s
-Covariance matrices updated! Time taken: 0.047 s
-For element 0, CUR removed 1 columns out of a total of 19 columns
-sparsification before training done! Time taken: 0.002 s
-For element 1, CUR removed 0 columns out of a total of 32 columns
-sparsification before training done! Time taken: 0.010 s
-Scaling K_train and b-vector done! Time taken: 0.000 s
-Calculation btb, AtA, Atb done! Time taken: 0.000 s
-Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.030 s
+Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.000 s
 broadcasting weights and SVD done! Time taken: 0.000 s
 SVD of AtA done! Time taken: 0.000 s
 Regularization minimum: 1e-11.000000
 Loop for Bayesian regression hyperparameters optimization: 
-Initial guess; sigma_v0: 0.678167, sigma_w0: 1371.379845
-Saving and other initialization before hyperparamter done! Time taken: 0.003 s
+Initial guess; sigma_v0: 0.824218, sigma_w0: 772.205498
+Saving and other initialization before hyperparamter done! Time taken: 0.001 s
 Gamma calculation done! It took 0.000 s.
 Iter number: 0
-Gamma: 19.978637
+Gamma: 15.242353
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 77.684624, M_total_rows: 228, gamma: 19.978637
-sigma_v: 0.611102 and sigma_w: 1371.893979 before check for cond
-After condK: sigma_v: 0.611102, sigma_w: 1371.893979
+norm_er2: 92.643700, M_total_rows: 190, gamma: 15.242353
+sigma_v: 0.728098 and sigma_w: 725.736938 before check for cond
+After condK: sigma_v: 0.728098, sigma_w: 725.736938
 Gamma calculation done! It took 0.000 s.
 Iter number: 1
-Gamma: 20.454057
+Gamma: 15.428936
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 75.848103, M_total_rows: 228, gamma: 20.454057
-sigma_v: 0.604526 and sigma_w: 1498.891751 before check for cond
-After condK: sigma_v: 0.604526, sigma_w: 1498.891751
+norm_er2: 91.473514, M_total_rows: 190, gamma: 15.428936
+sigma_v: 0.723872 and sigma_w: 768.900976 before check for cond
+After condK: sigma_v: 0.723872, sigma_w: 768.900976
 Gamma calculation done! It took 0.000 s.
 Iter number: 2
-Gamma: 20.913361
+Gamma: 15.622916
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 74.107502, M_total_rows: 228, gamma: 20.913361
-sigma_v: 0.598212 and sigma_w: 1631.363087 before check for cond
-After condK: sigma_v: 0.598212, sigma_w: 1631.363087
+norm_er2: 90.253014, M_total_rows: 190, gamma: 15.622916
+sigma_v: 0.719426 and sigma_w: 816.486545 before check for cond
+After condK: sigma_v: 0.719426, sigma_w: 816.486545
 Gamma calculation done! It took 0.000 s.
 Iter number: 3
-Gamma: 21.357775
+Gamma: 15.827895
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 72.446526, M_total_rows: 228, gamma: 21.357775
-sigma_v: 0.592106 and sigma_w: 1769.905574 before check for cond
-After condK: sigma_v: 0.592106, sigma_w: 1769.905574
+norm_er2: 88.963627, M_total_rows: 190, gamma: 15.827895
+sigma_v: 0.714689 and sigma_w: 869.659808 before check for cond
+After condK: sigma_v: 0.714689, sigma_w: 869.659808
 Gamma calculation done! It took 0.000 s.
 Iter number: 4
-Gamma: 21.788141
+Gamma: 16.047550
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 70.855672, M_total_rows: 228, gamma: 21.788141
-sigma_v: 0.586179 and sigma_w: 1914.847895 before check for cond
-After condK: sigma_v: 0.586179, sigma_w: 1914.847895
+norm_er2: 87.588910, M_total_rows: 190, gamma: 16.047550
+sigma_v: 0.709593 and sigma_w: 929.715889 before check for cond
+After condK: sigma_v: 0.709593, sigma_w: 929.715889
 Gamma calculation done! It took 0.000 s.
 Iter number: 5
-Gamma: 22.204408
+Gamma: 16.285504
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 69.332530, M_total_rows: 228, gamma: 22.204408
-sigma_v: 0.580431 and sigma_w: 2066.029141 before check for cond
-After condK: sigma_v: 0.580431, sigma_w: 2066.029141
+norm_er2: 86.116643, M_total_rows: 190, gamma: 16.285504
+sigma_v: 0.704086 and sigma_w: 998.007140 before check for cond
+After condK: sigma_v: 0.704086, sigma_w: 998.007140
 Gamma calculation done! It took 0.000 s.
 Iter number: 6
-Gamma: 22.605403
+Gamma: 16.545020
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 67.881360, M_total_rows: 228, gamma: 22.605403
-sigma_v: 0.574885 and sigma_w: 2222.595488 before check for cond
-After condK: sigma_v: 0.574885, sigma_w: 2222.595488
+norm_er2: 84.542139, M_total_rows: 190, gamma: 16.545020
+sigma_v: 0.698141 and sigma_w: 1075.787604 before check for cond
+After condK: sigma_v: 0.698141, sigma_w: 1075.787604
 Gamma calculation done! It took 0.000 s.
 Iter number: 7
-Gamma: 22.988828
+Gamma: 16.828432
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 66.511899, M_total_rows: 228, gamma: 22.988828
-sigma_v: 0.569588 and sigma_w: 2382.855172 before check for cond
-After condK: sigma_v: 0.569588, sigma_w: 2382.855172
+norm_er2: 82.872375, M_total_rows: 190, gamma: 16.828432
+sigma_v: 0.691778 and sigma_w: 1163.953697 before check for cond
+After condK: sigma_v: 0.691778, sigma_w: 1163.953697
 Gamma calculation done! It took 0.000 s.
 Iter number: 8
-Gamma: 23.351486
+Gamma: 17.136322
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 65.237303, M_total_rows: 228, gamma: 23.351486
-sigma_v: 0.564604 and sigma_w: 2544.255669 before check for cond
-After condK: sigma_v: 0.564604, sigma_w: 2544.255669
+norm_er2: 81.129569, M_total_rows: 190, gamma: 17.136322
+sigma_v: 0.685074 and sigma_w: 1262.704346 before check for cond
+After condK: sigma_v: 0.685074, sigma_w: 1262.704346
 Gamma calculation done! It took 0.000 s.
 Iter number: 9
-Gamma: 23.689700
+Gamma: 17.466594
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 64.071366, M_total_rows: 228, gamma: 23.689700
-sigma_v: 0.559998 and sigma_w: 2703.542487 before check for cond
-After condK: sigma_v: 0.559998, sigma_w: 2703.542487
+norm_er2: 79.351832, M_total_rows: 190, gamma: 17.466594
+sigma_v: 0.678175 and sigma_w: 1371.223543 before check for cond
+After condK: sigma_v: 0.678175, sigma_w: 1371.223543
 Hyperparameter SCF loop took 0.003 s.
-hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.022 s
-Training errors done! Time taken: 0.029 s
-mlff_train_Bayesian done! Time taken: 0.029 s
-Bayesian linear regression done! Time taken: 0.199 s
+hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.005 s
+Training errors done! Time taken: 0.000 s
+mlff_train_Bayesian done! Time taken: 0.000 s
+Bayesian linear regression done! Time taken: 0.035 s
+--------------------------------------------------------------------------------------------
+Calculation: 6
+Neighbor list and soap descriptor done! Time taken: 0.001 s
+Kpredict calculation done done! Time taken: 0.001 s
+prediction and gather done! Time taken: 0.000 s
+MLFF prediction made for the current step. Time taken: 0.002 s
+max_pred_error: 4.555281622E-03, F_tol_SOAP: 4.559836903E-03.
+Skipped DFT for this step!
+--------------------------------------------------------------------------------------------
+Calculation: 7
+Neighbor list and soap descriptor done! Time taken: 0.001 s
+Kpredict calculation done done! Time taken: 0.001 s
+prediction and gather done! Time taken: 0.000 s
+MLFF prediction made for the current step. Time taken: 0.002 s
+max_pred_error: 4.720206695E-03, F_tol_SOAP: 4.559836903E-03.
+Error prediction in ML Model is too large!
+DFT call made. Time taken: 22.736 s
+Error Energy: 0.000217506 (Ha/atom)
+Stress[5]: Error (Ha/Bohr^n) = 0.397017419, Error(percent) = 7.724309867
+Force Error atom-wise: 
+-0.006645292 -0.001698235 -0.002085671
+-0.000842145 0.006304611 -0.001244964
+-0.019368868 -0.002190773 0.012619109
+-0.003368033 0.003011987 0.013501566
+-0.006158706 0.001416696 -0.012094763
+0.003879268 -0.008229742 0.000811568
+0.001754787 -0.004666239 -0.001788635
+0.005717722 -0.003171224 -0.002108937
+0.009127154 -0.003792300 -0.002174755
+0.000942740 -0.004838392 -0.004407550
+0.003795725 0.007852844 0.001364485
+0.010383758 0.009417416 -0.002391452
+Error Force (max): 0.019368868 (Ha/Bohr)
+Error Force (RMS): 0.006680227 (Ha/Bohr)
+Error Force Train (max): 0.012650668 (Ha/Bohr)
+Error Energy Train (max): 0.000082555 (Ha/atom)
+neighbor list and soap descriptor done! Time taken: 0.001 s
+Covariance matrix rows updated! Time taken: 0.002 s
+Sparsification done! Time taken: 0.000 s
+Covariance matrix columns updated! Time taken: 0.001 s
+Covariance matrices updated! Time taken: 0.005 s
+For element 0, CUR removed 1 columns out of a total of 19 columns
+sparsification before training done! Time taken: 0.002 s
+For element 1, CUR removed 0 columns out of a total of 32 columns
+sparsification before training done! Time taken: 0.006 s
+Scaling K_train and b-vector done! Time taken: 0.000 s
+Calculation btb, AtA, Atb done! Time taken: 0.000 s
+Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.000 s
+broadcasting weights and SVD done! Time taken: 0.000 s
+SVD of AtA done! Time taken: 0.000 s
+Regularization minimum: 1e-11.000000
+Loop for Bayesian regression hyperparameters optimization: 
+Initial guess; sigma_v0: 0.678175, sigma_w0: 1371.223543
+Saving and other initialization before hyperparamter done! Time taken: 0.001 s
+Gamma calculation done! It took 0.000 s.
+Iter number: 0
+Gamma: 19.978092
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 77.686994, M_total_rows: 228, gamma: 19.978092
+sigma_v: 0.611110 and sigma_w: 1371.742046 before check for cond
+After condK: sigma_v: 0.611110, sigma_w: 1371.742046
+Gamma calculation done! It took 0.000 s.
+Iter number: 1
+Gamma: 20.453510
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 75.850422, M_total_rows: 228, gamma: 20.453510
+sigma_v: 0.604535 and sigma_w: 1498.728864 before check for cond
+After condK: sigma_v: 0.604535, sigma_w: 1498.728864
+Gamma calculation done! It took 0.000 s.
+Iter number: 2
+Gamma: 20.912818
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 74.109755, M_total_rows: 228, gamma: 20.912818
+sigma_v: 0.598220 and sigma_w: 1631.190133 before check for cond
+After condK: sigma_v: 0.598220, sigma_w: 1631.190133
+Gamma calculation done! It took 0.000 s.
+Iter number: 3
+Gamma: 21.357241
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 72.448693, M_total_rows: 228, gamma: 21.357241
+sigma_v: 0.592114 and sigma_w: 1769.724074 before check for cond
+After condK: sigma_v: 0.592114, sigma_w: 1769.724074
+Gamma calculation done! It took 0.000 s.
+Iter number: 4
+Gamma: 21.787625
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 70.857728, M_total_rows: 228, gamma: 21.787625
+sigma_v: 0.586187 and sigma_w: 1914.660241 before check for cond
+After condK: sigma_v: 0.586187, sigma_w: 1914.660241
+Gamma calculation done! It took 0.000 s.
+Iter number: 5
+Gamma: 22.203918
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 69.334446, M_total_rows: 228, gamma: 22.203918
+sigma_v: 0.580438 and sigma_w: 2065.838759 before check for cond
+After condK: sigma_v: 0.580438, sigma_w: 2065.838759
+Gamma calculation done! It took 0.000 s.
+Iter number: 6
+Gamma: 22.604946
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 67.883104, M_total_rows: 228, gamma: 22.604946
+sigma_v: 0.574891 and sigma_w: 2222.406912 before check for cond
+After condK: sigma_v: 0.574891, sigma_w: 2222.406912
+Gamma calculation done! It took 0.000 s.
+Iter number: 7
+Gamma: 22.988414
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 66.513441, M_total_rows: 228, gamma: 22.988414
+sigma_v: 0.569594 and sigma_w: 2382.673780 before check for cond
+After condK: sigma_v: 0.569594, sigma_w: 2382.673780
+Gamma calculation done! It took 0.000 s.
+Iter number: 8
+Gamma: 23.351122
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 65.238620, M_total_rows: 228, gamma: 23.351122
+sigma_v: 0.564609 and sigma_w: 2544.087390 before check for cond
+After condK: sigma_v: 0.564609, sigma_w: 2544.087390
+Gamma calculation done! It took 0.000 s.
+Iter number: 9
+Gamma: 23.689392
+Copying AtA and regularizing took 0.000 s.
+Linear system solving took 0.000 s.
+Copying weights and calculating norm_w2 took 0.000 s.
+Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
+norm_er2: 64.072443, M_total_rows: 228, gamma: 23.689392
+sigma_v: 0.560003 and sigma_w: 2703.393083 before check for cond
+After condK: sigma_v: 0.560003, sigma_w: 2703.393083
+Hyperparameter SCF loop took 0.003 s.
+hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.005 s
+Training errors done! Time taken: 0.000 s
+mlff_train_Bayesian done! Time taken: 0.000 s
+Bayesian linear regression done! Time taken: 0.034 s
 --------------------------------------------------------------------------------------------
 Calculation: 8
 Neighbor list and soap descriptor done! Time taken: 0.001 s
 Kpredict calculation done done! Time taken: 0.001 s
-prediction and gather done! Time taken: 0.001 s
-MLFF prediction made for the current step. Time taken: 0.003 s
-max_pred_error: 4.644030148E-03, F_tol_SOAP: 4.648674178E-03.
+prediction and gather done! Time taken: 0.000 s
+MLFF prediction made for the current step. Time taken: 0.002 s
+max_pred_error: 4.644076021E-03, F_tol_SOAP: 4.648720097E-03.
 Skipped DFT for this step!
 --------------------------------------------------------------------------------------------
 Calculation: 9
 Neighbor list and soap descriptor done! Time taken: 0.001 s
-Kpredict calculation done done! Time taken: 0.002 s
-prediction and gather done! Time taken: 0.004 s
-MLFF prediction made for the current step. Time taken: 0.007 s
-max_pred_error: 4.832497273E-03, F_tol_SOAP: 4.648674178E-03.
+Kpredict calculation done done! Time taken: 0.001 s
+prediction and gather done! Time taken: 0.000 s
+MLFF prediction made for the current step. Time taken: 0.002 s
+max_pred_error: 4.832543225E-03, F_tol_SOAP: 4.648720097E-03.
 Error prediction in ML Model is too large!
-DFT call made. Time taken: 45.465 s
-Error Energy: 0.000159124 (Ha/atom)
-Stress[5]: Error (Ha/Bohr^n) = 0.306234507, Error(percent) = 5.716693610
+DFT call made. Time taken: 22.656 s
+Error Energy: 0.000159123 (Ha/atom)
+Stress[5]: Error (Ha/Bohr^n) = 0.306258999, Error(percent) = 5.717145832
 Force Error atom-wise: 
--0.006863448 0.005096640 -0.001698247
-0.000826952 0.007234661 0.000134872
--0.023004424 -0.003974463 0.014194271
--0.003422773 0.001042614 0.010254687
--0.003437964 -0.003294965 -0.015061969
-0.002646599 -0.008103697 -0.000354814
-0.005675713 -0.004034056 -0.000741220
-0.003995989 -0.005378357 -0.000524682
-0.011200111 -0.005556574 -0.000127911
--0.000330906 -0.003624485 -0.004193596
-0.004907975 0.009734253 0.003977476
-0.006992630 0.010127426 -0.005858868
-Error Force (max): 0.023004424 (Ha/Bohr)
-Error Force (RMS): 0.007298426 (Ha/Bohr)
-Error Force Train (max): 0.016708150 (Ha/Bohr)
-Error Energy Train (max): 0.000075397 (Ha/atom)
+-0.006863494 0.005096273 -0.001698346
+0.000827106 0.007234567 0.000134174
+-0.023004439 -0.003974250 0.014194702
+-0.003422576 0.001042452 0.010255297
+-0.003438219 -0.003294980 -0.015061929
+0.002646308 -0.008103492 -0.000354973
+0.005675938 -0.004034094 -0.000741358
+0.003996091 -0.005378282 -0.000525130
+0.011199815 -0.005556966 -0.000128001
+-0.000331226 -0.003624390 -0.004193466
+0.004908303 0.009734611 0.003977581
+0.006992914 0.010127676 -0.005858551
+Error Force (max): 0.023004439 (Ha/Bohr)
+Error Force (RMS): 0.007298483 (Ha/Bohr)
+Error Force Train (max): 0.016709267 (Ha/Bohr)
+Error Energy Train (max): 0.000075406 (Ha/atom)
 neighbor list and soap descriptor done! Time taken: 0.001 s
-Covariance matrix rows updated! Time taken: 0.033 s
+Covariance matrix rows updated! Time taken: 0.003 s
 Sparsification done! Time taken: 0.000 s
-Covariance matrix columns updated! Time taken: 0.028 s
-Covariance matrices updated! Time taken: 0.066 s
+Covariance matrix columns updated! Time taken: 0.001 s
+Covariance matrices updated! Time taken: 0.005 s
 For element 0, CUR removed 1 columns out of a total of 19 columns
 sparsification before training done! Time taken: 0.002 s
 For element 1, CUR removed 0 columns out of a total of 32 columns
-sparsification before training done! Time taken: 0.011 s
+sparsification before training done! Time taken: 0.006 s
 Scaling K_train and b-vector done! Time taken: 0.000 s
 Calculation btb, AtA, Atb done! Time taken: 0.000 s
-Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.031 s
+Doing MPI_Allreduce for AtA and Atb done! Time taken: 0.000 s
 broadcasting weights and SVD done! Time taken: 0.000 s
-SVD of AtA done! Time taken: 0.001 s
+SVD of AtA done! Time taken: 0.000 s
 Regularization minimum: 1e-11.000000
 Loop for Bayesian regression hyperparameters optimization: 
-Initial guess; sigma_v0: 0.559998, sigma_w0: 2703.542487
-Saving and other initialization before hyperparamter done! Time taken: 0.003 s
+Initial guess; sigma_v0: 0.560003, sigma_w0: 2703.393083
+Saving and other initialization before hyperparamter done! Time taken: 0.001 s
 Gamma calculation done! It took 0.000 s.
 Iter number: 0
-Gamma: 25.832576
+Gamma: 25.832316
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.905394, M_total_rows: 266, gamma: 25.832576
-sigma_v: 0.515836 and sigma_w: 2563.155550 before check for cond
-After condK: sigma_v: 0.515836, sigma_w: 2563.155550
+norm_er2: 63.905873, M_total_rows: 266, gamma: 25.832316
+sigma_v: 0.515838 and sigma_w: 2563.061660 before check for cond
+After condK: sigma_v: 0.515838, sigma_w: 2563.061660
 Gamma calculation done! It took 0.000 s.
 Iter number: 1
-Gamma: 25.953735
+Gamma: 25.953573
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.613037, M_total_rows: 266, gamma: 25.953735
-sigma_v: 0.514785 and sigma_w: 2609.467641 before check for cond
-After condK: sigma_v: 0.514785, sigma_w: 2609.467641
+norm_er2: 63.613267, M_total_rows: 266, gamma: 25.953573
+sigma_v: 0.514785 and sigma_w: 2609.410030 before check for cond
+After condK: sigma_v: 0.514785, sigma_w: 2609.410030
 Gamma calculation done! It took 0.000 s.
 Iter number: 2
-Gamma: 26.037139
+Gamma: 26.037046
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.415542, M_total_rows: 266, gamma: 26.037139
-sigma_v: 0.514074 and sigma_w: 2641.696746 before check for cond
-After condK: sigma_v: 0.514074, sigma_w: 2641.696746
+norm_er2: 63.415605, M_total_rows: 266, gamma: 26.037046
+sigma_v: 0.514074 and sigma_w: 2641.664982 before check for cond
+After condK: sigma_v: 0.514074, sigma_w: 2641.664982
 Gamma calculation done! It took 0.000 s.
 Iter number: 3
-Gamma: 26.094030
+Gamma: 26.093983
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.282558, M_total_rows: 266, gamma: 26.094030
-sigma_v: 0.513596 and sigma_w: 2663.850372 before check for cond
-After condK: sigma_v: 0.513596, sigma_w: 2663.850372
+norm_er2: 63.282510, M_total_rows: 266, gamma: 26.093983
+sigma_v: 0.513596 and sigma_w: 2663.836646 before check for cond
+After condK: sigma_v: 0.513596, sigma_w: 2663.836646
 Gamma calculation done! It took 0.000 s.
 Iter number: 4
-Gamma: 26.132603
+Gamma: 26.132589
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.193178, M_total_rows: 266, gamma: 26.132603
-sigma_v: 0.513274 and sigma_w: 2678.952168 before check for cond
-After condK: sigma_v: 0.513274, sigma_w: 2678.952168
+norm_er2: 63.193056, M_total_rows: 266, gamma: 26.132589
+sigma_v: 0.513274 and sigma_w: 2678.950761 before check for cond
+After condK: sigma_v: 0.513274, sigma_w: 2678.950761
 Gamma calculation done! It took 0.000 s.
 Iter number: 5
-Gamma: 26.158655
+Gamma: 26.158662
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.133168, M_total_rows: 266, gamma: 26.158655
-sigma_v: 0.513058 and sigma_w: 2689.189395 before check for cond
-After condK: sigma_v: 0.513058, sigma_w: 2689.189395
+norm_er2: 63.132997, M_total_rows: 266, gamma: 26.158662
+sigma_v: 0.513058 and sigma_w: 2689.196409 before check for cond
+After condK: sigma_v: 0.513058, sigma_w: 2689.196409
 Gamma calculation done! It took 0.000 s.
 Iter number: 6
-Gamma: 26.176205
+Gamma: 26.176226
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.092904, M_total_rows: 266, gamma: 26.176205
-sigma_v: 0.512913 and sigma_w: 2696.103024 before check for cond
-After condK: sigma_v: 0.512913, sigma_w: 2696.103024
+norm_er2: 63.092700, M_total_rows: 266, gamma: 26.176226
+sigma_v: 0.512913 and sigma_w: 2696.115659 before check for cond
+After condK: sigma_v: 0.512913, sigma_w: 2696.115659
 Gamma calculation done! It took 0.000 s.
 Iter number: 7
-Gamma: 26.188006
+Gamma: 26.188037
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.065899, M_total_rows: 266, gamma: 26.188006
-sigma_v: 0.512816 and sigma_w: 2700.760408 before check for cond
-After condK: sigma_v: 0.512816, sigma_w: 2700.760408
+norm_er2: 63.065673, M_total_rows: 266, gamma: 26.188037
+sigma_v: 0.512815 and sigma_w: 2700.776803 before check for cond
+After condK: sigma_v: 0.512815, sigma_w: 2700.776803
 Gamma calculation done! It took 0.000 s.
 Iter number: 8
-Gamma: 26.195934
+Gamma: 26.195971
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.047792, M_total_rows: 266, gamma: 26.195934
-sigma_v: 0.512751 and sigma_w: 2703.892513 before check for cond
-After condK: sigma_v: 0.512751, sigma_w: 2703.892513
+norm_er2: 63.047551, M_total_rows: 266, gamma: 26.195971
+sigma_v: 0.512750 and sigma_w: 2703.911466 before check for cond
+After condK: sigma_v: 0.512750, sigma_w: 2703.911466
 Gamma calculation done! It took 0.000 s.
 Iter number: 9
-Gamma: 26.201255
+Gamma: 26.201297
 Copying AtA and regularizing took 0.000 s.
 Linear system solving took 0.000 s.
 Copying weights and calculating norm_w2 took 0.000 s.
 Calculating sigma_w and sigma_w for the next iterations took 0.000 s.
-norm_er2: 63.035652, M_total_rows: 266, gamma: 26.201255
-sigma_v: 0.512708 and sigma_w: 2705.996526 before check for cond
-After condK: sigma_v: 0.512708, sigma_w: 2705.996526
+norm_er2: 63.035402, M_total_rows: 266, gamma: 26.201297
+sigma_v: 0.512707 and sigma_w: 2706.017133 before check for cond
+After condK: sigma_v: 0.512707, sigma_w: 2706.017133
 Hyperparameter SCF loop took 0.003 s.
-hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.022 s
-Training errors done! Time taken: 0.027 s
-mlff_train_Bayesian done! Time taken: 0.027 s
-Bayesian linear regression done! Time taken: 0.252 s
+hyperparameter_Bayesian and broadcasting weights done! Time taken: 0.005 s
+Training errors done! Time taken: 0.000 s
+mlff_train_Bayesian done! Time taken: 0.000 s
+Bayesian linear regression done! Time taken: 0.035 s

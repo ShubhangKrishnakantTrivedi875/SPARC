@@ -4,7 +4,7 @@ LATVEC:
 1.0 0.0 0.0
 0.0 1.0 0.0
 0.0 0.0 1.0
-MESH_SPACING: 0.35
+MESH_SPACING: 0.25
 BC: P P P
 KPOINT_GRID: 1 1 1
 # SPIN_TYP: 1
@@ -24,9 +24,9 @@ ION_TEMP: 1120            # kelvin
 MD_METHOD: NPT_NP          # NVE, NVT_NH (Nose-Hoover), NVK_G (Gaussian)
 #QMASS: 1600                # mass for NH thermostat
 MD_TIMESTEP: 0.6              # fs
-MD_NSTEP: 40              # run MD for MD_NSTEP steps or TWTIME minutes, whichever comes first
+MD_NSTEP: 10              # run MD for MD_NSTEP steps or TWTIME minutes, whichever comes first
 #TWTIME: 1400
-RESTART_FLAG: 0               # 1 = restart MD from .restart file if present, 0 = start new
+RESTART_FLAG: 1               # 1 = restart MD from .restart file if present, 0 = start new
 #ION_VEL_DSTR: 1               # Initial velocities: 1 = uniform, 2 = Maxwell-Boltzmann (default)
 EXTERNAL_PRESSURE: 0 GPa
 NPT_NP_QMASS: 500.0
