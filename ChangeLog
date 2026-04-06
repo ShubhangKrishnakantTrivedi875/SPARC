@@ -4,7 +4,7 @@
 -changes
 
 --------------
-April 05, 2026
+April 06, 2026
 Name: Shubhang Krishnakant Trivedi
 Changes: (src/md.c, src/initialization.c, src/readfiles.c, src/include/md.h, src/include/isddft.h)
 1. Extended the functionality of NPT_NP QMD for doing full cell flexibility (including changing of cell angles).
