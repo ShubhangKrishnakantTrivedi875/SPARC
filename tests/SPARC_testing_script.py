@@ -13,11 +13,11 @@ import math
 
 # Other parameters to run the test (can be changed by the user)
 nprocs_tests = 12  # In default tests are run with 24 processors per node
-nnodes_tests = 4  # In default tests are run with 1 node
-npbs = 10  # By default (number of script files the tests are distributed to)
+nnodes_tests = 3  # In default tests are run with 1 node
+npbs = 40  # By default (number of script files the tests are distributed to)
 launch_cluster_extension = ".sbatch"   # extension of the file used to launch the jobs on the cluster by default it is .sbatch
 command_launch_extension = "sbatch"   # Command to launch the script to ask for resources on the cluster (example: qsub launch.pbs)
-MPI_command = "mpirun -np 48"  # MPI command to run the executable on the given cluster
+MPI_command = "mpirun -np 36"  # MPI command to run the executable on the given cluster
 
 
 
@@ -227,7 +227,7 @@ SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_t
 ##################################################################################################################
 SYSTEMS["systemname"].append('Al18Si18_NPTNP_aeqb_c')
 SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nptnp'])
+SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nptnp'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
 SYSTEMS["systemname"].append('Al18C2_NPTNP_onlyc')
@@ -262,7 +262,7 @@ SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_t
 ##################################################################################################################
 SYSTEMS["systemname"].append('Al18Si18_NPH_aeqc_b')
 SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'md_nph'])
+SYSTEMS["Tags"].append(['bulk', 'gga', 'orth', 'md_nph'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
 SYSTEMS["systemname"].append('Al18C2_NPH_onlyb')
@@ -3494,4 +3494,5 @@ if __name__ == '__main__':
 	if isAuto == True:
 		if failtests > 0:
 			raise Exception(str(failtests) + " out of "+str(passtests+failtests) +" failed")
+
 
