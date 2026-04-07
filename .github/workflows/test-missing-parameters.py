@@ -35,11 +35,21 @@ def check_missing_parameters(test_dir, parameters_json_path):
             pass
 
         # Check missing or typo parameters
+        # Parameters that are documented but not yet in SPARC-X-API validator
+        NEW_UNDOCUMENTED_PARAMS = {
+            "BOUNDARY_CONDITION",
+            "EXTERNAL_PRESSURE",
+            "NPH_BMASS",
+            "NPH_SCALE_CONSTRAINTS",
+            "NPH_ANGLES",
+            "NPT_NP_ANGLES",
+            "RELAX_PRESSURE"
+        }
+        
         missing_params = [
             param for param in params_in_file
             if (param.upper() not in documented_parameters)
-            # TODO: Obsolete BOUNDARY_CONDITION keyword
-            and (param.upper() != "BOUNDARY_CONDITION")
+            and (param.upper() not in NEW_UNDOCUMENTED_PARAMS)
         ]
         if missing_params:
             report[test_name] = missing_params
