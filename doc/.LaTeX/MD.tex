@@ -609,7 +609,7 @@ No unit
 \end{block}
 
 \begin{block}{Example}
-\texttt{NPT\_SCALE\_CONSTRAINTS}: 1
+\texttt{NPT\_NP\_ANGLES}: 1
 \end{block}
 \end{columns}
 
@@ -760,7 +760,7 @@ No unit
 \end{block}
 
 \begin{block}{Example}
-\texttt{NPT\_ANGLES}: 1
+\texttt{NPH\_ANGLES}: 1
 \end{block}
 \end{columns}
 
@@ -769,7 +769,7 @@ Flag to determine whether to allow changing of angles of the cell (simulation bo
 \end{block}
 
 \begin{block}{Remark}
-Applicable to NPH \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only when all the lattice vectors are allowed to be rescaled by setting \hyperlink{NPH\_SCALE\_VECS}{\texttt{NPH\_SCALE\_VECS}} to "123" and simultaneously no other constraints are imposed through \hyperlink{NPH\_SCALE\_CONSTRAINTS}{\texttt{NPH\_SCALE\_CONSTRAINTS}}.
+Analogous to \hyperlink{NPT\_NP\_ANGLES}{\texttt{NPT\_NP\_ANGLES}} but applicable to NPH \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only when all the lattice vectors are allowed to be rescaled by setting \hyperlink{NPH\_SCALE\_VECS}{\texttt{NPH\_SCALE\_VECS}} to "123" and simultaneously no other constraints are imposed through \hyperlink{NPH\_SCALE\_CONSTRAINTS}{\texttt{NPH\_SCALE\_CONSTRAINTS}}.
 \end{block}
 
 \end{frame}
