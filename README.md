@@ -7,7 +7,7 @@ SPARC is an open-source software package for the accurate, effcient, and scalabl
 * Local, semilocal, and nonlocal (including hybrid) exchange-correlation functionals.
 * Standard ONCV pseudopotentials, including nonlinear core corrections (NLCCs).
 * Calculation of ground state energy, atomic forces, and stress tensor.
-* Structural relaxation and ab initio molecular dynamics (NVE, NVT, and NPT).
+* Structural relaxation and ab initio molecular dynamics (NVE, NVTNH, NVKG, NPTNH, NPTNP and NPH).
 * Spin polarized and unpolarized calculations.
 * Spin-orbit coupling (SOC).
 * Noncollinear spin.
@@ -176,7 +176,7 @@ Upon successful execution of the `sparc` code, depending on the calculations per
 
 - `.aimd` file  
 
-  Atomic positions, atomic velocities, atomic forces, electronic temperature, ionic temperature and total energy for each QMD step.
+  Atomic positions, atomic velocities, atomic forces, electronic temperature, ionic temperature, pressure (ionic, electronic and total), energies (internal, kinetic, total), entropy, stresses (ionic, electronic and total) and cell parameters: lattice vectors, volume and angles (latter 3 only in case of flexible cell) for each QMD step.
 
 - `.restart` file  
 
