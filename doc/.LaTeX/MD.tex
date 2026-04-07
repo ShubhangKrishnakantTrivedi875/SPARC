@@ -544,7 +544,7 @@ Only three numbers 1, 2 and 3 can be accepted. For example, if ``2 3'' is the in
 
 If it is set in NPT\_NH, the expansion or shrinkage on designated lattice vector will try to keep the total pressure to oscillate near the target pressure.
 
-If it is set in NPT\_NP, the expansion or shrinkage on designated lattice vector will only try to keep the normal stress at their direction to oscillate near the corresponding target stress component (which is the sum of external pressure and corresponding external stress component).
+If it is set in NPT\_NP, the expansion or shrinkage on designated lattice vector will only try to keep the normal stress in this direction to oscillate near the corresponding target stress component (which is the sum of external pressure and corresponding external stress component).
 \end{block}
 
 \end{frame}
@@ -760,7 +760,7 @@ No unit
 \end{block}
 
 \begin{block}{Example}
-\texttt{NPT\_SCALE\_CONSTRAINTS}: 1
+\texttt{NPT\_ANGLES}: 1
 \end{block}
 \end{columns}
 
