@@ -447,7 +447,6 @@ void Initialize_MD(SPARC_OBJ *pSPARC) {
 		pSPARC->maxTimeIter = 100;
 		
 		//fetch_MD_cell_ingredients_restart(pSPARC);
-		pSPARC->KE_save = 0.0;
 
         pSPARC->pressure_external /= CONST_HA_BOHR3_GPA; // transfer from GPa to Ha/Bohr^3
 		for (int i = 0; i < 6; i++){
@@ -1828,7 +1827,6 @@ void NPT_NP_and_NPH_init_hamiltonian(SPARC_OBJ *pSPARC){
 	// Calculate kinetic energy and kinetic stress
 	Calculate_Kinetic_stress(pSPARC); //Calculate kinetic stress with the initial distribution of Ionic particles velocity
 	Calculate_Ionic_particles_Kinetic_energy(pSPARC);  //Term 1 in Eqn.10 Hernandez paper
-	pSPARC->KE_save = pSPARC->KE;
 
 	// Calculating thermostat energies
 	pSPARC->Kther = 0.5 * pSPARC->NPT_NP_qmass * pSPARC->SNOSE[1] * pSPARC->SNOSE[1]; //Kinetic;  Term 6 in Eqn.10 Hernandez paper
@@ -2711,8 +2709,8 @@ void Cart2nonCart(double *gradT, double *carCoord, double *nonCarCoord) {
 * @ brief: function to check if the atoms are too close to the boundary in case of bounded domain or to each other in general
 */
 void Check_atomlocation(SPARC_OBJ *pSPARC) {
-    int rank, ityp, i, atm, atm2, count, dir = 0, maxdir = 3, BC;
-	double length, temp, rc1 = 0.0, rc2 = 0.0, *rc, tol = 0.5;// Change tol according to the situation
+    int rank, ityp, i, atm, atm2, count;
+	double temp, rc1 = 0.0, rc2 = 0.0, *rc, tol = 0.5;// Change tol according to the situation
 	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
 
 	rc = (double *)malloc(pSPARC->Ntypes * sizeof(double) );
@@ -3205,7 +3203,7 @@ void MD_QOI(SPARC_OBJ *pSPARC, double *avgvel, double *maxvel, double *mindis) {
 	double *lattice = (double *)calloc(9, sizeof(double));
 	double cell[3] = {pSPARC->range_x, pSPARC->range_y, pSPARC->range_z};
 	double dr[3];
-    int row, col;
+    int row;
 	for (row = 0; row < 3; row++) {
         lattice[row*3] = pSPARC->LatUVec[row*3] * cell[row];
         lattice[row*3 + 1] = pSPARC->LatUVec[row*3 + 1] * cell[row];

@@ -105,7 +105,7 @@ void Gradient_vec_dir(const SPARC_OBJ *pSPARC, const int DMnd, const int *DMVert
     int nbrcount, nbr_i;
     
     MPI_Request request;
-    double *x_in, *x_out;   
+    double *x_in = NULL, *x_out = NULL;   
     
     if(nproc > 1){
         int nd_in = ncol * pSPARC->order * (isDir[0] * DMny * DMnz + DMnx * isDir[1] * DMnz + DMnxny * isDir[2]);

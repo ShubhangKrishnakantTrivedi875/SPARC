@@ -155,7 +155,8 @@ static inline signed int check_error(int return_value) {
  */
 int create_inet_stream_socket(const char *host, const char *service,
                               char proto_osi3, int flags) {
-    int sfd, return_value;
+    int sfd = -1;
+    int return_value;
     struct addrinfo hint, *result, *result_check;
 #ifdef VERBOSE
     const char *errstring;

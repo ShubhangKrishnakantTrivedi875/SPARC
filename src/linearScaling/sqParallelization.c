@@ -562,7 +562,7 @@ void TransferVeff_sq2sqext(SPARC_OBJ *pSPARC, double *Veff_send, double *Veff_re
     int DMnx = pSQ->DMnx_SQ;
     int DMny = pSQ->DMny_SQ;
     int DMnz = pSQ->DMnz_SQ;    
-    int DMnd = pSQ->DMnd_SQ;
+    //int DMnd = pSQ->DMnd_SQ;
     int *nloc = pSQ->nloc; 
 
     D2Dext(pSQ->d2dext_dmcomm_sq, pSQ->d2dext_dmcomm_sq_ext, DMnx, DMny, DMnz, 

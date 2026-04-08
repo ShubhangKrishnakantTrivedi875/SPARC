@@ -4,13 +4,13 @@
 -changes
 
 --------------
-April 06, 2026
+April 08, 2026
 Name: Shubhang Krishnakant Trivedi
 Changes: (src/md.c, src/initialization.c, src/readfiles.c, src/include/md.h, src/include/isddft.h)
 1. Extended the functionality of NPT_NP QMD for doing full cell flexibility (including changing of cell angles).
 2. Added the NPH (isobaric-isoenthalpic) ensemble in QMD with allowing full cell flexibility.
-3. Updated the manual regarding the same.
-4. Added extra tests corresponding to the same.
+3. Updated the manual and added extra tests corresponding to the same.
+4. Fixed warnings in the SPARC compilation occuring when using first 3 compile options.
 
 --------------
 December 03, 2025

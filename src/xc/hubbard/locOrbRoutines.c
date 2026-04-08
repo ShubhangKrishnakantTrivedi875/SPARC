@@ -60,7 +60,8 @@ void GetInfluencingAtoms_loc(SPARC_OBJ *pSPARC, ATOM_LOC_INFLUENCE_OBJ **Atom_In
     MPI_Comm_rank(comm, &rank_comm);
 
     double DMxs, DMxe, DMys, DMye, DMzs, DMze;
-    double Lx, Ly, Lz, rc, x0, y0, z0, x0_i, y0_i, z0_i, x2, y2, z2, r2, rc2, rcbox_x, rcbox_y, rcbox_z, x, y, z;
+    double Lx, Ly, Lz, x0, y0, z0, x0_i, y0_i, z0_i, r2, rc2, rcbox_x, rcbox_y, rcbox_z, x, y, z;
+    //double rc, x2, y2, z2;
     int count_overlap_loc, count_overlap_loc_sphere, ityp, i, j, k, count, i_DM, j_DM, k_DM, 
         iat, atmcount, atmcount2, DMnx, DMny;
     int pp, qq, rr, ppmin, ppmax, qqmin, qqmax, rrmin, rrmax;
@@ -409,8 +410,8 @@ void CalculateLocalProjectors(SPARC_OBJ *pSPARC, LOC_PROJ_OBJ **locProj,
     DMny = DMVertices[3] - DMVertices[2] + 1;
 
     (*locProj) = (LOC_PROJ_OBJ *)malloc(sizeof(LOC_PROJ_OBJ) * pSPARC->Ntypes);
-    double y0, z0, xi, yi, zi, ty, tz;
-    double xin = pSPARC->xin + DMVertices[0] * pSPARC->delta_x;
+    //double y0, z0, xi, yi, zi, ty, tz;
+    //double xin = pSPARC->xin + DMVertices[0] * pSPARC->delta_x;
 
     // Has no cyclix part
     for (ityp = 0; ityp < pSPARC->Ntypes; ityp++)
@@ -572,8 +573,8 @@ void CalculateLocalProjectors_kpt(SPARC_OBJ *pSPARC, LOC_PROJ_OBJ **locProj,
     DMny = DMVertices[3] - DMVertices[2] + 1;
 
     (*locProj) = (LOC_PROJ_OBJ *)malloc(sizeof(LOC_PROJ_OBJ) * pSPARC->Ntypes);
-    double y0, z0, xi, yi, zi, ty, tz;
-    double xin = pSPARC->xin + DMVertices[0] * pSPARC->delta_x;
+    //double y0, z0, xi, yi, zi, ty, tz;
+    //double xin = pSPARC->xin + DMVertices[0] * pSPARC->delta_x;
 
     // Has no cyclix part
     for (ityp = 0; ityp < pSPARC->Ntypes; ityp++)
@@ -763,9 +764,11 @@ void Vhub_vec_mult(const SPARC_OBJ *pSPARC, int DMnd, ATOM_LOC_INFLUENCE_OBJ *At
                    LOC_PROJ_OBJ *locProj, int ncol, double *x, int ldi, double *Hx, int ldo, int spin, MPI_Comm comm)
 {
 
-    int i, n, np, count, atm_idx;
+    int i, n, atm_idx;
+    //int np, count;
     /* compute hubbard operator times vector(s) */
-    int ityp, iat, l, m, ldispl, lmax, ndc, atom_index, nproj;
+    int ityp, iat, ndc, atom_index;
+    //int l, m, ldispl, lmax, nproj;
     double *alpha, *pre_fac_alpha, *x_rc, *Vhub;
 
     int n_atom = pSPARC->n_atom;
@@ -912,9 +915,11 @@ void Vhub_vec_mult(const SPARC_OBJ *pSPARC, int DMnd, ATOM_LOC_INFLUENCE_OBJ *At
  void Vhub_vec_mult_kpt(const SPARC_OBJ *pSPARC, int DMnd, ATOM_LOC_INFLUENCE_OBJ *Atom_Influence_loc,
     LOC_PROJ_OBJ *locProj, int ncol, double _Complex *x, int ldi, double _Complex *Hx, int ldo, int spin, int kpt, MPI_Comm comm)
 {
-    int i, n, np, count, atm_idx;
+    int i, n, atm_idx;
+    //int np, count;
     /* compute hubbard operator times vector(s) */
-    int ityp, iat, l, m, ldispl, lmax, ndc, atom_index, nproj;
+    int ityp, iat, ndc, atom_index;
+    //int l, m, ldispl, lmax, nproj;
     double x0_i, y0_i, z0_i;
 
     double _Complex *alpha, *pre_fac, *pre_fac_alpha, *x_rc, *Vhub;

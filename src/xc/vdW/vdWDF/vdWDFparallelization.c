@@ -98,6 +98,7 @@ void vdWDF_Setup_Comms(SPARC_OBJ *pSPARC, int *gridsizes, int *phiDims) {
             pSPARC->zAxisVertices[2] = 0; 
             pSPARC->zAxisVertices[3] = gridsizes[1] - 1;
             int lengthKint, startKint;
+            (void)startKint;
             allLengthK = (int *)malloc(sizeof(int) * FFTsize);
             #if defined(USE_MKL) // use MKL CDFT
                 // initializa parallel FFT
@@ -119,6 +120,7 @@ void vdWDF_Setup_Comms(SPARC_OBJ *pSPARC, int *gridsizes, int *phiDims) {
                 const ptrdiff_t N0 = gridsizes[2], N1 = gridsizes[1], N2 = gridsizes[0]; // N0: z; N1:Y; N2:x
                 /* get local data size and allocate */
                 localArrayLength = fftw_mpi_local_size_3d(N0, N1, N2, pSPARC->zAxisComm, &lengthK, &startK);
+                (void)localArrayLength;
                 lengthKint = lengthK;
                 startKint = startK;
                 pSPARC->zAxisVertices[4] = startKint;
@@ -757,11 +759,17 @@ void D2D_AnyDMVert(D2D_OBJ *d2d_sender, D2D_OBJ *d2d_recvr, int *gridsizes, int 
 #endif
 
     if (send_comm != MPI_COMM_NULL) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
         MPI_Waitall(nsend_tot, send_request, MPI_STATUS_IGNORE);
+#pragma GCC diagnostic pop
     }
 
     if (recv_comm != MPI_COMM_NULL) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
         MPI_Waitall(nrecv_tot, recv_request, MPI_STATUS_IGNORE);
+#pragma GCC diagnostic pop
         int all_send_vertices_start = 0;
         for (n = 0; n < nrecv_tot; n++) {
             DMnd = 1;

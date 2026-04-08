@@ -51,7 +51,7 @@ void densityMatrix(SPARC_ATOM_OBJ *pSPARC_ATOM, double *denMat) {
     int Nd = pSPARC_ATOM->Nd;
     int nspinor = pSPARC_ATOM->nspinor;
     double *w = pSPARC_ATOM->w;
-    double *r = pSPARC_ATOM->r;
+    //double *r = pSPARC_ATOM->r;
     double *int_scale = pSPARC_ATOM->int_scale;
     int val_len = pSPARC_ATOM->val_len;
     int *occ = pSPARC_ATOM->occ;

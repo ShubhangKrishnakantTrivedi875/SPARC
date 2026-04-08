@@ -907,7 +907,8 @@ void pois_fft(SPARC_OBJ *pSPARC, double *rhs, double *pois_const, int ncol, doub
     if (ncol == 0) return;    
 
     int Nd = pSPARC->Nd;
-    int Nx = pSPARC->Nx, Ny = pSPARC->Ny, Nz = pSPARC->Nz; 
+    (void)Nd;
+    int Nx = pSPARC->Nx, Ny = pSPARC->Ny, Nz = pSPARC->Nz;
     int Ndc = Nz * Ny * (Nx/2+1);
     double _Complex *rhs_bar = (double _Complex*) malloc(sizeof(double _Complex) * Ndc * ncol);
     assert(rhs_bar != NULL);
@@ -1187,7 +1188,8 @@ void solving_for_Xi(SPARC_OBJ *pSPARC, double *psi, double *occ, double *Xi)
                 solve_half_local_poissons_equation_apply2Xi(pSPARC, Nband_M, psi + spinor*DMnd, DMndsp, occ_, Xi_ + spinor*DMnd, DMndsp);
             } else {
                 t1 = MPI_Wtime();
-                int res = MPI_Waitall(2, reqs, MPI_STATUSES_IGNORE);
+                MPI_Status stats[2];
+                int res = MPI_Waitall(2, reqs, stats);
                 assert(res == MPI_SUCCESS);
 
                 double *sendbuff = (rep%2==1) ? psi_storage1 : psi_storage2;

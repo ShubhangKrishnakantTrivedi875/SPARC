@@ -66,14 +66,13 @@ void calculate_density_matrix_SQ_highT(SPARC_OBJ *pSPARC)
     if (pSQ->dmcomm_SQ == MPI_COMM_NULL) return;
 
     int DMnd = pSQ->DMnd_SQ;
-    int *nloc = pSQ->nloc;
-    int Nx_loc = pSQ->Nx_loc;
-    int Ny_loc = pSQ->Ny_loc;
-    int Nd_loc = pSQ->Nd_loc;
-    int NxNy_loc = Nx_loc*Ny_loc;
-    int center = nloc[0] + nloc[1]*Nx_loc + nloc[2]*NxNy_loc;
-    int flag_exxPot = (pSPARC->usefock > 0) && (pSPARC->usefock % 2 == 0) 
-                   && (pSPARC->ExxAcc == 1) && (pSPARC->SQ_highT_hybrid_gauss_mem == 0);
+    //int *nloc = pSQ->nloc;
+    //int Nx_loc = pSQ->Nx_loc;
+    //int Ny_loc = pSQ->Ny_loc;
+    //int Nd_loc = pSQ->Nd_loc;
+    //int NxNy_loc = Nx_loc*Ny_loc;
+    //int center = nloc[0] + nloc[1]*Nx_loc + nloc[2]*NxNy_loc;
+    //int flag_exxPot = (pSPARC->usefock > 0) && (pSPARC->usefock % 2 == 0) && (pSPARC->ExxAcc == 1) && (pSPARC->SQ_highT_hybrid_gauss_mem == 0);
 
     for (int nd = 0; nd < DMnd; nd++) {
         // Already saved

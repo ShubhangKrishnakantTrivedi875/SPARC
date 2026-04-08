@@ -50,7 +50,14 @@ void find_element(char element[8], char *atom_type)
         memcpy(element, str, pch-str);
         element[pch-str] = '\0';
     } else {
-        strncpy( element, str, 8 );
+
+        if (strlen(str) >= 8) {
+            fprintf(stderr, "Warning: Element name '%s' exceeds 8-character limit. Truncating.\n", str);
+        }
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-truncation"
+        snprintf(element, 8, "%s", str);
+        #pragma GCC diagnostic pop
     }
 }
 
@@ -140,7 +147,14 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     Flag_fdgrid = Flag_ecut = Flag_meshspacing = 0;
     int Flag_tol_relaxcell = 0;
 
+    if (strlen(pSPARC_Input->filename) + 5 >= L_STRING) {
+        fprintf(stderr, "Warning: Input filename is very long. Input_filename.inpt exceeding 512 characters, it will be truncated.\n");
+    }
+
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wformat-truncation"
     snprintf(input_filename, L_STRING, "%s.inpt", pSPARC_Input->filename);
+    #pragma GCC diagnostic pop
     
     FILE *input_fp = fopen(input_filename,"r");
     
@@ -1518,7 +1532,16 @@ void read_ion(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     char *ion_filename = malloc(L_STRING * sizeof(char));
     char *str          = malloc(L_STRING * sizeof(char));
     int i, ityp, typcnt, atmcnt_coord, atmcnt_relax, atmcnt_spin, *atmcnt_cum, n_atom;
+
+    if (strlen(pSPARC->filename) + 4 >= L_STRING) {
+        fprintf(stderr, "Warning: Ion filename is very long. Ion_filename.ion exceeding 512 characters will be truncated.\n");
+    }
+
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wformat-truncation"
     snprintf(ion_filename, L_STRING, "%s.ion", pSPARC->filename);
+    #pragma GCC diagnostic pop
+    
     FILE *ion_fp = fopen(ion_filename,"r");
     
     if (ion_fp == NULL) {
@@ -1781,7 +1804,7 @@ void read_ion(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
                 exit(EXIT_FAILURE);
             }
             //simplifyPath(str_tmp, &pSPARC->psdName[typcnt*L_PSD], L_PSD);
-            snprintf(&pSPARC->psdName[typcnt*L_PSD], L_PSD, "%s", str_tmp);
+            snprintf(&pSPARC->psdName[typcnt*L_PSD], L_PSD, "%.*s", L_PSD - 1, str_tmp);
             free(str_tmp);
             #undef STR
             #undef STR_
@@ -1838,7 +1861,7 @@ void read_ion(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     /* Identify atom types for which radial solve is desired */
     typcnt = -1;
     char *atm_str= malloc(L_ATMTYPE * sizeof(char));
-    int id_OG; int str_len;
+    int id_OG = 0; int str_len;
     int atm_flag = 0;
     // while (!feof(ion_fp)) {
     //     fscanf(ion_fp,"%s",str);

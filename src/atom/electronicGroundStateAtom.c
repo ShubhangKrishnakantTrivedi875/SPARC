@@ -99,7 +99,7 @@ void electronicGroundState_atom(SPARC_ATOM_OBJ *pSPARC_ATOM){
     if (pSPARC_ATOM->usefock) pSPARC_ATOM->usefock++;
 
     if (pSPARC_ATOM->usefock > 0) {
-        int countExx = 0; double exx_error;
+        int countExx = 0; double exx_error = 1;
         double *denMatPrev = (double *)malloc((Nd-1)*(Nd-1)*sizeof(double));
         double *denMat = (double *)malloc((Nd-1)*(Nd-1)*sizeof(double));
 
@@ -407,7 +407,7 @@ void Calculate_Vxc_atom(SPARC_ATOM_OBJ *pSPARC_ATOM){
     int Nd = pSPARC_ATOM->Nd;
     int sz = ncol * (Nd - 1); // first and last points are not needed
     double *rho = (double *)malloc(sz * sizeof(double));
-    double *r_rho, *sigma, *Drho, *tau;
+    double *r_rho, *sigma, *Drho, *tau = NULL;
     r_rho = sigma = Drho = NULL;
     double *D = NULL;
 
@@ -843,7 +843,7 @@ void scfLoopAtom(SPARC_ATOM_OBJ *pSPARC_ATOM) {
     int val_len = pSPARC_ATOM->val_len;
     int min_l = pSPARC_ATOM->min_l;
     int max_l = pSPARC_ATOM->max_l;
-    int no_orb_per_l;
+    int no_orb_per_l = 0;
 
     // Allocate memory for eigenvectors/eigenvalues
     double *eigvecs = (double *)malloc(col*(Nd - 1)*(Nd - 1)*sizeof(double));

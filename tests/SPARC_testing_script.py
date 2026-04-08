@@ -17,7 +17,7 @@ nnodes_tests = 4  # In default tests are run with 1 node
 npbs = 10  # By default (number of script files the tests are distributed to)
 launch_cluster_extension = ".sbatch"   # extension of the file used to launch the jobs on the cluster by default it is .sbatch
 command_launch_extension = "sbatch"   # Command to launch the script to ask for resources on the cluster (example: qsub launch.pbs)
-MPI_command = "mpirun -np 48"  # MPI command to run the executable on the given cluster
+MPI_command = "srun -n 48"  # MPI command to run the executable on the given cluster
 
 
 
@@ -257,7 +257,7 @@ SYSTEMS["Tols"].append([tols["E_tol"], 1e-4, tols["stress_tol"]]) # E_tol(Ha/ato
 ##################################################################################################################
 SYSTEMS["systemname"].append('C_HSE_aux')
 SYSTEMS["directory"].append("./xc/exx_tests/")
-SYSTEMS["Tags"].append(['bulk', 'HSE','gamma' 'nonorth','smear_fd','potmix'])
+SYSTEMS["Tags"].append(['bulk', 'HSE', 'gamma', 'nonorth', 'smear_fd', 'potmix'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
 SYSTEMS["systemname"].append('Fe2_spin_gamma_ortho_vdWDF1')
@@ -277,7 +277,7 @@ SYSTEMS["Tols"].append([tols["E_tol"], 3e-4, tols["stress_tol"]]) # E_tol(Ha/ato
 ################################################################################################################
 SYSTEMS["systemname"].append('NaCl_PBE0')
 SYSTEMS["directory"].append("./xc/exx_tests/")
-SYSTEMS["Tags"].append(['bulk', 'PBE0','gamma' 'nonorth','smear_fd'])
+SYSTEMS["Tags"].append(['bulk', 'PBE0', 'gamma', 'nonorth', 'smear_fd'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
 SYSTEMS["systemname"].append('O2_spin_HSE')
@@ -287,12 +287,12 @@ SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_t
 ################################################################################################################
 SYSTEMS["systemname"].append('PtAu_SOC')
 SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'SOC','kpt' 'nonorth','smear_gauss'])
+SYSTEMS["Tags"].append(['bulk', 'SOC', 'kpt', 'nonorth', 'smear_gauss'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
 SYSTEMS["systemname"].append('Si2_kpt_PBE0')
 SYSTEMS["directory"].append("./xc/exx_tests/")
-SYSTEMS["Tags"].append(['bulk', 'PBE0','kpt' 'nonorth','smear_fd'])
+SYSTEMS["Tags"].append(['bulk', 'PBE0', 'kpt', 'nonorth', 'smear_fd'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
 SYSTEMS["systemname"].append('Si4_kpt_vdWDF1')
@@ -546,10 +546,10 @@ SYSTEMS["directory"].append("./mlff/")
 SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'mlff1', 'md_nvkg','cyclix'])
 SYSTEMS["Tols"].append([1e-5, 5e-4, 0.5]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
-SYSTEMS["systemname"].append('WSe2_cyclix_mlff')
-SYSTEMS["directory"].append("./mlff/")
-SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'mlff1', 'md_nvkg','cyclix'])
-SYSTEMS["Tols"].append([1e-5, 5e-4, 0.5]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+#SYSTEMS["systemname"].append('WSe2_cyclix_mlff')
+#SYSTEMS["directory"].append("./mlff/")
+#SYSTEMS["Tags"].append(['bulk', 'gga', 'nonorth', 'mlff1', 'md_nvkg','cyclix'])
+#SYSTEMS["Tols"].append([1e-5, 5e-4, 0.5]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
 SYSTEMS["systemname"].append('MoO3_hubbard')
 SYSTEMS["directory"].append("./")
@@ -561,10 +561,10 @@ SYSTEMS["directory"].append("./")
 SYSTEMS["Tags"].append(['bulk', 'gga','spin','kpt','nonorth','hubbard'])
 SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
-SYSTEMS["systemname"].append('TiCrO4_kpt_hubbard')
-SYSTEMS["directory"].append("./")
-SYSTEMS["Tags"].append(['bulk', 'gga','orth','kpt','hubbard'])
-SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
+#SYSTEMS["systemname"].append('TiCrO4_kpt_hubbard')
+#SYSTEMS["directory"].append("./")
+#SYSTEMS["Tags"].append(['bulk', 'gga','orth','kpt','hubbard'])
+#SYSTEMS["Tols"].append([tols["E_tol"], tols["F_tol"], tols["stress_tol"]]) # E_tol(Ha/atom), F_tol(Ha/Bohr), stress_tol(%)
 ##################################################################################################################
 SYSTEMS["systemname"].append('Al_pr_relax_comp')
 SYSTEMS["directory"].append("./")
@@ -894,7 +894,6 @@ def isfinished(syst, dirs_sys, isorientsys):
 				return True
 			else:
 				return False
-			f_out.close()
 		else:
 			return False
 	else:
@@ -909,7 +908,6 @@ def isfinished(syst, dirs_sys, isorientsys):
 				return True
 			else:
 				return False
-			f_out.close()
 		else:
 			return False
 
@@ -3276,7 +3274,6 @@ if __name__ == '__main__':
 						# isorient_temp.remove(isorient_temp[j])
 						temp = False
 						break
-						time.sleep(0.1)
 				time.sleep(0.1)
 
 		print('\n')
@@ -3363,6 +3360,8 @@ if __name__ == '__main__':
 	count_run=0
 	data_info={}
 	sys_which_ran_idx=[]
+	if len(systems) == 0:
+		sys.exit("No systems found matching the specified tags/names. Please check your input and try again.\n")
 	try:
 		os.chdir(home_directory)
 		temp=getInfo(systems[0], dirs_sys[0],  singlept[0],Type[0],False,memcheck[0],ismempbs,isspin[0],ifVHQ,isorient[0],tols_sys[0])

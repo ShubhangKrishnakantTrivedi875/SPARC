@@ -247,8 +247,8 @@ void add_firstDFT(DescriptorObj *desc_str, NeighList *nlist, MLFF_Obj *mlff_str,
 	
 	
 
-	int row_idx, col_idx, count, atom_idx, idx;
-	int iatm_str, istress;
+	int row_idx, col_idx, count, idx; //int atom_idx;
+	//int iatm_str; //int istress;
 
 	// calculate mean and std deviation to do the normalization
 	mlff_str->E_store[mlff_str->E_store_counter] = E;
@@ -590,14 +590,14 @@ add_newstr_rows function updates the MLFF_Obj by updating design matrix, b vecto
 
 void add_newstr_rows(DescriptorObj *desc_str, NeighList *nlist, MLFF_Obj *mlff_str, double E, double *F, double *stress_sparc) {
 	
-	int row_idx, col_idx, atom_idx;
-	int num_Fterms_newstr, iel, iatm_str;
+	int row_idx, col_idx; //int atom_idx;
+	//int num_Fterms_newstr, iel, iatm_str;
 
 	int  natom = desc_str->natom;
 	int nelem = desc_str->nelem	;
 	int size_X3 = desc_str->size_X3;
 	double xi_3 = desc_str->xi_3;
-	int kernel_typ = mlff_str->kernel_typ;
+	//int kernel_typ = mlff_str->kernel_typ;
 
 	int rank, nprocs;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -855,8 +855,10 @@ calculate_Kpredict function calculate the design matrix for prediction for a new
 //TODO: Obtain the polynomial to do the evaluation of energy and forces
 void calculate_Kpredict(DescriptorObj *desc_str, NeighList *nlist, MLFF_Obj *mlff_str, double **K_predict){
 
- 	int row_idx, col_idx, atom_idx, iel, iatm_str, istress;
- 	double E_scale, F_scale, *stress_scale;
+ 	int row_idx, col_idx;
+	//int atom_idx, iel, iatm_str, istress;
+ 	//=double E_scale;
+	double F_scale, *stress_scale;
 
  	int natom = desc_str->natom;
  	int nelem = desc_str->nelem;
@@ -869,9 +871,9 @@ void calculate_Kpredict(DescriptorObj *desc_str, NeighList *nlist, MLFF_Obj *mlf
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &nproc);
 
- 	int kernel_typ = mlff_str->kernel_typ;
+ 	//int kernel_typ = mlff_str->kernel_typ;
 
- 	E_scale = mlff_str->E_scale;
+ 	//E_scale = mlff_str->E_scale;
  	F_scale = mlff_str->F_scale * mlff_str->relative_scale_F;
 
  	for (int i=0; i < mlff_str->stress_len; i++){
@@ -1072,11 +1074,12 @@ add_newtrain_cols function updates the MLFF_Obj by updating design matrix column
 */
 
  void add_newtrain_cols(double *X3, int elem_typ, MLFF_Obj *mlff_str){
-	int row_idx, col_idx, atom_idx, istress;
-	int nelem = mlff_str->nelem;
-	int natom = mlff_str->natom;
+	int row_idx, atom_idx;
+	//int col_idx, istress;
+	//int nelem = mlff_str->nelem;
+	//int natom = mlff_str->natom;
 	int size_X3 = mlff_str->size_X3;
-	int kernel_typ = mlff_str->kernel_typ;
+	//int kernel_typ = mlff_str->kernel_typ;
 	double xi_3 = mlff_str->xi_3;
 
 	int rank, nprocs;

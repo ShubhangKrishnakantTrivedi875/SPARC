@@ -440,7 +440,7 @@ void compute_exx_potential_node_SQ(SPARC_OBJ *pSPARC, int indx, double *exxPot)
     int Ny_loc = pSQ->Ny_loc;
     int Nz_loc = pSQ->Nz_loc;
     int Nd_loc = pSQ->Nd_loc;
-    int DMnd_PR = pSQ->DMnd_PR;
+    //int DMnd_PR = pSQ->DMnd_PR;
 
     double *rho = (double *) malloc(sizeof(double)*Nd_loc*Nd_loc);
     assert(rho != NULL);

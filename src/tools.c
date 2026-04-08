@@ -2679,9 +2679,9 @@ void MKL_MDiFFT_batch(double _Complex *c2c_3dinput, int ncol, MKL_LONG *dim_size
  * @brief   FFTW multi-dimension FFT interface, complex to complex. 
  */
 void FFTW_MDFFT(int *dim_sizes, double _Complex *c2c_3dinput, double _Complex *c2c_3doutput) {
-    fftw_complex *in, *out;
+    //fftw_complex *in, *out;
     fftw_plan p;
-    int N = dim_sizes[0] * dim_sizes[1] * dim_sizes[2];
+    //int N = dim_sizes[0] * dim_sizes[1] * dim_sizes[2];
     p = fftw_plan_dft(3, dim_sizes, c2c_3dinput, c2c_3doutput, FFTW_FORWARD, FFTW_ESTIMATE);
     fftw_execute(p);
     fftw_destroy_plan(p);
@@ -2691,7 +2691,7 @@ void FFTW_MDFFT(int *dim_sizes, double _Complex *c2c_3dinput, double _Complex *c
  * @brief   FFTW multi-dimension iFFT interface, complex to complex. 
  */
 void FFTW_MDiFFT(int *dim_sizes, double _Complex *c2c_3dinput, double _Complex *c2c_3doutput) {
-    fftw_complex *in, *out;
+   // fftw_complex *in, *out;
     fftw_plan p;
     int N = dim_sizes[0] * dim_sizes[1] * dim_sizes[2], i;
     p = fftw_plan_dft(3, dim_sizes, c2c_3dinput, c2c_3doutput, FFTW_BACKWARD, FFTW_ESTIMATE);
@@ -2706,9 +2706,9 @@ void FFTW_MDiFFT(int *dim_sizes, double _Complex *c2c_3dinput, double _Complex *
  * Warning: This routine might change input array 
  */
 void FFTW_MDFFT_real(int *dim_sizes, double *r2c_3dinput, double _Complex *r2c_3doutput) {
-    fftw_complex *in, *out;
+    //fftw_complex *in, *out;
     fftw_plan p;
-    int N = dim_sizes[0] * dim_sizes[1] * dim_sizes[2];
+   // int N = dim_sizes[0] * dim_sizes[1] * dim_sizes[2];
     p = fftw_plan_dft_r2c(3, dim_sizes, r2c_3dinput, r2c_3doutput, FFTW_ESTIMATE);
     fftw_execute(p);
     fftw_destroy_plan(p);
@@ -2718,7 +2718,7 @@ void FFTW_MDFFT_real(int *dim_sizes, double *r2c_3dinput, double _Complex *r2c_3
  * @brief   FFTW multi-dimension FFT interface, complex to real. 
  */
 void FFTW_MDiFFT_real(int *dim_sizes, double _Complex *c2r_3dinput, double *c2r_3doutput) {
-    fftw_complex *in, *out;
+    //fftw_complex *in, *out;
     fftw_plan p;
     int N = dim_sizes[0] * dim_sizes[1] * dim_sizes[2], i;
     p = fftw_plan_dft_c2r(3, dim_sizes, c2r_3dinput, c2r_3doutput, FFTW_ESTIMATE);
@@ -2731,7 +2731,7 @@ void FFTW_MDiFFT_real(int *dim_sizes, double _Complex *c2r_3dinput, double *c2r_
 
 
 void FFTW_MDFFT_batch(int *dim_sizes, int ncol, double _Complex *c2c_3dinput, int idist, double _Complex *c2c_3doutput, int odist) {
-    fftw_complex *in, *out;
+    //fftw_complex *in, *out;
     fftw_plan p;
     p = fftw_plan_many_dft(3, dim_sizes, ncol, c2c_3dinput, dim_sizes, 1, idist, 
                                             c2c_3doutput, dim_sizes, 1, odist, FFTW_FORWARD, FFTW_ESTIMATE);
@@ -2741,7 +2741,7 @@ void FFTW_MDFFT_batch(int *dim_sizes, int ncol, double _Complex *c2c_3dinput, in
 
 
 void FFTW_MDiFFT_batch(int *dim_sizes, int ncol, double _Complex *c2c_3dinput, int idist, double _Complex *c2c_3doutput, int odist) {
-    fftw_complex *in, *out;
+   // fftw_complex *in, *out;
     fftw_plan p;    
     int N = dim_sizes[0] * dim_sizes[1] * dim_sizes[2];
     p = fftw_plan_many_dft(3, dim_sizes, ncol, c2c_3dinput, dim_sizes, 1, idist, 
@@ -2755,7 +2755,7 @@ void FFTW_MDiFFT_batch(int *dim_sizes, int ncol, double _Complex *c2c_3dinput, i
 
 // Warning: This routine might change input array 
 void FFTW_MDFFT_batch_real(int *dim_sizes, int ncol, double *r2c_3dinput, int *inembed, int idist, double _Complex *r2c_3doutput, int *onembed, int odist) {
-    fftw_complex *in, *out;
+    //fftw_complex *in, *out;
     fftw_plan p;
     
     p = fftw_plan_many_dft_r2c(3, dim_sizes, ncol, r2c_3dinput, inembed, 1, idist, r2c_3doutput, onembed, 1, odist, FFTW_ESTIMATE);
@@ -2764,7 +2764,7 @@ void FFTW_MDFFT_batch_real(int *dim_sizes, int ncol, double *r2c_3dinput, int *i
 }
 
 void FFTW_MDiFFT_batch_real(int *dim_sizes, int ncol, double _Complex *c2r_3dinput, int *inembed, int idist, double *c2r_3doutput, int *onembed, int odist) {
-    fftw_complex *in, *out;
+    //fftw_complex *in, *out;
     fftw_plan p;
     int N = dim_sizes[0] * dim_sizes[1] * dim_sizes[2], i;
     p = fftw_plan_many_dft_c2r(3, dim_sizes, ncol, c2r_3dinput, inembed, 1, idist, c2r_3doutput, onembed, 1, odist, FFTW_ESTIMATE);

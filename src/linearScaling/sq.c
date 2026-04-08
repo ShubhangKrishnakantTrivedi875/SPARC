@@ -62,7 +62,7 @@ void GaussQuadrature(SPARC_OBJ *pSPARC, int SCFCount, int spn_i) {
     int nd, rank;
     int *nloc, DMnx, DMny, DMnz, DMnd;    
     int Nx_loc, Ny_loc;
-    double lambda_min, lambda_max, lambda_min_MIN, lambda_max_MAX, x1, x2, *t0;
+    double lambda_min, lambda_max, *t0;
     double time1, time2;
     SQ_OBJ  *pSQ = pSPARC->pSQ;
 
@@ -71,6 +71,11 @@ void GaussQuadrature(SPARC_OBJ *pSPARC, int SCFCount, int spn_i) {
     DMny = pSQ->DMny_SQ;
     DMnz = pSQ->DMnz_SQ;    
     DMnd = pSQ->DMnd_SQ;
+
+    (void)DMnx;
+    (void)DMny;
+    (void)DMnz;
+
     Nx_loc = pSQ->Nx_loc;
     Ny_loc = pSQ->Ny_loc;    
     MPI_Comm_rank(pSQ->dmcomm_SQ, & rank);
@@ -90,6 +95,7 @@ void GaussQuadrature(SPARC_OBJ *pSPARC, int SCFCount, int spn_i) {
 	{
     	t0 = (double *) malloc(sizeof(double) * pSQ->Nd_loc);
     	int center = nloc[0] + nloc[1]*Nx_loc + nloc[2]*Nx_loc*Ny_loc;    
+        (void)center;
     	for (nd = 0; nd < DMnd; nd ++) {
         	// initialize t0 as identity vector
         	memset(t0, 0, sizeof(double)*pSQ->Nd_loc);
@@ -215,105 +221,117 @@ void LanczosAlgorithm_gauss(SPARC_OBJ *pSPARC, double *vkm1, double *lambda_min,
  */
 void TridiagEigenSolve_gauss(SPARC_OBJ *pSPARC, double *diag, double *subdiag, int nd, int spn_i, double *lambda_min, double *lambda_max) {
     int m, l, iter, i, j, k, n;
-    double s, r, p, g, f, dd, c, b, *d, *e, **z;
+    double s, r, p, g, f, dd, c, b, *d = NULL, *e = NULL, **z = NULL;
     SQ_OBJ* pSQ  = pSPARC->pSQ;
 
     int DMnd_SQ = pSQ->DMnd_SQ;
     n = pSPARC->SQ_npl_g;
-    d = (double *) malloc(sizeof(double) * n);
-    e = (double *) malloc(sizeof(double) *  n);
-    z = (double **) malloc(sizeof(double*) * n);
-    for (i = 0; i < n; i++)
-        z[i] = (double *) malloc(sizeof(double) * n);
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            if (i == j)
-                z[i][j] = 1.0;
-            else
-                z[i][j] = 0.0;
-        }
-    }
-
-    // create copy of diag and subdiag in d and e
-    for (i = 0; i < n; i++) {
-        d[i] = diag[i];
-        e[i] = subdiag[i];
-    }
-
-    // e has the subdiagonal elements 
-    // ignore last element(n-1) of e, make it zero
-    e[n - 1] = 0.0;
-
-    for (l = 0; l <= n - 1; l++) {
-        iter = 0;
-        do {
-            for (m = l; m <= n - 2; m++) {
-                dd = fabs(d[m]) + fabs(d[m + 1]);
-                if ((double)(fabs(e[m]) + dd) == dd) break;
+    if (n > 0){
+        d = (double *) malloc(sizeof(double) * n);
+        e = (double *) malloc(sizeof(double) *  n);
+        z = (double **) malloc(sizeof(double*) * n);
+        for (i = 0; i < n; i++)
+            z[i] = (double *) malloc(sizeof(double) * n);
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                if (i == j)
+                    z[i][j] = 1.0;
+                else
+                    z[i][j] = 0.0;
             }
-            if (m != l) {
-                if (iter++ == 200) {
-                    printf("Too many iterations in Tridiagonal solver\n");
-                    exit(1);
-                }
-                g = (d[l + 1] - d[l]) / (2.0 * e[l]);
-                r = sqrt(g * g + 1.0); // pythag
-                g = d[m] - d[l] + e[l] / (g + SIGN(r, g)); 
-                s = c = 1.0;
-                p = 0.0;
+        }
 
-                for (i = m - 1; i >= l; i--) {
-                    f = s * e[i];
-                    b = c * e[i];
-                    e[i + 1] = (r = sqrt(g * g + f * f));
-                    if (r == 0.0) {
-                        d[i + 1] -= p;
-                        e[m] = 0.0;
-                        break;
-                    }
-                    s = f / r;
-                    c = g / r;
-                    g = d[i + 1] - p;
-                    r = (d[i] - g) * s + 2.0 * c * b;
-                    d[i + 1] = g + (p = s * r);
-                    g = c * r - b;
-                    // Form eigenvectors (Normalized)
-                    for (k = 0; k < n; k++) {
-                        f = z[k][i + 1];
-                        z[k][i + 1] = s * z[k][i] + c * f;
-                        z[k][i] = c * z[k][i] - s * f;
-                    }
+        // create copy of diag and subdiag in d and e
+        for (i = 0; i < n; i++) {
+            d[i] = diag[i];
+            e[i] = subdiag[i];
+        }
+
+        // e has the subdiagonal elements 
+        // ignore last element(n-1) of e, make it zero
+        e[n - 1] = 0.0;
+
+        for (l = 0; l <= n - 1; l++) {
+            iter = 0;
+            do {
+                for (m = l; m <= n - 2; m++) {
+                    dd = fabs(d[m]) + fabs(d[m + 1]);
+                    if ((double)(fabs(e[m]) + dd) == dd) break;
                 }
-                if (r == 0.0 && i >= l) continue;
-                d[l] -= p;
-                e[l] = g;
-                e[m] = 0.0;
+                if (m != l) {
+                    if (iter++ == 200) {
+                        printf("Too many iterations in Tridiagonal solver\n");
+                        exit(1);
+                    }
+                    g = (d[l + 1] - d[l]) / (2.0 * e[l]);
+                    r = sqrt(g * g + 1.0); // pythag
+                    g = d[m] - d[l] + e[l] / (g + SIGN(r, g)); 
+                    s = c = 1.0;
+                    p = 0.0;
+
+                    for (i = m - 1; i >= l; i--) {
+                        f = s * e[i];
+                        b = c * e[i];
+                        e[i + 1] = (r = sqrt(g * g + f * f));
+                        if (r == 0.0) {
+                            d[i + 1] -= p;
+                            e[m] = 0.0;
+                            break;
+                        }
+                        s = f / r;
+                        c = g / r;
+                        g = d[i + 1] - p;
+                        r = (d[i] - g) * s + 2.0 * c * b;
+                        d[i + 1] = g + (p = s * r);
+                        g = c * r - b;
+                        // Form eigenvectors (Normalized)
+                        for (k = 0; k < n; k++) {
+                            f = z[k][i + 1];
+                            z[k][i + 1] = s * z[k][i] + c * f;
+                            z[k][i] = c * z[k][i] - s * f;
+                        }
+                    }
+                    if (r == 0.0 && i >= l) continue;
+                    d[l] -= p;
+                    e[l] = g;
+                    e[m] = 0.0;
+                }
+            } while (m != l);
+        }
+
+        for (i = 0; i < n; i++) {
+            pSQ->gnd[nd+spn_i*DMnd_SQ][i] = d[i] ;
+            pSQ->gwt[nd+spn_i*DMnd_SQ][i] = z[0][i] * z[0][i];
+        }
+
+        double *w = (pSPARC->sqHighTFlag == 1) ? pSQ->w_all[nd+spn_i*DMnd_SQ] : pSQ->w;
+        int count = 0;
+        // Save all eigenvectors w 
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                w[count ++] = z[j][i];
             }
-        } while (m != l);
-    }
+        }
 
-    for (i = 0; i < n; i++) {
-        pSQ->gnd[nd+spn_i*DMnd_SQ][i] = d[i] ;
-        pSQ->gwt[nd+spn_i*DMnd_SQ][i] = z[0][i] * z[0][i];
-    }
+        *lambda_min = d[0]; *lambda_max = d[0];
 
-    double *w = (pSPARC->sqHighTFlag == 1) ? pSQ->w_all[nd+spn_i*DMnd_SQ] : pSQ->w;
-    int count = 0;
-    // Save all eigenvectors w 
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            w[count ++] = z[j][i];
+        for (i = 1; i < n; i++) {
+            if (d[i] > * lambda_max) { 
+                *lambda_max = d[i];
+            } else if (d[i] < * lambda_min) { 
+                *lambda_min = d[i];
+            }
         }
     }
-
-    *lambda_min = d[0]; *lambda_max = d[0];
-
-    for (i = 1; i < n; i++) {
-        if (d[i] > * lambda_max) { 
-            *lambda_max = d[i];
-        } else if (d[i] < * lambda_min) { 
-            *lambda_min = d[i];
+    else {
+        int rank;
+        MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+        // Handle n=0 or allocation failure
+        if (rank == 0) {
+            fprintf(stderr, "WARNING: TridiagEigenSolve_gauss called with n=%d. Skipping calculation.\n", n);
         }
+        *lambda_min = 0.0;
+        *lambda_max = 0.0;
     }
     // free memory
     free(d);

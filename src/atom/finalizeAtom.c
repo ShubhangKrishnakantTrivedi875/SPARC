@@ -14,8 +14,8 @@
  * @brief Print eigenvalues and energy.
  */
 void printResultsAtom(SPARC_ATOM_OBJ *pSPARC_ATOM) {
-    char filename[64];
-    int Z = *pSPARC_ATOM->Zatom;
+   // char filename[64];
+    //int Z = *pSPARC_ATOM->Zatom;
     int Nd = pSPARC_ATOM->Nd;
     
     int lcount0 = pSPARC_ATOM->lcount0;
@@ -361,12 +361,12 @@ void copyAtomSolution(SPARC_ATOM_OBJ *pSPARC_ATOM, SPARC_OBJ *pSPARC, int ityp) 
 
     int Nd = pSPARC_ATOM->Nd;
     double *r = pSPARC_ATOM->r;
-    double *orb = pSPARC_ATOM->orbitals;
+    //double *orb = pSPARC_ATOM->orbitals;
     int val_len = pSPARC_ATOM->val_len;
     int nspinor = pSPARC_ATOM->nspinor;
     int orb_size = (Nd)*val_len*nspinor;
     int max_l = pSPARC_ATOM->max_l;
-    int min_l = pSPARC_ATOM->min_l;
+    //int min_l = pSPARC_ATOM->min_l;
     // allocate memory
     pSPARC->AtmU[ityp].orbitals = (double *)malloc(orb_size*sizeof(double));
     pSPARC->AtmU[ityp].RadialGrid = (double *)calloc((Nd),sizeof(double));

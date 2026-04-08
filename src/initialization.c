@@ -55,7 +55,7 @@
 #define min(x,y) ((x)<(y)?(x):(y))
 #define max(x,y) ((x)>(y)?(x):(y))
 
-#define N_MEMBR 217
+#define N_MEMBR 216
 
 
 /**
@@ -1752,26 +1752,33 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
 
     // filenames
     if (rank == 0) {
-        snprintf(pSPARC->OutFilename,       L_STRING, "%s.out"  ,     pSPARC->filename_out);
-        snprintf(pSPARC->StaticFilename,    L_STRING, "%s.static",     pSPARC->filename_out);
-        snprintf(pSPARC->AtomFilename,      L_STRING, "%s.atom",      pSPARC->filename_out);
-        snprintf(pSPARC->EigenFilename,     L_STRING, "%s.eigen",     pSPARC->filename_out);
-        snprintf(pSPARC->MDFilename,        L_STRING, "%s.aimd",      pSPARC->filename_out);
-        snprintf(pSPARC->RelaxFilename,     L_STRING, "%s.geopt",     pSPARC->filename_out);
-        snprintf(pSPARC->restart_Filename,  L_STRING, "%s.restart",   pSPARC->filename_out);
-        snprintf(pSPARC->restartC_Filename, L_STRING, "%s.restart-0", pSPARC->filename_out);
-        snprintf(pSPARC->restartP_Filename, L_STRING, "%s.restart-1", pSPARC->filename_out);
-        snprintf(pSPARC->DensTCubFilename,  L_STRING, "%s.dens",   pSPARC->filename_out);
-        snprintf(pSPARC->DensUCubFilename,  L_STRING, "%s.densUp",    pSPARC->filename_out);
-        snprintf(pSPARC->DensDCubFilename,  L_STRING, "%s.densDwn",   pSPARC->filename_out);
-        snprintf(pSPARC->OrbitalsFilename,  L_STRING, "%s.psi",       pSPARC->filename_out);
-        snprintf(pSPARC->KinEnDensTCubFilename,  L_STRING, "%s.kedens",       pSPARC->filename_out);
-        snprintf(pSPARC->KinEnDensUCubFilename,  L_STRING, "%s.kedensUp",     pSPARC->filename_out);
-        snprintf(pSPARC->KinEnDensDCubFilename,  L_STRING, "%s.kedensDwn",    pSPARC->filename_out);
-        snprintf(pSPARC->XcEnDensCubFilename,    L_STRING, "%s.xcedens",      pSPARC->filename_out);
-        snprintf(pSPARC->ExxEnDensTCubFilename,  L_STRING, "%s.exxedens",     pSPARC->filename_out);
-        snprintf(pSPARC->ExxEnDensUCubFilename,  L_STRING, "%s.exxedensUp",   pSPARC->filename_out);
-        snprintf(pSPARC->ExxEnDensDCubFilename,  L_STRING, "%s.exxedensDwn",  pSPARC->filename_out);
+        if (strlen(pSPARC->filename_out) + 12 >= L_STRING) {
+            fprintf(stderr, "Warning: filename provided in the OUTPUT_FILE argument is very long. Output_filenames.extension exceeding 512 characters will be truncated.\n");
+        }
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-truncation"
+            snprintf(pSPARC->OutFilename,           L_STRING, "%s.out",          pSPARC->filename_out);
+            snprintf(pSPARC->StaticFilename,        L_STRING, "%s.static",       pSPARC->filename_out);
+            snprintf(pSPARC->AtomFilename,          L_STRING, "%s.atom",         pSPARC->filename_out);
+            snprintf(pSPARC->EigenFilename,         L_STRING, "%s.eigen",        pSPARC->filename_out);
+            snprintf(pSPARC->MDFilename,            L_STRING, "%s.aimd",         pSPARC->filename_out);
+            snprintf(pSPARC->RelaxFilename,         L_STRING, "%s.geopt",        pSPARC->filename_out);
+            snprintf(pSPARC->restart_Filename,      L_STRING, "%s.restart",      pSPARC->filename_out);
+            snprintf(pSPARC->restartC_Filename,     L_STRING, "%s.restart-0",    pSPARC->filename_out);
+            snprintf(pSPARC->restartP_Filename,     L_STRING, "%s.restart-1",    pSPARC->filename_out);
+            snprintf(pSPARC->DensTCubFilename,      L_STRING, "%s.dens",         pSPARC->filename_out);
+            snprintf(pSPARC->DensUCubFilename,      L_STRING, "%s.densUp",       pSPARC->filename_out);
+            snprintf(pSPARC->DensDCubFilename,      L_STRING, "%s.densDwn",      pSPARC->filename_out);
+            snprintf(pSPARC->OrbitalsFilename,      L_STRING, "%s.psi",          pSPARC->filename_out);
+            snprintf(pSPARC->KinEnDensTCubFilename, L_STRING, "%s.kedens",       pSPARC->filename_out);
+            snprintf(pSPARC->KinEnDensUCubFilename, L_STRING, "%s.kedensUp",     pSPARC->filename_out);
+            snprintf(pSPARC->KinEnDensDCubFilename, L_STRING, "%s.kedensDwn",    pSPARC->filename_out);
+            snprintf(pSPARC->XcEnDensCubFilename,   L_STRING, "%s.xcedens",      pSPARC->filename_out);
+            snprintf(pSPARC->ExxEnDensTCubFilename, L_STRING, "%s.exxedens",     pSPARC->filename_out);
+            snprintf(pSPARC->ExxEnDensUCubFilename, L_STRING, "%s.exxedensUp",   pSPARC->filename_out);
+            snprintf(pSPARC->ExxEnDensDCubFilename, L_STRING, "%s.exxedensDwn",  pSPARC->filename_out);
+        #pragma GCC diagnostic pop
+
 
         // check if the name for out file exits
         char temp_outfname[L_STRING];
@@ -1783,7 +1790,15 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
         i = 0;
         while ( (access( temp_outfname, F_OK ) != -1) && i <= MAX_OUTPUT ) {
             i++;
+            if (strlen(pSPARC->OutFilename) + 4 >= L_STRING) {
+                fprintf(stderr, "Warning: Output filename is very long. Output_filename.extension exceeding 512 characters will be truncated.\n");
+            }
+
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wformat-truncation"
             snprintf(temp_outfname, L_STRING, "%s_%02d", pSPARC->OutFilename, i);
+            #pragma GCC diagnostic pop
+            
         }
         pSPARC->suffixNum = i; // note that this is only known to rank 0!
 
@@ -1806,6 +1821,13 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
                      "         Current output name (without suffix): %s\n\n", pSPARC->filename_out);
         } else if (i > 0) {
             char tempchar[L_STRING];
+
+            if (strlen(tempchar) + 4 >= L_STRING) {
+                fprintf(stderr, "Warning: filename provided in the OUTPUT_FILE argument is very long. Output filenames.extension exceeding 512 characters will be truncated.\n");
+            }
+
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wformat-truncation"
             snprintf(tempchar, L_STRING, "%s", pSPARC->OutFilename);
             snprintf(pSPARC->OutFilename,   L_STRING, "%s_%02d", tempchar, i);
             snprintf(tempchar, L_STRING, "%s", pSPARC->StaticFilename);
@@ -1841,6 +1863,7 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
             snprintf(pSPARC->ExxEnDensUCubFilename, L_STRING, "%s_%02d", tempchar, i);
             snprintf(tempchar, L_STRING, "%s", pSPARC->ExxEnDensDCubFilename);
             snprintf(pSPARC->ExxEnDensDCubFilename, L_STRING, "%s_%02d", tempchar, i);
+            #pragma GCC diagnostic pop
         }
     }
     // Not only rank 0 printing orbitals
@@ -1916,15 +1939,15 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
             }
         }
 
-        if (pSPARC->cell_typ == 0){
+        if (pSPARC->cell_typ != 17){
             if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0){
                 if (pSPARC->NPT_NP_ANGLES == 1){
-                    pSPARC->cell_typ = 17;  //change the default cell to triclinic as the change in angles in MD during NPT_NP ensemble would result in non-orthogonal cell if initially started with orthogonal
+                    pSPARC->cell_typ = 17;  //change the default cell to triclinic as the change in angles in MD during NPT_NP ensemble would result in non-orthogonal cell if initially started with non-triclinic
                 }
             }
             if (strcmpi(pSPARC->MDMeth,"NPH") == 0){
                 if (pSPARC->NPH_ANGLES == 1){
-                    pSPARC->cell_typ = 17;  //change the default cell to triclinic as the change in angles in MD during NPT_NP ensemble would result in non-orthogonal cell if initially started with orthogonal
+                    pSPARC->cell_typ = 17;  //change the default cell to triclinic as the change in angles in MD during NPT_NP ensemble would result in non-orthogonal cell if initially started with non-triclinic
                 }
             }
         }
@@ -2974,83 +2997,96 @@ void SPARC_copy_input(SPARC_OBJ *pSPARC, SPARC_INPUT_OBJ *pSPARC_Input) {
             exit(EXIT_FAILURE);
     }
     if (strcmpi(pSPARC->MDMeth,"NPT_NP") == 0) {
-        if (pSPARC->NPTconstraintFlag == 1) { // check conflict between NPT_SCALE_CONFINEMENTS and NPT_SCALE_VECS
-            if (! (pSPARC->NPTscaleVecs[0] * pSPARC->NPTscaleVecs[1])) { // a or b cannot be rescaled
-                if (!rank) {
-                    printf("\nNPT_SCALE_CONSTRAINTS 12 has conflict with NPT_SCALE_VECS!\n");
-                }
-                exit(EXIT_FAILURE);
-            }
+
+        if (pSPARC->cell_typ > 20){
+            printf("In the current version, the MD Method: NPT_NP and NPH does not support Cyclix or Helical systems. Please change MD Method if testing with Cyclix or Helical system\n");
+            exit(EXIT_FAILURE);
         }
-        if (pSPARC->NPTconstraintFlag == 2) {
-            if (! (pSPARC->NPTscaleVecs[0] * pSPARC->NPTscaleVecs[2])) { // a or c cannot be rescaled
-                if (!rank) {
-                    printf("\nNPT_SCALE_CONSTRAINTS 13 has conflict with NPT_SCALE_VECS!\n");
-                }
-                exit(EXIT_FAILURE);
-            }
-        }
-        if (pSPARC->NPTconstraintFlag == 3) {
-            if (! (pSPARC->NPTscaleVecs[1] * pSPARC->NPTscaleVecs[2])) { // b or c cannot be rescaled
-                if (!rank) {
-                    printf("\nNPT_SCALE_CONSTRAINTS 23 has conflict with NPT_SCALE_VECS!\n");
-                }
-                exit(EXIT_FAILURE);
-            }
-        }
-        if (pSPARC->NPTconstraintFlag == 4) {
-            if (! (pSPARC->NPTscaleVecs[0] * pSPARC->NPTscaleVecs[1] * pSPARC->NPTscaleVecs[2])) { // a or b or c cannot be rescaled
-                if (!rank) {
-                    printf("\nNPT_SCALE_CONSTRAINTS 123 has conflict with NPT_SCALE_VECS!\n");
-                }
-                exit(EXIT_FAILURE);
-            }
-        }
-        if (pSPARC->NPT_NP_ANGLES==1){
-            if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 || pSPARC_Input->NPTconstraintFlag != 0){
-                    printf("Angle changing in NPT_NP ensemble is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints of any kind imposed on them.\n");
+        else{
+            if (pSPARC->NPTconstraintFlag == 1) { // check conflict between NPT_SCALE_CONFINEMENTS and NPT_SCALE_VECS
+                if (! (pSPARC->NPTscaleVecs[0] && pSPARC->NPTscaleVecs[1])) { // a or b cannot be rescaled
+                    if (!rank) {
+                        printf("\nNPT_SCALE_CONSTRAINTS 12 has conflict with NPT_SCALE_VECS!\n");
+                    }
                     exit(EXIT_FAILURE);
                 }
+            }
+            if (pSPARC->NPTconstraintFlag == 2) {
+                if (! (pSPARC->NPTscaleVecs[0] && pSPARC->NPTscaleVecs[2])) { // a or c cannot be rescaled
+                    if (!rank) {
+                        printf("\nNPT_SCALE_CONSTRAINTS 13 has conflict with NPT_SCALE_VECS!\n");
+                    }
+                    exit(EXIT_FAILURE);
+                }
+            }
+            if (pSPARC->NPTconstraintFlag == 3) {
+                if (! (pSPARC->NPTscaleVecs[1] && pSPARC->NPTscaleVecs[2])) { // b or c cannot be rescaled
+                    if (!rank) {
+                        printf("\nNPT_SCALE_CONSTRAINTS 23 has conflict with NPT_SCALE_VECS!\n");
+                    }
+                    exit(EXIT_FAILURE);
+                }
+            }
+            if (pSPARC->NPTconstraintFlag == 4) {
+                if (! (pSPARC->NPTscaleVecs[0] && pSPARC->NPTscaleVecs[1] && pSPARC->NPTscaleVecs[2])) { // a or b or c cannot be rescaled
+                    if (!rank) {
+                        printf("\nNPT_SCALE_CONSTRAINTS 123 has conflict with NPT_SCALE_VECS!\n");
+                    }
+                    exit(EXIT_FAILURE);
+                }
+            }
+            if (pSPARC->NPT_NP_ANGLES==1){
+                if (pSPARC_Input->NPTscaleVecs[0] == 0 || pSPARC_Input->NPTscaleVecs[1] == 0 || pSPARC_Input->NPTscaleVecs[2] == 0 || pSPARC_Input->NPTconstraintFlag != 0){
+                        printf("Angle changing in NPT_NP ensemble is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints of any kind imposed on them.\n");
+                        exit(EXIT_FAILURE);
+                    }
+            }
         }
     }
     else if (strcmpi(pSPARC->MDMeth,"NPH") == 0) {
-        if (pSPARC->NPHconstraintFlag == 1) { // check conflict between NPH_SCALE_CONFINEMENTS and NPH_SCALE_VECS
-            if (! (pSPARC->NPHscaleVecs[0] * pSPARC->NPHscaleVecs[1])) { // a or b cannot be rescaled
-                if (!rank) {
-                    printf("\nNPH_SCALE_CONSTRAINTS 12 has conflict with NPH_SCALE_VECS!\n");
-                }
-                exit(EXIT_FAILURE);
-            }
+        if (pSPARC->cell_typ > 20){
+            printf("In the current version, the MD Method: NPT_NP and NPH does not support Cyclix or Helical systems. Please change MD Method if testing with Cyclix or Helical system\n");
+            exit(EXIT_FAILURE);
         }
-        if (pSPARC->NPHconstraintFlag == 2) {
-            if (! (pSPARC->NPHscaleVecs[0] * pSPARC->NPHscaleVecs[2])) { // a or c cannot be rescaled
-                if (!rank) {
-                    printf("\nNPH_SCALE_CONSTRAINTS 13 has conflict with NPH_SCALE_VECS!\n");
+        else{
+                if (pSPARC->NPHconstraintFlag == 1) { // check conflict between NPH_SCALE_CONFINEMENTS and NPH_SCALE_VECS
+                    if (! (pSPARC->NPHscaleVecs[0] && pSPARC->NPHscaleVecs[1])) { // a or b cannot be rescaled
+                        if (!rank) {
+                            printf("\nNPH_SCALE_CONSTRAINTS 12 has conflict with NPH_SCALE_VECS!\n");
+                        }
+                        exit(EXIT_FAILURE);
+                    }
                 }
-                exit(EXIT_FAILURE);
-            }
-        }
-        if (pSPARC->NPHconstraintFlag == 3) {
-            if (! (pSPARC->NPHscaleVecs[1] * pSPARC->NPHscaleVecs[2])) { // b or c cannot be rescaled
-                if (!rank) {
-                    printf("\nNPH_SCALE_CONSTRAINTS 23 has conflict with NPH_SCALE_VECS!\n");
+                if (pSPARC->NPHconstraintFlag == 2) {
+                    if (! (pSPARC->NPHscaleVecs[0] && pSPARC->NPHscaleVecs[2])) { // a or c cannot be rescaled
+                        if (!rank) {
+                            printf("\nNPH_SCALE_CONSTRAINTS 13 has conflict with NPH_SCALE_VECS!\n");
+                        }
+                        exit(EXIT_FAILURE);
+                    }
                 }
-                exit(EXIT_FAILURE);
-            }
-        }
-        if (pSPARC->NPHconstraintFlag == 4) {
-            if (! (pSPARC->NPHscaleVecs[0] * pSPARC->NPHscaleVecs[1] * pSPARC->NPHscaleVecs[2])) { // a or b or c cannot be rescaled
-                if (!rank) {
-                    printf("\nNPH_SCALE_CONSTRAINTS 123 has conflict with NPH_SCALE_VECS!\n");
+                if (pSPARC->NPHconstraintFlag == 3) {
+                    if (! (pSPARC->NPHscaleVecs[1] && pSPARC->NPHscaleVecs[2])) { // b or c cannot be rescaled
+                        if (!rank) {
+                            printf("\nNPH_SCALE_CONSTRAINTS 23 has conflict with NPH_SCALE_VECS!\n");
+                        }
+                        exit(EXIT_FAILURE);
+                    }
                 }
-                exit(EXIT_FAILURE);
-            }
-        }
-        if (pSPARC->NPH_ANGLES==1){
-            if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 || pSPARC_Input->NPHconstraintFlag != 0){
-                    printf("Angle changing in NPH ensemble is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints of any kind imposed on them.\n");
+                if (pSPARC->NPHconstraintFlag == 4) {
+                    if (! (pSPARC->NPHscaleVecs[0] && pSPARC->NPHscaleVecs[1] && pSPARC->NPHscaleVecs[2])) { // a or b or c cannot be rescaled
+                        if (!rank) {
+                            printf("\nNPH_SCALE_CONSTRAINTS 123 has conflict with NPH_SCALE_VECS!\n");
+                        }
                     exit(EXIT_FAILURE);
                 }
+            }
+            if (pSPARC->NPH_ANGLES==1){
+                if (pSPARC_Input->NPHscaleVecs[0] == 0 || pSPARC_Input->NPHscaleVecs[1] == 0 || pSPARC_Input->NPHscaleVecs[2] == 0 || pSPARC_Input->NPHconstraintFlag != 0){
+                        printf("Angle changing in NPH ensemble is only possible when all 3 lattice vectors are allowed to expand/shrink, and simultaneously there are scale NO constraints of any kind imposed on them.\n");
+                        exit(EXIT_FAILURE);
+                    }
+            }
         }
     }
 
@@ -3771,7 +3807,7 @@ void CalculateDistance(SPARC_OBJ *pSPARC, double x, double y, double z, double x
  * @brief   Write the initialized parameters into the output file.
  */
 void write_output_init(SPARC_OBJ *pSPARC) {
-    int i, j, nproc, count;
+    int i, nproc;
     MPI_Comm_size(MPI_COMM_WORLD, &nproc);
 
     // time_t current_time = time(NULL);
@@ -3790,7 +3826,7 @@ void write_output_init(SPARC_OBJ *pSPARC) {
     }
 
     fprintf(output_fp,"***************************************************************************\n");
-    fprintf(output_fp,"*                       SPARC (version April 06, 2026)                 *\n");
+    fprintf(output_fp,"*                       SPARC (version April 08, 2026)                 *\n");
     fprintf(output_fp,"*   Copyright (c) 2020 Material Physics & Mechanics Group, Georgia Tech   *\n");
     fprintf(output_fp,"*           Distributed under GNU General Public License 3 (GPL)          *\n");
     fprintf(output_fp,"*                   Start time: %s                  *\n",c_time_str);
@@ -4381,10 +4417,10 @@ void write_output_init(SPARC_OBJ *pSPARC) {
             fprintf(static_fp,"***************************************************************************\n");
             fprintf(static_fp,"                            Atom positions                                 \n");
             fprintf(static_fp,"***************************************************************************\n");
-            count = 0;
+            int count = 0;
             for (i = 0; i < pSPARC->Ntypes; i++) {
                 fprintf(static_fp,"Fractional coordinates of %s:\n",&pSPARC->atomType[L_ATMTYPE*i]);
-                for (j = 0; j < pSPARC->nAtomv[i]; j++) {
+                for (int j = 0; j < pSPARC->nAtomv[i]; j++) {
                     fprintf(static_fp,"%18.10f %18.10f %18.10f\n",
                             pSPARC->atom_pos[3*count]/pSPARC->range_x,
                             pSPARC->atom_pos[3*count+1]/pSPARC->range_y,
@@ -4413,7 +4449,7 @@ void print_orthogonal_warning(SPARC_OBJ *pSPARC, FILE *output_fp)
  * @brief Create MPI struct type SPARC_INPUT_MPI for broadcasting.
 */
 void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
-    SPARC_INPUT_OBJ sparc_input_tmp;
+    SPARC_INPUT_OBJ sparc_input_tmp={0};
 
     MPI_Datatype SPARC_types[N_MEMBR] = {MPI_INT, MPI_INT, MPI_INT, MPI_INT, /* int array */
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
@@ -4440,7 +4476,7 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
                                          MPI_INT, MPI_INT, MPI_INT, MPI_INT, MPI_INT,
-                                         MPI_INT, MPI_INT,  /* int */
+                                         MPI_INT,  /* int */
 
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE,
                                          MPI_DOUBLE, MPI_DOUBLE, MPI_DOUBLE, /* double array */
@@ -4486,7 +4522,7 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
                           1, 1, 1, 1, 1,
                           1, 1, 1, 1, 1, 
                           1, 1, 1, 1, 1,
-                          1, 1, /* int */ 
+                          1,  /* int */ 
                           9, 3, L_QMASS, L_kpoint, L_kpoint,
                           L_kpoint, 6, 6,/* double array */
                           1, 1, 1, 1, 1, 
@@ -4616,7 +4652,6 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
     MPI_Get_address(&sparc_input_tmp.OFDFTFlag, addr + i++);
     MPI_Get_address(&sparc_input_tmp.PrintEnergyDensFlag, addr + i++);
     MPI_Get_address(&sparc_input_tmp.eig_paral_maxnp, addr + i++);
-    MPI_Get_address(&sparc_input_tmp.StandardEigenFlag, addr + i++);
     MPI_Get_address(&sparc_input_tmp.n_kpt_line, addr + i++);
     MPI_Get_address(&sparc_input_tmp.BandStructFlag, addr + i++);
     MPI_Get_address(&sparc_input_tmp.kpt_per_line, addr + i++);
@@ -4713,7 +4748,6 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
     MPI_Get_address(&sparc_input_tmp.OFDFT_tol, addr + i++);
     MPI_Get_address(&sparc_input_tmp.OFDFT_lambda, addr + i++);
     MPI_Get_address(&sparc_input_tmp.twist, addr + i++);
-
     MPI_Get_address(&sparc_input_tmp.radial_min, addr + i++);
     MPI_Get_address(&sparc_input_tmp.radial_max, addr + i++);
     MPI_Get_address(&sparc_input_tmp.condK_min, addr + i++);
@@ -4724,7 +4758,6 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
     MPI_Get_address(&sparc_input_tmp.xi_3_SOAP, addr + i++);
     MPI_Get_address(&sparc_input_tmp.F_tol_SOAP, addr + i++);
     MPI_Get_address(&sparc_input_tmp.F_rel_scale, addr + i++);
-
     MPI_Get_address(&sparc_input_tmp.relaxPrTarget, addr + i++);
     MPI_Get_address(&sparc_input_tmp.pressure_external, addr + i++);
     
@@ -4739,7 +4772,6 @@ void SPARC_Input_MPI_create(MPI_Datatype *pSPARC_INPUT_MPI) {
     MPI_Get_address(&sparc_input_tmp.InDensTCubFilename, addr + i++);
     MPI_Get_address(&sparc_input_tmp.InDensUCubFilename, addr + i++);
     MPI_Get_address(&sparc_input_tmp.InDensDCubFilename, addr + i++);
-
     MPI_Get_address(&sparc_input_tmp.mlff_data_folder, addr + i++);
     for (i = 0; i < N_MEMBR; i++) {
         disps[i] = addr[i] - base;

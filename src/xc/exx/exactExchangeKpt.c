@@ -179,7 +179,8 @@ void solving_for_Xi_kpt(SPARC_OBJ *pSPARC,
                 }
             } else {
                 t1 = MPI_Wtime();
-                MPI_Waitall(2, reqs_kpt, MPI_STATUSES_IGNORE);
+                MPI_Status stats_kpt[2];
+                MPI_Waitall(2, reqs_kpt, stats_kpt);
                 sendbuff_kpt = (rep_kpt%2==1) ? psi_storage2_kpt : psi_storage1_kpt;
                 recvbuff_kpt = (rep_kpt%2==1) ? psi_storage1_kpt : psi_storage2_kpt;
                 if (rep_kpt != reps_kpt) {
@@ -210,7 +211,8 @@ void solving_for_Xi_kpt(SPARC_OBJ *pSPARC,
                         }
                     } else {
                         t1 = MPI_Wtime();
-                        MPI_Waitall(2, reqs_band, MPI_STATUSES_IGNORE);
+                        MPI_Status stats_band[2];
+                        MPI_Waitall(2, reqs_band, stats_band);
                         sendbuff_band = (rep_band%2==1) ? psi_storage1_band : psi_storage2_band;
                         recvbuff_band = (rep_band%2==1) ? psi_storage2_band : psi_storage1_band;
                         if (rep_band != reps_band) {
@@ -914,7 +916,8 @@ void pois_fft_kpt(SPARC_OBJ *pSPARC, double _Complex *rhs, double *pois_const,
     if (ncol == 0) return;
 
     int Nd = pSPARC->Nd;
-    int Nx = pSPARC->Nx, Ny = pSPARC->Ny, Nz = pSPARC->Nz; 
+    int Nx = pSPARC->Nx, Ny = pSPARC->Ny, Nz = pSPARC->Nz;
+    (void)Nx; (void)Ny; (void)Nz;
     double _Complex *rhs_bar = (double _Complex*) malloc(sizeof(double _Complex) * Nd * ncol);
     assert(rhs_bar != NULL);
     int *Kptshift_map = pSPARC->Kptshift_map;

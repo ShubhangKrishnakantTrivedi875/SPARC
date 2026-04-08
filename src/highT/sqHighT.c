@@ -55,7 +55,7 @@ void GaussQuadrature_highT(SPARC_OBJ *pSPARC, int SCFCount) {
     int nd, rank;
     int *nloc, DMnx, DMny, DMnz, DMnd;    
     int Nx_loc, Ny_loc;
-    double lambda_min, lambda_max, lambda_min_MIN, lambda_max_MAX, x1, x2, *t0;
+    double lambda_min, lambda_max, *t0;
     double time1, time2;
     SQ_OBJ  *pSQ = pSPARC->pSQ;
 
@@ -64,6 +64,11 @@ void GaussQuadrature_highT(SPARC_OBJ *pSPARC, int SCFCount) {
     DMny = pSQ->DMny_SQ;
     DMnz = pSQ->DMnz_SQ;
     DMnd = pSQ->DMnd_SQ;
+
+    (void)DMnx;
+    (void)DMny;
+    (void)DMnz;
+
     Nx_loc = pSQ->Nx_loc;
     Ny_loc = pSQ->Ny_loc;    
     MPI_Comm_rank(pSQ->dmcomm_SQ, & rank);
