@@ -13,7 +13,7 @@ USE_DP_SUBEIG = 0
 # Set USE_FFTW = 1 to use FFTW for fast Fourier transform in vdWDF. Don't open it together with USE_MKL
 USE_FFTW      = 0
 # Set DEBUG_MODE = 1 to run with debug mode and print debug output
-DEBUG_MODE    = 1
+DEBUG_MODE    = 0
 
 # Set USE_SOCKET = 0 to disable compilation with socket support
 USE_SOCKET    = 0
@@ -23,7 +23,7 @@ USE_ELPA      = 0
 
 # Enable SIMD vectorization for complex stencil routines
 # CAUTION: for some compilers this results in wrong results! Use for intel/19.0.3 or later versions
-ENABLE_SIMD_COMPLEX = 1
+ENABLE_SIMD_COMPLEX = 0
 
 # Enable ACCEL by GT
 USE_ACCELGT = 0
