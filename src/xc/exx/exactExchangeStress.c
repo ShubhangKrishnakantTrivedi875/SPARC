@@ -239,7 +239,8 @@ void Calculate_exact_exchange_stress_linear_ACE(SPARC_OBJ *pSPARC,
                 sendbuff = psi;
             }
         } else {
-            MPI_Waitall(2, reqs, MPI_STATUSES_IGNORE);
+            MPI_Status stats[2];
+            MPI_Waitall(2, reqs, stats);
             // first gather the orbitals in the rotation way
             sendbuff = (rep%2==1) ? psi_storage1 : psi_storage2;
             recvbuff = (rep%2==1) ? psi_storage2 : psi_storage1;
@@ -694,7 +695,8 @@ void Calculate_exact_exchange_stress_kpt_ACE(SPARC_OBJ *pSPARC,
                 transfer_orbitals_kptbridgecomm(pSPARC, sendbuff_kpt, recvbuff_kpt, rep_kpt, reqs_kpt, sizeof(double _Complex));
             }
         } else {
-            MPI_Waitall(2, reqs_kpt, MPI_STATUSES_IGNORE);
+            MPI_Status stats_kpt[2];
+            MPI_Waitall(2, reqs_kpt, stats_kpt);
             sendbuff_kpt = (rep_kpt%2==1) ? psi_storage2_kpt : psi_storage1_kpt;
             recvbuff_kpt = (rep_kpt%2==1) ? psi_storage1_kpt : psi_storage2_kpt;
             if (rep_kpt != reps_kpt) {
@@ -718,8 +720,9 @@ void Calculate_exact_exchange_stress_kpt_ACE(SPARC_OBJ *pSPARC,
                         recvbuff_band = psi_storage1_band;
                         transfer_orbitals_blacscomm(pSPARC, sendbuff_band, recvbuff_band, rep_band, reqs_band, sizeof(double _Complex));
                     }
-                } else {                    
-                    MPI_Waitall(2, reqs_band, MPI_STATUSES_IGNORE);
+                } else {
+                    MPI_Status stats_band[2];
+                    MPI_Waitall(2, reqs_band, stats_band);
                     sendbuff_band = (rep_band%2==1) ? psi_storage1_band : psi_storage2_band;
                     recvbuff_band = (rep_band%2==1) ? psi_storage2_band : psi_storage1_band;
                     if (rep_band != reps_band) {

@@ -59,7 +59,7 @@ void evaluateExxPotentialAtom(SPARC_ATOM_OBJ *pSPARC_ATOM, int l, double spin, d
     double *int_scale = pSPARC_ATOM->int_scale;
     int val_len = pSPARC_ATOM->val_len;
     int *occ = pSPARC_ATOM->occ;
-    int *orbital_l = pSPARC_ATOM->orbital_l;
+    //int *orbital_l = pSPARC_ATOM->orbital_l;
 
     // Copy \tilde{R}_{nl} = r*R_{nl} into orbitals
     double *orbitals = (double *)malloc(nspinor*val_len*(Nd-1)*sizeof(double));
@@ -208,11 +208,11 @@ void evaluateExxEnergyAtom(SPARC_ATOM_OBJ *pSPARC_ATOM, double *Exx) {
     int Nd = pSPARC_ATOM->Nd;
     int nspinor = pSPARC_ATOM->nspinor;
     double *w = pSPARC_ATOM->w;
-    double *r = pSPARC_ATOM->r;
+   // double *r = pSPARC_ATOM->r;
     double *int_scale = pSPARC_ATOM->int_scale;
     int val_len = pSPARC_ATOM->val_len;
     int *occ = pSPARC_ATOM->occ;
-    int *orbital_l = pSPARC_ATOM->orbital_l;
+   // int *orbital_l = pSPARC_ATOM->orbital_l;
 
     // Copy \tilde{R}_{nl} = r*R_{nl} into orbitals
     double *orbitals = (double *)malloc(nspinor*val_len*(Nd-1)*sizeof(double));
@@ -230,7 +230,7 @@ void evaluateExxEnergyAtom(SPARC_ATOM_OBJ *pSPARC_ATOM, double *Exx) {
 
     int jstart, jstop;
     double *orbital;
-    double wigner_const;
+   // double wigner_const;
     double *wt_orbital = (double *)malloc(sizeof(double)*(Nd - 1));
     for (int i = lmin; i <= lmax; i++) {
         // store the start and stop indices

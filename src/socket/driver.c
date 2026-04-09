@@ -413,7 +413,8 @@ void reinit_mesh(SPARC_OBJ *pSPARC){
   }
 
   int FDn = pSPARC->order / 2;
-  int p, i;
+  int p;
+  //int i;
   // 1st derivative weights including mesh
   double dx_inv, dy_inv, dz_inv;
   dx_inv = 1.0 / pSPARC->delta_x;
@@ -705,7 +706,7 @@ int read_atoms_position_fom_socket(SPARC_OBJ *pSPARC, int init)
   int ret = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // TODO: check if status is in IPI_MSG_POSDATA
-  int sockfd = pSPARC->socket_fd;
+  //int sockfd = pSPARC->socket_fd;
   int natoms;
   double ipi_cell[9], ipi_inv_cell[9];
   // The read process will need to get the forces, although we don't pass them back to SPARC
@@ -788,7 +789,7 @@ void stress_to_virial(SPARC_OBJ *pSPARC, double *virial)
   if (pSPARC->Calc_stress == 0){
     if (rank == 0)
       printf("Stress is not calculated in this system. Will return zero-stress tensor to the socket server.\n");
-    for (int i; i < 9; i++){
+    for (int i = 0; i < 9; i++){
       virial_calc[i]= 0.0;
     }
   }
@@ -796,7 +797,7 @@ void stress_to_virial(SPARC_OBJ *pSPARC, double *virial)
   else if (pSPARC->BC == 1){
     if (rank == 0)
       printf("You're simulating an isolated system, no stress will be calculated. Zero stress tensor will be send to the socket server\n");
-    for (int i; i < 9; i++){
+    for (int i = 0; i < 9; i++){
       virial_calc[i]= 0.0;
     }
   }
@@ -806,17 +807,17 @@ void stress_to_virial(SPARC_OBJ *pSPARC, double *virial)
       printf("The simulation has 2D stress tensor in Ha/Bohr**2. The equivalent value in periodic system will be returned!\n");
     // Periodic in xy-
     if (pSPARC->BCx == 0 && pSPARC->BCy == 0){
-      for (int i; i < 9; i++){
+      for (int i = 0; i < 9; i++){
 	virial_calc[i] /= pSPARC->range_z;
       }}
     // Periodic in xz-
     else if (pSPARC->BCx == 0 && pSPARC->BCz == 0){
-      for (int i; i < 9; i++){
+      for (int i = 0; i < 9; i++){
 	virial_calc[i] /= pSPARC->range_y;
       }}
     // Periodic in yz-
     else if (pSPARC->BCy == 0 && pSPARC->BCz == 0){
-      for (int i; i < 9; i++){
+      for (int i = 0; i < 9; i++){
 	virial_calc[i] /= pSPARC->range_x;
       }
     }
@@ -827,18 +828,18 @@ void stress_to_virial(SPARC_OBJ *pSPARC, double *virial)
       printf("The simulation has 1D stress tensor in Ha/Bohr. The equivalent value in periodic system will be returned!\n");
     // Periodic in x-
     if (pSPARC->BCx == 0){
-      for (int i; i < 9; i++){
+      for (int i = 0; i < 9; i++){
 	virial_calc[i] /= (pSPARC->range_y * pSPARC->range_z);
       }
     }
     // Periodic in y-
     else if (pSPARC->BCy == 0){
-      for (int i; i < 9; i++){
+      for (int i = 0; i < 9; i++){
 	virial_calc[i] /= (pSPARC->range_x * pSPARC->range_z);
       }
     }
     else if (pSPARC->BCx == 0){
-      for (int i; i < 9; i++){
+      for (int i = 0; i < 9; i++){
 	virial_calc[i] /= (pSPARC->range_x * pSPARC->range_y);
       }
     }
@@ -847,7 +848,7 @@ void stress_to_virial(SPARC_OBJ *pSPARC, double *virial)
   else if (pSPARC->BC >= 5 && pSPARC->BC <= 7){
     if (rank == 0)
       printf("The simulation has 1D stress tensor in Ha/Bohr (cyclic or helix boundaries). The equivalent value in periodic system will be returned!\n");
-    for (int i; i < 9; i++){
+    for (int i = 0; i < 9; i++){
       virial_calc[i] /= (M_PI * ( pow(pSPARC->xout,2.0) - pow(pSPARC->xin,2.0) ) ) ;
     }
   }
@@ -868,12 +869,13 @@ int write_forces_to_socket(SPARC_OBJ *pSPARC)
   int ret = 1;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  int sockfd = pSPARC->socket_fd;
+  //int sockfd = pSPARC->socket_fd;
   int natoms = pSPARC->n_atom;
   double ipi_potential;
   double ipi_virial[9];
   // The read process will need to get the forces, although we don't pass them back to SPARC
-  double ipi_atom_pos[3 * natoms], ipi_forces[3 * natoms];
+  //double ipi_atom_pos[3 * natoms];
+  double ipi_forces[3 * natoms];
   // Check if we need to substract entropy
   ipi_potential = pSPARC->Etot;
   memcpy(ipi_forces, pSPARC->forces, sizeof(double) * 3 * natoms);
@@ -903,7 +905,7 @@ int write_message_to_socket(SPARC_OBJ *pSPARC, char *message)
   int ret = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-  int sockfd = pSPARC->socket_fd;
+  //int sockfd = pSPARC->socket_fd;
   char clean_msg[IPI_HEADERLEN + 1];
   // memset(clean_msg, ' ', IPI_HEADERLEN + 1);
   if (strlen(message) > IPI_HEADERLEN)
@@ -912,7 +914,7 @@ int write_message_to_socket(SPARC_OBJ *pSPARC, char *message)
       exit(EXIT_FAILURE);
     }
 
-  strncpy(clean_msg, message, strlen(message));
+  memcpy(clean_msg, message, strlen(message));
   memset(clean_msg + strlen(message), ' ', IPI_HEADERLEN - strlen(message));
   clean_msg[IPI_HEADERLEN] = '\0';
   if (rank == 0){
@@ -1040,10 +1042,10 @@ void print_socket_error_info(SPARC_OBJ *pSPARC)
 int read_setparam(SPARC_OBJ *pSPARC)
 {
   int rank;
-  int ret = 0;
+ // int ret = 0;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   // TODO: check if status is in IPI_MSG_POSDATA
-  int sockfd = pSPARC->socket_fd;
+  //int sockfd = pSPARC->socket_fd;
   int msglen = 0;
   char *msg;
   if (rank == 0)
@@ -1085,7 +1087,7 @@ void main_Socket(SPARC_OBJ *pSPARC)
   if (rank == 0)
     printf("Starting socket communication\n");
 #endif // DEBUG
-  int sfd = pSPARC->socket_fd;
+  //int sfd = pSPARC->socket_fd;
   int status, init, hasdata, retcode, print_socket_err;
   status = -1; // -1: not initialized
   init = 1;

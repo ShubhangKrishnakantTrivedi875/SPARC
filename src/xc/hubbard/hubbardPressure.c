@@ -53,14 +53,17 @@ void Calculate_hubbard_pressure_linear(SPARC_OBJ *pSPARC) {
     
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);   
-    int i, ncol, DMnd, DMndsp;
-    int dim, dim2, count, size_k, spinor, Nspinor;
+    int ncol, DMnd, DMndsp;
+    int dim, count, size_k, spinor, Nspinor;
+    //int i, dim2;
+
     ncol = pSPARC->Nband_bandcomm; // number of bands assigned
     DMnd = pSPARC->Nd_d_dmcomm;
     Nspinor = pSPARC->Nspinor_spincomm;
     DMndsp = DMnd * Nspinor;
     size_k = DMndsp * ncol;
-    
+    (void)size_k;
+
     double *alpha, *beta;
     double energy_hub = 0.0, pressure_hub = 0.0;
     
@@ -403,8 +406,10 @@ void Calculate_hubbard_pressure_kpt(SPARC_OBJ *pSPARC) {
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);   
-    int i, ncol, DMnd, DMndsp;
-    int dim, dim2, count, kpt, Nk, size_k, spinor, Nspinor;
+    int ncol, DMnd, DMndsp;
+    int dim, count, kpt, Nk, size_k, spinor, Nspinor;
+    //int i, dim2;
+
     ncol = pSPARC->Nband_bandcomm; // number of bands assigned
     DMnd = pSPARC->Nd_d_dmcomm;
     Nk = pSPARC->Nkpts_kptcomm;

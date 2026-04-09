@@ -45,7 +45,7 @@ void CUR_sparsify_before_training(MLFF_Obj *mlff_str){
 
     double t1, t2;
 
-    FILE *fp_mlff;
+    FILE *fp_mlff = NULL;
     if (mlff_str->print_mlff_flag==1 && rank==0){
     	// fp_mlff = fopen("mlff.log","a");
     	fp_mlff = mlff_str->fp_mlff;
@@ -110,8 +110,8 @@ t1 = MPI_Wtime();
     		exit(1);
     	}
 
-    	int col_idx_toremove;
-    	int cols_before_remove = mlff_str->n_cols;
+    	//int col_idx_toremove;
+    	//int cols_before_remove = mlff_str->n_cols;
 
     	for (int k=0; k < ncols_to_remove; k++){
  		
@@ -167,14 +167,15 @@ t2 = MPI_Wtime();
 #endif 
 t1 = MPI_Wtime();
 
-	FILE *fp_mlff;
+	FILE *fp_mlff = NULL;
     if (mlff_str->print_mlff_flag==1 && rank==0){
     	// fp_mlff = fopen("mlff.log","a");
     	fp_mlff = mlff_str->fp_mlff;
     }
 
 	double *a_scaled, *b_scaled;
-	int info, m = mlff_str->n_rows, n = mlff_str->n_cols;
+	//int info;
+	int m = mlff_str->n_rows, n = mlff_str->n_cols;
 
 	mlff_str->E_scale = 1.0;
 	mlff_str->F_scale = mlff_str->std_E/mlff_str->std_F;
@@ -315,7 +316,7 @@ t2 = MPI_Wtime();
 		mlff_str->AtA[i] = AtA_reduced[i];
 	}
 
-	int ipiv[mlff_str->n_cols];
+	//int ipiv[mlff_str->n_cols];
 	int M_total_rows;
 	MPI_Allreduce(&mlff_str->n_rows, &M_total_rows, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 
@@ -328,7 +329,7 @@ t2 = MPI_Wtime();
 
 t1 = MPI_Wtime();
 	if (rank==0){
-		double sigma_w, sigma_v;
+		//double sigma_w, sigma_v;
 		int dohyperparameter = 1;
 		if (dohyperparameter){
 			hyperparameter_Bayesian(btb_reduced, AtA_h_reduced, Atb_h_reduced, mlff_str, M_total_rows, mlff_str->condK_min);
@@ -468,7 +469,7 @@ void hyperparameter_Bayesian(double btb_reduced, double *AtA, double *Atb, MLFF_
 	// printf("Inside hyperparameter_Bayesian std_F: %f, std_E: %f, mu_E: %f\n",mlff_str->std_F, mlff_str->std_E, mlff_str->mu_E);
 	int rank = 0;
 double t1, t2, t3, t4;
-	FILE *fp_mlff;
+	FILE *fp_mlff = NULL;
     if (mlff_str->print_mlff_flag==1 && rank==0){
     	// fp_mlff = fopen("mlff.log","a");
     	fp_mlff = mlff_str->fp_mlff;
@@ -489,7 +490,8 @@ t1 = MPI_Wtime();
 		}
 	}
 
-	int ipiv[mlff_str->n_cols], info;
+	//int ipiv[mlff_str->n_cols]
+	int info;
 
 	// info = LAPACKE_dsyevd(LAPACK_COL_MAJOR, 'V', 'U', mlff_str->n_cols, AtA_h, mlff_str->n_cols, lambda_0);
 
@@ -787,6 +789,7 @@ double get_regularization_min(double *A, int size, double condK_min){
 
 		norm = LAPACKE_dlange(LAPACK_COL_MAJOR, 'I', size, size, a_copy, size);
 		info = LAPACKE_dgetrf(LAPACK_COL_MAJOR, size, size, a_copy, size, &ipiv[0]);
+		(void)info;
 		LAPACKE_dgecon(LAPACK_COL_MAJOR, 'I', size, a_copy, size, norm, &rcond);
 #ifdef DEBUG
 		printf("Regularization: 1e-%f, Condition number reciprocal: 1e%f\n",log10(reg_temp[k]), log10(rcond) );
@@ -816,12 +819,13 @@ Output:
 */
 void mlff_predict(double *K_predict, MLFF_Obj *mlff_str, double *E,  double* F, double *stress, double* error_bayesian, int natoms ){
 	int rank;
-	int quot;
+	//int quot;
 	double regul;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	int rows, cols;
 
-double t1, t2, t3, t4;
+double t1, t2;
+//double t3, t4;
 
 t1 = MPI_Wtime();
 

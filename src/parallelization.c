@@ -52,6 +52,7 @@
  */
 void Setup_Comms(SPARC_OBJ *pSPARC) {
     int i, j, dims[3] = {0, 0, 0}, periods[3], ierr;
+    (void)j;
     int nproc, rank;
     int size_spincomm, rank_spincomm;
     int nproc_kptcomm, rank_kptcomm, size_kptcomm;
@@ -331,7 +332,11 @@ void Setup_Comms(SPARC_OBJ *pSPARC) {
                     }
                 }
             }
+
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wstringop-overread"
             MPI_Dist_graph_create_adjacent(pSPARC->kptcomm_topo,nneighb,neighb,(int *)MPI_UNWEIGHTED,nneighb,neighb,(int *)MPI_UNWEIGHTED,MPI_INFO_NULL,0,&pSPARC->kptcomm_topo_dist_graph);
+            #pragma GCC diagnostic pop
             free(neighb);
         }
     }
@@ -586,7 +591,11 @@ void Setup_Comms(SPARC_OBJ *pSPARC) {
                     }
                 }
             }
+
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wstringop-overread"
             MPI_Dist_graph_create_adjacent(pSPARC->dmcomm,nneighb,neighb,(int *)MPI_UNWEIGHTED,nneighb,neighb,(int *)MPI_UNWEIGHTED,MPI_INFO_NULL,0,&pSPARC->comm_dist_graph_psi); // creates a distributed graph topology (adjacent, cartesian cubical)
+            #pragma GCC diagnostic pop
             //pSPARC->dmcomm_phi = pSPARC->comm_dist_graph_phi;
             free(neighb);
         }
@@ -973,7 +982,11 @@ void Setup_Comms(SPARC_OBJ *pSPARC) {
                     }
                 }
             }
+
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wstringop-overread"
             MPI_Dist_graph_create_adjacent(pSPARC->dmcomm_phi,nneighb,neighb,(int *)MPI_UNWEIGHTED,nneighb,neighb,(int *)MPI_UNWEIGHTED,MPI_INFO_NULL,0,&pSPARC->comm_dist_graph_phi); // creates a distributed graph topology (adjacent, cartesian cubical)
+            #pragma GCC diagnostic pop
             //pSPARC->dmcomm_phi = pSPARC->comm_dist_graph_phi;
             free(neighb);
         }
@@ -2448,11 +2461,17 @@ void D2D(D2D_OBJ *d2d_sender, D2D_OBJ *d2d_recvr, int *gridsizes, int *sDMVert, 
 #endif
 
     if (send_comm != MPI_COMM_NULL) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
         MPI_Waitall(nsend_tot, send_request, MPI_STATUS_IGNORE);
+#pragma GCC diagnostic pop
     }
 
     if (recv_comm != MPI_COMM_NULL) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
         MPI_Waitall(nrecv_tot, recv_request, MPI_STATUS_IGNORE);
+#pragma GCC diagnostic pop
         for (n = 0; n < nrecv_tot; n++) {
             DMnd = 1;
             for (i = 0; i < ndims; i++) {
@@ -2758,8 +2777,12 @@ void Set_D2Dext_Target(D2Dext_OBJ *d2dext_sender, D2Dext_OBJ *d2dext_recvr,
                 * (d2dext_recvr->layers[2] + d2dext_recvr->layers[3] + 1) 
                 * (d2dext_recvr->layers[4] + d2dext_recvr->layers[5] + 1) - 1;
     
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wstringop-overread"
     MPI_Dist_graph_create_adjacent(cart, sources, rneighs, (int *)MPI_UNWEIGHTED, 
         destinations, sneighs, (int *)MPI_UNWEIGHTED, MPI_INFO_NULL, 0, comm_d2dext); 
+    #pragma GCC diagnostic pop
+
 
     d2dext_sender->counts = (int *) calloc(destinations, sizeof(int));
     d2dext_sender->displs = (int *) calloc(destinations, sizeof(int));

@@ -174,7 +174,7 @@ void build_nlist(const double rcut, const int nelem, const int natom, const doub
 	
 	for (int i = 0; i < natom_domain; i++){
 		int atm_idx = atom_idx_domain[i];
-		int el_idx = el_idx_domain[i];
+		//int el_idx = el_idx_domain[i];
 		double xi = atompos[3*atm_idx];
 		double yi = atompos[3*atm_idx+1];
 		double zi = atompos[3*atm_idx+2];
@@ -478,7 +478,7 @@ void build_soapObj(DescriptorObj *soap_str, NeighList *nlist, double* rgrid, dou
 
 
 	// const double PI = 3.141592653589793;
-	int natom= nlist->natom;
+	//int natom= nlist->natom;
 	int nelem = nlist->nelem;
 	int uniq_el_atms, local_index;
 	int size_cnlm =  (Lmax + 1) * (Lmax + 2) * Nmax;   // just \sum_{l=1}^{Lmax} (l+1) only store (m = 0 to l)
@@ -563,7 +563,7 @@ void build_soapObj(DescriptorObj *soap_str, NeighList *nlist, double* rgrid, dou
 	reshape_stress(cell_typ, nlist->BC, index);
 	double complex *temp_dcnlm_dF = (double complex*) malloc(6 * sizeof(double complex));
 
-	int counter1 = 0, counter2 = 0, counter3 = 0;
+	//int counter1 = 0, counter2 = 0, counter3 = 0;
 	for (int i = 0; i < soap_str->natom_domain; i++){
 		int atm_idx = soap_str->atom_idx_domain[i];
 		double xi = atompos[3*atm_idx];
@@ -635,8 +635,10 @@ void build_soapObj(DescriptorObj *soap_str, NeighList *nlist, double* rgrid, dou
 			dr_dF[4] = dy*dz/dr;
 			dr_dF[5] = dz*dz/dr;
 
-			double dth_dr[6] = {dth_dxi[0]*dx, dth_dxi[0]*dy, dth_dxi[0]*dz, dth_dxi[1]*dy, dth_dxi[1]*dz, dth_dxi[2]*dz};
-			double dphi_dr[6] = {dphi_dxi[0]*dx, dphi_dxi[0]*dy, dphi_dxi[0]*dz, dphi_dxi[1]*dy, dphi_dxi[1]*dz, dphi_dxi[2]*dz};
+			(void)dr_dF;
+
+			//double dth_dr[6] = {dth_dxi[0]*dx, dth_dxi[0]*dy, dth_dxi[0]*dz, dth_dxi[1]*dy, dth_dxi[1]*dz, dth_dxi[2]*dz};
+			//double dphi_dr[6] = {dphi_dxi[0]*dx, dphi_dxi[0]*dy, dphi_dxi[0]*dz, dphi_dxi[1]*dy, dphi_dxi[1]*dz, dphi_dxi[2]*dz};
 			double dxi_dr[3] = {dx/dr, dy/dr, dz/dr};
 			rtemp[0] = dr;
 			// Calculate h_nl and dh_nl from dpline interpoation for all combinations of n and l
@@ -675,11 +677,12 @@ void build_soapObj(DescriptorObj *soap_str, NeighList *nlist, double* rgrid, dou
 
 								if ((fabs(dtheta) < temp_tol || fabs(dtheta - M_PI) < temp_tol)){
 									double fact = 1.0;
-									if ((l%2 == 0) && (fabs(dtheta - M_PI) < temp_tol)) 
+									if ((l%2 == 0) && (fabs(dtheta - M_PI) < temp_tol)){
 										fact = -1.0;
-										dFi[0] =  dhnl_val * dxi_dr[0] * Ylm_val + hnl_val * dYlm_theta_val * (fact/dr) ;
-										dFi[1] =  dhnl_val * dxi_dr[1] * Ylm_val - hnl_val * dYlm_theta_val * 1.0*I * (fact/dr);
-										dFi[2] = dhnl_val * dxi_dr[2] * Ylm_val + hnl_val * (dYlm_theta_val * dth_dxi[2] + dYlm_phi_val * dphi_dxi[2]);	
+									}
+									dFi[0] =  dhnl_val * dxi_dr[0] * Ylm_val + hnl_val * dYlm_theta_val * (fact/dr) ;
+									dFi[1] =  dhnl_val * dxi_dr[1] * Ylm_val - hnl_val * dYlm_theta_val * 1.0*I * (fact/dr);
+									dFi[2] = dhnl_val * dxi_dr[2] * Ylm_val + hnl_val * (dYlm_theta_val * dth_dxi[2] + dYlm_phi_val * dphi_dxi[2]);	
 								} else {
 									for (int iforce = 0; iforce < 3; iforce++){			
 										dFi[iforce] = dhnl_val * dxi_dr[iforce] * Ylm_val + hnl_val * (dYlm_theta_val * dth_dxi[iforce] + dYlm_phi_val * dphi_dxi[iforce]);		
@@ -749,8 +752,10 @@ void build_soapObj(DescriptorObj *soap_str, NeighList *nlist, double* rgrid, dou
 
 
 
-	double complex el1_xder, el1_yder, el1_zder, el2_xder, el2_yder, el2_zder,el_xder,el_yder,el_zder;
-	int count_X2, neigh, count_X3, n2, el2;
+	double complex el1_xder, el1_yder, el1_zder, el2_xder, el2_yder, el2_zder;
+	//double complex el_xder,el_yder,el_zder;
+	//int count_X2, neigh;
+	int count_X3, n2, el2;
 	
 	int local_index2, local_index1;
 	double const_X3, temp1, temp2, temp3;	

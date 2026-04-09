@@ -295,7 +295,8 @@ void occMatExtrapolation(SPARC_OBJ *pSPARC) {
  */
 void CalculateOccMatAtomIndex(SPARC_OBJ *pSPARC)
 {
-    int ityp, iat, l, lmax, atom_index, atom_index2, angnum, id;
+    int ityp, iat, l, lmax, atom_index, atom_index2, id;
+    //int angnum;
 
     pSPARC->rho_mn_displ = (int *)malloc(sizeof(int) * (pSPARC->n_atom + 1));
     memset(pSPARC->rho_mn_displ, -1, sizeof(int) * (pSPARC->n_atom + 1));
@@ -357,19 +358,20 @@ void Calculate_occMat(SPARC_OBJ *pSPARC, ATOM_LOC_INFLUENCE_OBJ *Atom_Influence_
 
     if (pSPARC->spincomm_index < 0 || pSPARC->kptcomm_index < 0 || pSPARC->bandcomm_index < 0 || pSPARC->dmcomm == MPI_COMM_NULL) return;
 
-    int i, n, k, Ns, count, nstart, nend, spinor, DMnd;
+    int i, n, Ns, count, nstart, nend, spinor, DMnd;
+    //int k;
     double **g_n;
     DMnd = pSPARC->Nd_d_dmcomm;
     nstart = pSPARC->band_start_indx;
     nend = pSPARC->band_end_indx;
     Ns = pSPARC->Nstates;
-    int Nspinor = pSPARC->Nspinor;
+    //int Nspinor = pSPARC->Nspinor;
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     int ncol = nend - nstart + 1;
-    int Nkpts = pSPARC->Nkpts_kptcomm;
+    //int Nkpts = pSPARC->Nkpts_kptcomm;
 
     // Extract local g_n as array
     g_n = (double **)calloc((pSPARC->Nspinor_spincomm), sizeof(double*));
@@ -381,7 +383,7 @@ void Calculate_occMat(SPARC_OBJ *pSPARC, ATOM_LOC_INFLUENCE_OBJ *Atom_Influence_
     count = 0;
     for (n = nstart; n <= nend; n++) {
         for (spinor = 0; spinor < pSPARC->Nspinor_spincomm; spinor ++) {
-            int spinor_g = spinor + pSPARC->spinor_start_indx;
+            //int spinor_g = spinor + pSPARC->spinor_start_indx;
             double *occ = pSPARC->occ; 
             if (pSPARC->spin_typ == 1) occ += spinor*Ns;
             g_n[spinor][count] = occ[n];
@@ -425,7 +427,7 @@ void Calculate_occMat(SPARC_OBJ *pSPARC, ATOM_LOC_INFLUENCE_OBJ *Atom_Influence_
 
     // calculate local rho_mn
     int n_atom = pSPARC->n_atom;
-    int atm_idx;
+    int atm_idx = 0;
     for (int JJ = n_atom; JJ >= 0; JJ--) {
         if (pSPARC->IP_displ_U[JJ] >= 0) {
             atm_idx = JJ; // last entry of IP_displ_U array corresponding to the last atom with U correction
@@ -652,7 +654,7 @@ void Calculate_occMat_kpt(SPARC_OBJ *pSPARC, ATOM_LOC_INFLUENCE_OBJ *Atom_Influe
     nstart = pSPARC->band_start_indx;
     nend = pSPARC->band_end_indx;
     Ns = pSPARC->Nstates;
-    int Nspinor = pSPARC->Nspinor;
+    //int Nspinor = pSPARC->Nspinor;
 
     int rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -720,7 +722,7 @@ void Calculate_occMat_kpt(SPARC_OBJ *pSPARC, ATOM_LOC_INFLUENCE_OBJ *Atom_Influe
 
     // calculate local rho_mn
     int n_atom = pSPARC->n_atom;
-    int atm_idx;
+    int atm_idx = 0;
     for (int JJ = n_atom; JJ >= 0; JJ--) {
         if (pSPARC->IP_displ_U[JJ] >= 0) {
             atm_idx = JJ; // last entry of IP_displ_U array corresponding to the last atom with U correction
@@ -830,7 +832,7 @@ void Calculate_occMat_kpt(SPARC_OBJ *pSPARC, ATOM_LOC_INFLUENCE_OBJ *Atom_Influe
             }
         }
 
-        int angnum;
+        //int angnum;
         int atmcount = 0;
         for (int ityp = 0; ityp < pSPARC->Ntypes; ityp++) {
             if (!pSPARC->atom_solve_flag[ityp]) {
@@ -844,7 +846,7 @@ void Calculate_occMat_kpt(SPARC_OBJ *pSPARC, ATOM_LOC_INFLUENCE_OBJ *Atom_Influe
             }
 
             // angnum = pSPARC->AtmU[ityp].angnum;
-            angnum = locProj[ityp].nproj;
+            //angnum = locProj[ityp].nproj;
             for (int iat = 0; iat < pSPARC->nAtomv[ityp]; iat++)
             {
 
@@ -1199,6 +1201,10 @@ void print_Occ_mat(SPARC_OBJ *pSPARC) {
 
                 int info = LAPACKE_dgeev(LAPACK_COL_MAJOR, 'N', 'V', angnum, rho_mn, angnum,
                                         eval, eval_imag, evec_left, angnum, evec, angnum);
+                if (info != 0) {
+                    fprintf(stderr, "Error: LAPACKE_dgeev failed with info = %d\n", info);
+                }
+
                 printf("Eigenvalues:\n");
                 for (int JJ = 0; JJ < angnum; JJ++) {
                     printf("% 6.6f    ",eval[JJ]);

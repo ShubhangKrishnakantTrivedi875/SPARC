@@ -72,7 +72,7 @@ No unit
 \end{columns}
 
 \begin{block}{Description}
-Type of QMD to be performed. Currently, NVE (microcanonical ensemble), NVT\_NH (canonical ensemble with Nose-Hoover thermostat), NVK\_G (isokinetic ensemble with Gaussian thermostat), NPT\_NH (isothermal-isobaric ensemble with Nose-Hoover thermostat) and NPT\_NP (isothermal-isobaric ensemble with Nose-Poincare thermostat) are supported.
+Type of QMD to be performed. Currently, NVE (microcanonical ensemble), NVT\_NH (canonical ensemble with Nose-Hoover thermostat), NVK\_G (isokinetic ensemble with Gaussian thermostat), NPT\_NH (isothermal-isobaric ensemble with Nose-Hoover thermostat), NPT\_NP (isothermal-isobaric ensemble with Nose-Poincare thermostat) and NPH (isothermal-isoenthalpic ensemble) are supported.
 \end{block}
 
 \end{frame}
@@ -466,7 +466,7 @@ Gives the inertia mass for the thermostat variable in NPT\_NP.
 
 \begin{block}{Remark}
 Applicable to NPT\_NP \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only.
-Program will exit if NPT\_NP is selected but NPT\_NP\_BMASS is not input
+Program will exit if NPT\_NP is selected but NPT\_NP\_QMASS is not input
 \end{block}
 
 \end{frame}
@@ -537,7 +537,6 @@ No unit
 \begin{block}{Description}
 Specify which lattice vectors can be rescaled in NPT\_NH and NPT\_NP. The cell will only expand or shrink in the specified directions.
 
-Rescaled vectors can be specified for orthogonal systems if NPT\_NP thermostat is used.
 \end{block}
 
 \begin{block}{Remark}
@@ -545,7 +544,7 @@ Only three numbers 1, 2 and 3 can be accepted. For example, if ``2 3'' is the in
 
 If it is set in NPT\_NH, the expansion or shrinkage on designated lattice vector will try to keep the total pressure to oscillate near the target pressure.
 
-If it is set in NPT\_NP, the expansion or shrinkage on designated lattice vector will only try to keep the normal stress at their direction to oscillate near the target pressure.
+If it is set in NPT\_NP, the expansion or shrinkage on designated lattice vector will only try to keep the normal stress in this direction to oscillate near the corresponding target stress component (which is the sum of external pressure and corresponding external stress component).
 \end{block}
 
 \end{frame}
@@ -559,7 +558,7 @@ If it is set in NPT\_NP, the expansion or shrinkage on designated lattice vector
 \begin{columns}
 \column{0.4\linewidth}
 \begin{block}{Type}
-Double
+Int
 \end{block}
 
 \begin{block}{Default}
@@ -577,13 +576,200 @@ No unit
 \end{columns}
 
 \begin{block}{Description}
-Set the scale constraint for lattice vectors in NPT\_NP. The length ratio between the designated lattice vector keeps constant in NPT\_NP thermostat. For example, if ``12'' is set, then the length ratio between 1st and 2nd lattice vectors will keep constant.
+Set the scale constraint for lattice vectors in NPT\_NP. The length ratio between the designated lattice vector keeps constant in NPT\_NP ensemble. For example, if ``12'' is set, then the length ratio between 1st and 2nd lattice vectors will keep constant.
 \end{block}
 
 \begin{block}{Remark}
-Applicable to orthogonal system using NPT\_NP \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only.
+Applicable to NPT\_NP \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only.
 
 There are 4 types of available constraints. ``12'' or ``21''; ``13'' or ``31''; ``23'' or ``32''; ``123'' or ``132'' or ``213'' or ``231'' or ``312'' or ``321''.
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{\texttt{NPT\_NP\_ANGLES}} \label{NPT_NP_ANGLES}
+\vspace*{-12pt}
+\begin{columns}
+\column{0.4\linewidth}
+\begin{block}{Type}
+Int
+\end{block}
+
+\begin{block}{Default}
+0
+\end{block}
+
+\column{0.4\linewidth}
+\begin{block}{Unit}
+No unit
+\end{block}
+
+\begin{block}{Example}
+\texttt{NPT\_NP\_ANGLES}: 1
+\end{block}
+\end{columns}
+
+\begin{block}{Description}
+Flag to determine whether to allow changing of angles of the cell (simulation box) in NPT\_NP. Choosing "1" as the input allows changing of angles between lattice vectors, and "0" keeps the angles between lattice vectors to be fixed.
+\end{block}
+
+\begin{block}{Remark}
+Applicable to NPT\_NP \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only when all the lattice vectors are allowed to be rescaled by setting \hyperlink{NPT\_SCALE\_VECS}{\texttt{NPT\_SCALE\_VECS}} to "123" and simultaneously no other constraints are imposed through \hyperlink{NPT\_SCALE\_CONSTRAINTS}{\texttt{NPT\_SCALE\_CONSTRAINTS}}.
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{\texttt{NPH\_BMASS}} \label{NPH_BMASS}
+\vspace*{-12pt}
+\begin{columns}
+\column{0.4\linewidth}
+\begin{block}{Type}
+Double
+\end{block}
+
+\begin{block}{Default}
+No default value
+\end{block}
+
+\column{0.4\linewidth}
+\begin{block}{Unit}
+atomic unit
+\end{block}
+
+\begin{block}{Example}
+\texttt{NPH\_BMASS}: 72.4
+\end{block}
+\end{columns}
+
+\begin{block}{Description}
+Gives the inertia mass for the barostat variable in NPH.
+\end{block}
+
+\begin{block}{Remark}
+Applicable to NPH \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only.
+Program will exit if NPH is selected but NPH\_BMASS is not input. 
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{\texttt{NPH\_SCALE\_VECS}} \label{NPH_SCALE_VECS}
+\vspace*{-12pt}
+\begin{columns}
+\column{0.4\linewidth}
+\begin{block}{Type}
+Int
+\end{block}
+
+\begin{block}{Default}
+1 2 3
+\end{block}
+
+\column{0.4\linewidth}
+\begin{block}{Unit}
+No unit
+\end{block}
+
+\begin{block}{Example}
+\texttt{NPH\_SCALE\_VECS}: 1 2
+\end{block}
+\end{columns}
+
+\begin{block}{Description}
+Specify which lattice vectors can be rescaled in NPH. The cell will only expand or shrink in the specified directions.
+
+\end{block}
+
+\begin{block}{Remark}
+It is similar to \hyperlink{NPT\_SCALE\_VECS}{\texttt{NPT\_SCALE\_VECS}} but meant to use when doing NPH ensemble. Only three numbers 1, 2 and 3 can be accepted. For example, if ``2 3'' is the input, the cell will only expand or shrink in the directions of lattice vector 2 and lattice vector 3.
+\\
+If it is set in NPH, the expansion or shrinkage on designated lattice vector will only try to keep the total internal normal stress at their direction to oscillate near the corresponding target stress component (which is the sum of external pressure and corresponding external stress component).
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{\texttt{NPH\_SCALE\_CONSTRAINTS}} \label{NPH_SCALE_CONSTRAINTS}
+\vspace*{-12pt}
+\begin{columns}
+\column{0.4\linewidth}
+\begin{block}{Type}
+Int
+\end{block}
+
+\begin{block}{Default}
+none
+\end{block}
+
+\column{0.4\linewidth}
+\begin{block}{Unit}
+No unit
+\end{block}
+
+\begin{block}{Example}
+\texttt{NPH\_SCALE\_CONSTRAINTS}: 23
+\end{block}
+\end{columns}
+
+\begin{block}{Description}
+Set the scale constraint for lattice vectors in NPH. The length ratio between the designated lattice vector keeps constant in NPH thermostat. For example, if ``23'' is set, then the length ratio between 2nd and 3rd lattice vectors will be kept constant.
+\end{block}
+
+\begin{block}{Remark}
+Applicable to NPH \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only.
+It is similar to \hyperlink{NPT\_SCALE\_VECS}{\texttt{NPT\_SCALE\_VECS}} but meant to use when doing NPH ensemble.
+There are 4 types of available constraints. ``12'' or ``21''; ``13'' or ``31''; ``23'' or ``32''; ``123'' or ``132'' or ``213'' or ``231'' or ``312'' or ``321''.
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[allowframebreaks]{\texttt{NPH\_ANGLES}} \label{NPH_ANGLES}
+\vspace*{-12pt}
+\begin{columns}
+\column{0.4\linewidth}
+\begin{block}{Type}
+Int
+\end{block}
+
+\begin{block}{Default}
+0
+\end{block}
+
+\column{0.4\linewidth}
+\begin{block}{Unit}
+No unit
+\end{block}
+
+\begin{block}{Example}
+\texttt{NPH\_ANGLES}: 1
+\end{block}
+\end{columns}
+
+\begin{block}{Description}
+Flag to determine whether to allow changing of angles of the cell (simulation box) in NPH. Choosing "1" as the input allows changing of angles between lattice vectors, and "0" keeps the angles between lattice vectors to be fixed.
+\end{block}
+
+\begin{block}{Remark}
+Analogous to \hyperlink{NPT\_NP\_ANGLES}{\texttt{NPT\_NP\_ANGLES}} but applicable to NPH \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only when all the lattice vectors are allowed to be rescaled by setting \hyperlink{NPH\_SCALE\_VECS}{\texttt{NPH\_SCALE\_VECS}} to "123" and simultaneously no other constraints are imposed through \hyperlink{NPH\_SCALE\_CONSTRAINTS}{\texttt{NPH\_SCALE\_CONSTRAINTS}}.
 \end{block}
 
 \end{frame}
@@ -615,11 +801,87 @@ GPa
 \end{columns}
 
 \begin{block}{Description}
-Gives the outer pressure in NPT\_NH and NPT\_NP.
+Gives the outer pressure in NPT\_NH.
 \end{block}
 
 \begin{block}{Remark}
-Applicable to NPT\_NH and NPT\_NP \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only.
+Applicable to NPT\_NH \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only.
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{\texttt{EXTERNAL\_PRESSURE}} \label{EXTERNAL_PRESSURE}
+\vspace*{-12pt}
+\begin{columns}
+\column{0.4\linewidth}
+\begin{block}{Type}
+Double
+\end{block}
+
+\begin{block}{Default}
+0.0
+\end{block}
+
+\column{0.4\linewidth}
+\begin{block}{Unit}
+GPa
+\end{block}
+
+\begin{block}{Example}
+\texttt{EXTERNAL\_PRESSURE}: 0.5
+\end{block}
+\end{columns}
+
+\begin{block}{Description}
+Gives the outer/external pressure in NPT\_NP and NPH.
+\end{block}
+
+\begin{block}{Remark}
+Applicable to NPT\_NP and NPH \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only. In contrast to NPT\_NH governed by a single \hyperlink{TARGET\_PRESSURE}{\texttt{TARGET\_PRESSURE}} argument, the NPT\_NP and NPH are governed by two arguments: \hyperlink{EXTERNAL\_PRESSURE}{\texttt{EXTERNAL\_PRESSURE}} and \hyperlink{EXTERNAL\_STRESS}{\texttt{EXTERNAL\_STRESS}}, the sum of which gives target stress, around which the total internal stress must oscillate.  
+\\
+Note that in absence of \hyperlink{EXTERNAL_STRESS}{\texttt{EXTERNAL\_STRESS}}, target stress in NPT\_NP and NPH would be isotropic and (have diagonal components) equal to \hyperlink{EXTERNAL\_PRESSURE}{\texttt{EXTERNAL\_PRESSURE}}. 
+
+
+\end{block}
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}[allowframebreaks]{\texttt{EXTERNAL\_STRESS}} \label{EXTERNAL_STRESS}
+\vspace*{-12pt}
+\begin{columns}
+\column{0.4\linewidth}
+\begin{block}{Type}
+Double
+\end{block}
+
+\begin{block}{Default}
+0.0 0.0 0.0 0.0 0.0 0.0
+\end{block}
+
+\column{0.4\linewidth}
+\begin{block}{Unit}
+GPa
+\end{block}
+
+\begin{block}{Example}
+\texttt{EXTERNAL\_STRESS}: \\ 5 0.1 -5 2 4 0.3
+\end{block}
+\end{columns}
+
+\begin{block}{Description}
+Gives the outer stress in NPT\_NP and NPH.
+\end{block}
+
+\begin{block}{Remark}
+Applicable to NPT\_NP and NPH \hyperlink{MD_METHOD}{\texttt{MD\_METHOD}} only. The format is "$\sigma_{xx} \ \sigma_{yy} \ \sigma_{zz} \ \sigma_{xy} \ \sigma_{xz} \ \sigma_{yz}$", where $\sigma$ here denotes the \hyperlink{EXTERNAL\_PRESSURE}{\texttt{EXTERNAL\_PRESSURE}}. The target stress around which the total internal stress must oscillate in NPT\_NP and NPH ensemble is the sum of \hyperlink{EXTERNAL\_PRESSURE}{\texttt{EXTERNAL\_PRESSURE}} and \hyperlink{EXTERNAL\_STRESS}{\texttt{EXTERNAL\_STRESS}}.
 \end{block}
 
 \end{frame}

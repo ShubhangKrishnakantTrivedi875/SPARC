@@ -58,7 +58,8 @@ double compute_hnl(int n, int l, double r, double rcut, double sigma_atom){
 
 	double rgrid_integration[N_integration_grid];
 
-	double rgrid_min = 0.001, rgrid_max = rcut;
+	double rgrid_min = 0.001;
+	//double rgrid_max = rcut;
 
 	for (int i = 0; i < N_integration_grid; i++){
 		rgrid_integration[i] = rgrid_min + i*dr;
@@ -71,7 +72,8 @@ double compute_hnl(int n, int l, double r, double rcut, double sigma_atom){
 	double q_nl = root_n/rcut;
 
 	double jl_term[N_integration_grid], exp_term[N_integration_grid], ll_term[N_integration_grid];
-	double sj, sy, sjp, syp, sj1;
+	//double sj;
+	double sy, sjp, syp, sj1;
 
 	sphbes(l+1, q_nl*rcut, &sj1, &sy, &sjp, &syp);
 	double C_sph_Bessel = sqrt((1.0/2.0/M_PI)*(1.0/rcut/rcut/rcut)*(1.0/sj1/sj1));
@@ -109,7 +111,8 @@ double compute_d_hnl(int n, int l, double r, double rcut, double sigma_atom){
 
 	double rgrid_integration[N_integration_grid];
 
-	double rgrid_min = 0.001, rgrid_max = rcut;
+	double rgrid_min = 0.001;
+	//double rgrid_max = rcut;
 
 	for (int i = 0; i < N_integration_grid; i++){
 		rgrid_integration[i] = rgrid_min + i*dr;
@@ -176,7 +179,8 @@ void compute_hnl_soap(SPARC_OBJ *pSPARC, MLFF_Obj *mlff_str){
 	
 	mlff_str->rgrid = (double *) malloc(sizeof(double)* pSPARC->N_rgrid_MLFF);
 	double dr = (mlff_str->rcut-0.001)/(pSPARC->N_rgrid_MLFF-1);
-	double rgrid_min = 0.001, rgrid_max = mlff_str->rcut;
+	double rgrid_min = 0.001;
+	//double rgrid_max = mlff_str->rcut;
 	for (int i = 0; i < pSPARC->N_rgrid_MLFF; i++){
 		mlff_str->rgrid[i] = rgrid_min + i*dr;
 	}

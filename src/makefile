@@ -23,7 +23,7 @@ USE_ELPA      = 0
 
 # Enable SIMD vectorization for complex stencil routines
 # CAUTION: for some compilers this results in wrong results! Use for intel/19.0.3 or later versions
-ENABLE_SIMD_COMPLEX = 1
+ENABLE_SIMD_COMPLEX = 0
 
 # Enable ACCEL by GT
 USE_ACCELGT = 0

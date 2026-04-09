@@ -63,7 +63,7 @@ void GetInfluencingAtoms_nloc(SPARC_OBJ *pSPARC, ATOM_NLOC_INFLUENCE_OBJ **Atom_
     MPI_Comm_rank(comm, &rank_comm);
     
     double DMxs, DMxe, DMys, DMye, DMzs, DMze;
-    double Lx, Ly, Lz, rc, x0, y0, z0, x0_i, y0_i, z0_i, x2, y2, z2, r2, rc2, rcbox_x, rcbox_y, rcbox_z, x, y, z;
+    double Lx, Ly, Lz, rc, x0, y0, z0, x0_i, y0_i, z0_i, r2, rc2, rcbox_x, rcbox_y, rcbox_z, x, y, z;
     int count_overlap_nloc, count_overlap_nloc_sphere, ityp, i, j, k, count, i_DM, j_DM, k_DM, 
         iat, atmcount, atmcount2, DMnx, DMny;
     int pp, qq, rr, ppmin, ppmax, qqmin, qqmax, rrmin, rrmax;

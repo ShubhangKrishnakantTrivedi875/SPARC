@@ -50,7 +50,14 @@ void find_element(char element[8], char *atom_type)
         memcpy(element, str, pch-str);
         element[pch-str] = '\0';
     } else {
-        strncpy( element, str, 8 );
+
+        if (strlen(str) >= 8) {
+            fprintf(stderr, "Warning: Element name '%s' exceeds 8-character limit. Truncating.\n", str);
+        }
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-truncation"
+        snprintf(element, 8, "%s", str);
+        #pragma GCC diagnostic pop
     }
 }
 
@@ -140,7 +147,14 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     Flag_fdgrid = Flag_ecut = Flag_meshspacing = 0;
     int Flag_tol_relaxcell = 0;
 
+    if (strlen(pSPARC_Input->filename) + 5 >= L_STRING) {
+        fprintf(stderr, "Warning: Input filename is very long. Input_filename.inpt exceeding 512 characters, it will be truncated.\n");
+    }
+
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wformat-truncation"
     snprintf(input_filename, L_STRING, "%s.inpt", pSPARC_Input->filename);
+    #pragma GCC diagnostic pop
     
     FILE *input_fp = fopen(input_filename,"r");
     
@@ -777,6 +791,51 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
                 exit(EXIT_FAILURE);
             }
             fscanf(input_fp, "%*[^\n]\n");
+        } else if (strcmpi(str,"NPT_NP_ANGLES:") == 0){
+            fscanf(input_fp,"%d",&pSPARC_Input->NPT_NP_ANGLES);
+            fscanf(input_fp, "%*[^\n]\n");
+        } else if (strcmpi(str,"NPH_SCALE_VECS:") == 0) {
+            int dir[3] = {0, 0, 0};
+            pSPARC_Input->NPHscaleVecs[0] = 0; pSPARC_Input->NPHscaleVecs[1] = 0; pSPARC_Input->NPHscaleVecs[2] = 0; 
+            int scanfResult;
+            scanfResult = fscanf(input_fp,"%d %d %d\n",&dir[0], &dir[1], &dir[2]);
+            if (scanfResult == -1) {
+                scanfResult = fscanf(input_fp,"%d %d\n",&dir[0], &dir[1]);
+            }
+            if (scanfResult == -1) {
+                scanfResult = fscanf(input_fp,"%d\n",&dir[0]);
+            }
+            if (scanfResult == -1) {
+                printf("To correctly input NPH_SCALE_VECS, please do not add space or other characters between number and newline.\n");
+                printf("input as NPH_SCALE_VECS: 1 2 3\n");
+                exit(EXIT_FAILURE);
+            }
+            for (int i = 0; i < 3; i++) {
+                if (dir[i] > 0) pSPARC_Input->NPHscaleVecs[dir[i] - 1] = 1;
+            }
+            // fscanf(input_fp, "%*[^\n]\n");
+         } else if (strcmpi(str,"NPH_SCALE_CONSTRAINTS:") == 0) {
+            fscanf(input_fp,"%s",temp);
+            if (strcmpi(temp,"none") == 0) {
+                pSPARC_Input->NPHconstraintFlag = 0;
+            } else if ((strcmpi(temp, "12") == 0) || (strcmpi(temp, "21") == 0)) {
+                pSPARC_Input->NPHconstraintFlag = 1;
+            } else if ((strcmpi(temp, "13") == 0) || (strcmpi(temp, "31") == 0)) {
+                pSPARC_Input->NPHconstraintFlag = 2;
+            } else if ((strcmpi(temp, "23") == 0) || (strcmpi(temp, "32") == 0)) {
+                pSPARC_Input->NPHconstraintFlag = 3;
+            } else if ((strcmpi(temp, "123") == 0) || (strcmpi(temp, "132") == 0) || (strcmpi(temp, "213") == 0) ||
+                (strcmpi(temp, "231") == 0) || (strcmpi(temp, "312") == 0) || (strcmpi(temp, "321") == 0)) {
+                pSPARC_Input->NPHconstraintFlag = 4;
+            }
+            else {
+                printf("Cannot recognize NPH_SCALE_CONSTRAINTS: %s\n", temp);
+                exit(EXIT_FAILURE);
+            }
+            fscanf(input_fp, "%*[^\n]\n");
+        } else if (strcmpi(str,"NPH_ANGLES:") == 0){
+            fscanf(input_fp,"%d",&pSPARC_Input->NPH_ANGLES);
+            fscanf(input_fp, "%*[^\n]\n");
         } else if (strcmpi(str,"NPT_NH_QMASS:") == 0) { 
             fscanf(input_fp,"%d",&pSPARC_Input->NPT_NHnnos);
             for (int subscript_NPTNH_qmass = 0; subscript_NPTNH_qmass < pSPARC_Input->NPT_NHnnos; subscript_NPTNH_qmass++){
@@ -794,6 +853,16 @@ void read_input(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
             fscanf(input_fp, "%*[^\n]\n");
         } else if (strcmpi(str,"NPT_NP_BMASS:") == 0) {    
             fscanf(input_fp,"%lf",&pSPARC_Input->NPT_NP_bmass);
+            fscanf(input_fp, "%*[^\n]\n");
+        } else if (strcmpi(str,"NPH_BMASS:") == 0) {    
+            fscanf(input_fp,"%lf",&pSPARC_Input->NPH_bmass);
+            fscanf(input_fp, "%*[^\n]\n");
+        } else if (strcmpi(str,"EXTERNAL_PRESSURE:") == 0) {    
+            fscanf(input_fp,"%lf",&pSPARC_Input->pressure_external);
+            fscanf(input_fp, "%*[^\n]\n");
+        }else if (strcmpi(str,"EXTERNAL_STRESS:") == 0) {    
+            fscanf(input_fp,"%lf %lf %lf %lf %lf %lf",&pSPARC_Input->stress_external[0], &pSPARC_Input->stress_external[1], &pSPARC_Input->stress_external[2]
+                                                     ,&pSPARC_Input->stress_external[3], &pSPARC_Input->stress_external[4], &pSPARC_Input->stress_external[5]);
             fscanf(input_fp, "%*[^\n]\n");
         } else if (strcmpi(str,"STANDARD_EIGEN:") == 0) {    
             fscanf(input_fp,"%d",&pSPARC_Input->StandardEigenFlag);
@@ -1463,7 +1532,16 @@ void read_ion(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     char *ion_filename = malloc(L_STRING * sizeof(char));
     char *str          = malloc(L_STRING * sizeof(char));
     int i, ityp, typcnt, atmcnt_coord, atmcnt_relax, atmcnt_spin, *atmcnt_cum, n_atom;
+
+    if (strlen(pSPARC->filename) + 4 >= L_STRING) {
+        fprintf(stderr, "Warning: Ion filename is very long. Ion_filename.ion exceeding 512 characters will be truncated.\n");
+    }
+
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wformat-truncation"
     snprintf(ion_filename, L_STRING, "%s.ion", pSPARC->filename);
+    #pragma GCC diagnostic pop
+    
     FILE *ion_fp = fopen(ion_filename,"r");
     
     if (ion_fp == NULL) {
@@ -1726,7 +1804,7 @@ void read_ion(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
                 exit(EXIT_FAILURE);
             }
             //simplifyPath(str_tmp, &pSPARC->psdName[typcnt*L_PSD], L_PSD);
-            snprintf(&pSPARC->psdName[typcnt*L_PSD], L_PSD, "%s", str_tmp);
+            snprintf(&pSPARC->psdName[typcnt*L_PSD], L_PSD, "%.*s", L_PSD - 1, str_tmp);
             free(str_tmp);
             #undef STR
             #undef STR_
@@ -1783,7 +1861,7 @@ void read_ion(SPARC_INPUT_OBJ *pSPARC_Input, SPARC_OBJ *pSPARC) {
     /* Identify atom types for which radial solve is desired */
     typcnt = -1;
     char *atm_str= malloc(L_ATMTYPE * sizeof(char));
-    int id_OG; int str_len;
+    int id_OG = 0; int str_len;
     int atm_flag = 0;
     // while (!feof(ion_fp)) {
     //     fscanf(ion_fp,"%s",str);

@@ -602,7 +602,11 @@ void Setup_Comms_OFDFT(SPARC_OBJ *pSPARC) {
                     }
                 }
             }
+
+            #pragma GCC diagnostic push
+            #pragma GCC diagnostic ignored "-Wstringop-overread"
             MPI_Dist_graph_create_adjacent(pSPARC->dmcomm_phi,nneighb,neighb,(int *)MPI_UNWEIGHTED,nneighb,neighb,(int *)MPI_UNWEIGHTED,MPI_INFO_NULL,0,&pSPARC->comm_dist_graph_phi); // creates a distributed graph topology (adjacent, cartesian cubical)
+            #pragma GCC diagnostic pop
             //pSPARC->dmcomm_phi = pSPARC->comm_dist_graph_phi;
             free(neighb);
         }

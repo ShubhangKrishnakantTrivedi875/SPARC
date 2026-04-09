@@ -170,14 +170,20 @@ t1 = MPI_Wtime();
 	mlff_str->atom_idx_domain = (int *)malloc(mlff_str->natom_domain*sizeof(int));
 	mlff_str->el_idx_domain = (int *)malloc(mlff_str->natom_domain*sizeof(int));
 	mlff_str->print_mlff_flag = pSPARC->print_mlff_flag;
-	char str1[100] = "MLFF_data_reference_atoms.txt"; 
-	snprintf(mlff_str->ref_atom_name, L_STRING, "%s%s%s", pSPARC->mlff_data_folder, "/",str1);
+	char str1[100] = "MLFF_data_reference_atoms.txt";
+	char str2[100] = "MLFF_data_reference_structures.txt";
+	char str3[100] = "MLFF_RESTART.txt";
+	if (strlen(pSPARC->mlff_data_folder) + strlen(str2) + 1 >= L_STRING) {
+		fprintf(stderr, "Warning: MLFF data folder path is very long. MLFF filenames exceeding %d characters will be truncated.\n", L_STRING);
+	}
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
+	snprintf(mlff_str->ref_atom_name, L_STRING, "%s%s%s", pSPARC->mlff_data_folder, "/", str1);
     // strcpy(mlff_str->ref_atom_name, str1);
-    char str2[100] = "MLFF_data_reference_structures.txt"; 
-    snprintf(mlff_str->ref_str_name, L_STRING, "%s%s%s", pSPARC->mlff_data_folder, "/",str2);
+    snprintf(mlff_str->ref_str_name, L_STRING, "%s%s%s", pSPARC->mlff_data_folder, "/", str2);
     // strcpy(mlff_str->ref_str_name, str2);
-    char str3[100] = "MLFF_RESTART.txt"; 
-    snprintf(mlff_str->restart_name, L_STRING, "%s%s%s", pSPARC->mlff_data_folder, "/",str3);
+    snprintf(mlff_str->restart_name, L_STRING, "%s%s%s", pSPARC->mlff_data_folder, "/", str3);
+#pragma GCC diagnostic pop
     // strcpy(mlff_str->restart_name, str3);
 	int strt = 0;
 	if (rank==0){
@@ -296,7 +302,7 @@ void init_MLFF_simulation(SPARC_OBJ *pSPARC) {
 	int rank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	MLFF_Obj* mlff_str = pSPARC->mlff_str;
-	FILE *fp_mlff;
+	FILE *fp_mlff = NULL;
 	if (pSPARC->print_mlff_flag == 1 && rank ==0){
 		fp_mlff = mlff_str->fp_mlff;
 		fprintf(fp_mlff,"--------------------------------------------------------------------------------------------\n");
@@ -375,6 +381,7 @@ void init_existing_trainable_MLFF(SPARC_OBJ *pSPARC, MLFF_Obj *mlff_str) {
 	int rank;
 	double t1, t2;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+t1 = MPI_Wtime();
 	if (!rank){
 		// TODO: Probably need to edit or debug
 		read_MLFF_files(mlff_str, pSPARC);
@@ -411,14 +418,14 @@ t2 = MPI_Wtime();
 	fname_str = (char *) malloc(sizeof(char)*512);
 	char str1[512] = "MLFF_data_reference_structures.txt"; 
 	strcpy(fname_str, str1);
-	double **cell_data;
-	double **LatUVec_data;
-	double **apos_data; 
-	double *Etot_data;
-	double **F_data;
-	double **stress_data;
-	int *natom_data;
-	int **natom_elem_data;
+	double **cell_data = NULL;
+	double **LatUVec_data = NULL;
+	double **apos_data = NULL; 
+	double *Etot_data = NULL;
+	double **F_data = NULL;
+	double **stress_data = NULL;
+	int *natom_data = NULL;
+	int **natom_elem_data = NULL;
 	natom_data = (int *) malloc(sizeof(int)*mlff_str->n_str);
 	Etot_data = (double *) malloc(sizeof(double)*mlff_str->n_str);
 	cell_data = (double **) malloc(sizeof(double*)*mlff_str->n_str);
@@ -491,8 +498,11 @@ t2 = MPI_Wtime();
 	delete_dyarray(&mlff_str->atom_idx_addtrain);
 	for (int i = 0; i < mlff_str->n_str-1; i++){
 		if(rank == 0){
-			free(apos_data[i]); // Check this for memory leak
-			free(F_data[i]);   // Check this for memory leak
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+			free(apos_data[i]);
+			free(F_data[i]);
+#pragma GCC diagnostic pop
 		}
 		free(cell_data[i]);
 		free(LatUVec_data[i]);
@@ -509,6 +519,7 @@ t2 = MPI_Wtime();
 	free(natom_elem_data);
 	free(Etot_data);
 	free(natom_data);
+	free(fname_str);
 	if (pSPARC->MDFlag == 1 || pSPARC->RelaxFlag == 1) {
 		if(pSPARC->cell_typ != 0){
 			for(int i = 0; i < pSPARC->n_atom; i++)
@@ -525,6 +536,7 @@ void init_static_MLFF(SPARC_OBJ *pSPARC, MLFF_Obj *mlff_str) {
 	int rank;
 	double t1, t2;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+t1 = MPI_Wtime();
 	if (!rank){
 		// TODO: Probably need to edit or debug
 		read_MLFF_files(mlff_str, pSPARC);
@@ -581,7 +593,8 @@ void free_MLFF(MLFF_Obj *mlff_str){
 	if (rank==0 && mlff_str->print_mlff_flag==1){
 		fclose(mlff_str->fp_mlff);
 	}
-	int natom = mlff_str->natom, K_size_row = mlff_str->n_str_max*(3*mlff_str->natom_domain + 1 + mlff_str->stress_len), nelem = mlff_str->nelem;
+	//int natom = mlff_str->natom, K_size_row = mlff_str->n_str_max*(3*mlff_str->natom_domain + 1 + mlff_str->stress_len);
+	int nelem = mlff_str->nelem;
 	free(mlff_str->Znucl);
 	free(mlff_str->atom_idx_domain);
 	free(mlff_str->el_idx_domain);
@@ -662,8 +675,9 @@ void pretrain_MLFF_model(
 	int rank, nprocs;
 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	double t1, t2, t3, t4;
-	FILE *fp_mlff;
+	double t1, t2;
+	//double t3, t4;
+	FILE *fp_mlff = NULL;
 	if (pSPARC->print_mlff_flag == 1 && rank ==0){
 		fp_mlff = mlff_str->fp_mlff;
 	}
@@ -790,15 +804,8 @@ void get_domain_decompose_mlff_natom(
 {
 	int natom_per_procs_quot = natom/nprocs;
 	int natom_per_procs_rem = natom%nprocs;
-	int el_idx_global[natom];
-	// element ID of all atoms
-	int count = 0;
-	for (int i=0; i < nelem; i++){
-		for (int j=0; j < nAtomv[i]; j++){
-			el_idx_global[count] = i;
-			count++;
-		}
-	}
+	//int count = 0;
+
 	int natom_procs[nprocs];
 	for (int i=0; i < nprocs; i++){
 		if (i < natom_per_procs_rem){
@@ -863,18 +870,19 @@ void get_domain_decompose_mlff_idx(
  */
 
 void MLFF_train_predict(SPARC_OBJ *pSPARC, MLFF_Obj *mlff_str){
-	double t1, t2, t3, t4;
-	t3 = MPI_Wtime();
+	double t1, t2;
+	//double t3, t4;
+	//t3 = MPI_Wtime();
 	int nprocs, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    FILE *fp_mlff;
+    FILE *fp_mlff = NULL;
     if (pSPARC->print_mlff_flag == 1 && rank ==0){
     	// fp_mlff = fopen("mlff.log","a");
     	fp_mlff = mlff_str->fp_mlff;
     }
-	int doMLFF = pSPARC->mlff_flag;
-	int initial_train;
+	//int doMLFF = pSPARC->mlff_flag;
+	int initial_train = -1;
 	if (pSPARC->mlff_flag==1){
 		initial_train= pSPARC->begin_train_steps;
 	}
@@ -1090,12 +1098,14 @@ t2 = MPI_Wtime();
 			for (int i=0; i < pSPARC->n_atom*3; i++){
 				pSPARC->forces[i] = -1.0*F_predict[i];
 			}
-			double E_internal, entropy;
+			double E_internal;
 			if (pSPARC->mlff_internal_energy_flag){
+				double entropy;
 				E_internal = pSPARC->Etot*mlff_str->internal_energy_model_weights[1] + mlff_str->internal_energy_model_weights[0];
 				entropy = pSPARC->Etot - E_internal;
+				pSPARC->Entropy = entropy;
 			}
-			pSPARC->Entropy = entropy;
+			
 			if (pSPARC->mlff_pressure_train_flag==0){
 				for(int i = 0; i < mlff_str->stress_len; i++){
 					pSPARC->stress[index[i]] = stress_predict[i];
@@ -1114,7 +1124,7 @@ t2 = MPI_Wtime();
 		free(stress_predict);
 		free(bayesian_error);
 	}
-t4 = MPI_Wtime();
+//t4 = MPI_Wtime();
 }
 
 /** 
@@ -1126,7 +1136,7 @@ void MLFF_only_predict(SPARC_OBJ *pSPARC, MLFF_Obj *mlff_str){
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     double t1, t2;
-    FILE *fp_mlff;
+    FILE *fp_mlff = NULL;
     if (pSPARC->print_mlff_flag==1 && rank==0){
     	// fp_mlff = fopen("mlff.log","a");
     	fp_mlff = mlff_str->fp_mlff;
@@ -1183,12 +1193,13 @@ t2 = MPI_Wtime();
  */
 
 void sparc_mlff_interface_initialDFT(SPARC_OBJ *pSPARC, MLFF_Obj *mlff_str){
-double t1, t2, t3, t4;
-t3 = MPI_Wtime();
+double t1, t2;
+//double t3, t4;
+//t1 = MPI_Wtime();
 	int rank, nprocs;
 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    FILE *fp_mlff;
+    FILE *fp_mlff = NULL;
     if (pSPARC->print_mlff_flag==1 && rank==0){
     	fp_mlff = mlff_str->fp_mlff;
     }
@@ -1196,8 +1207,8 @@ t3 = MPI_Wtime();
 	for (int i=0; i <pSPARC->Ntypes; i++){
 		Z[i] = pSPARC->Znucl[i];
 	}
-	double  F_estimate_max;
-	double **K_predict, *K_predict_col_major;
+	//double  F_estimate_max;
+	//double **K_predict, *K_predict_col_major;
 	double *geometric_ratio = (double*) malloc(2 * sizeof(double));
 	geometric_ratio[0] = pSPARC->CUTOFF_y[0]/pSPARC->CUTOFF_x[0];
 	geometric_ratio[1] = pSPARC->CUTOFF_z[0]/pSPARC->CUTOFF_x[0];
@@ -1281,12 +1292,13 @@ t2 = MPI_Wtime();
  */
 
 void sparc_mlff_interface_addDFT(SPARC_OBJ *pSPARC, MLFF_Obj *mlff_str){
-double t1, t2, t3, t4;
-t3 = MPI_Wtime();
+double t1, t2;
+//double t3, t4;
+//t3 = MPI_Wtime();
 	int rank, nprocs;
 	MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	FILE *fp_mlff;
+	FILE *fp_mlff = NULL;
     if (pSPARC->print_mlff_flag==1 && rank==0){
     	// fp_mlff = fopen("mlff.log","a");
     	fp_mlff = mlff_str->fp_mlff;
@@ -1301,8 +1313,9 @@ t3 = MPI_Wtime();
 	nlist = (NeighList *) malloc(sizeof(NeighList)*1);
 	desc_str = (DescriptorObj *) malloc(sizeof(DescriptorObj)*1);
 	int *BC, *atomtyp;
-	double *cell, F_estimate_max;
-	double **K_predict, *K_predict_col_major;
+	double *cell;
+	//double F_estimate_max;
+	//double **K_predict, *K_predict_col_major;
 	int nelem = mlff_str->nelem;
 	int size_X3 = mlff_str->size_X3;
 	double xi_3 = mlff_str->xi_3;
@@ -1393,10 +1406,10 @@ t1 = MPI_Wtime();
 	}
 	// Only atoms whose force error was larger than the threshold
 	X3_toadd = (double **) malloc(sizeof(double *)* (((&mlff_str->atom_idx_addtrain))->len));
-	int atom_typ1[((&mlff_str->atom_idx_addtrain))->len];
+	//int atom_typ1[((&mlff_str->atom_idx_addtrain))->len];
 	for (int i =0; i<(((&mlff_str->atom_idx_addtrain))->len); i++){
 		X3_toadd[i] = (double *) malloc(sizeof(double)*size_X3);
-		atom_typ1[i] = atomtyp[((&mlff_str->atom_idx_addtrain))->array[i]];
+		//atom_typ1[i] = atomtyp[((&mlff_str->atom_idx_addtrain))->array[i]];
 		for (int j=0; j < size_X3; j++){
 			X3_toadd[i][j] = X3_gathered_2D[((&mlff_str->atom_idx_addtrain))->array[i]][j];
 		}
@@ -1476,7 +1489,7 @@ t2 = MPI_Wtime();
 	free(stress);
 	free(highrank_ID_descriptors);
 	free(Z);
-t4 = MPI_Wtime();
+//t4 = MPI_Wtime();
 }
 
 /**
@@ -1484,12 +1497,13 @@ t4 = MPI_Wtime();
  */
 
 void sparc_mlff_interface_predict(SPARC_OBJ *pSPARC, MLFF_Obj *mlff_str, double *E_predict, double *F_predict,  double *stress_predict, double *bayesian_error){
-double t1, t2, t3, t4;
-t3 = MPI_Wtime();
+double t1, t2;
+//double t3, t4;
+//t3 = MPI_Wtime();
 	int nprocs, rank;
     MPI_Comm_size(MPI_COMM_WORLD, &nprocs);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	FILE *fp_mlff;
+	FILE *fp_mlff = NULL;
     if (pSPARC->print_mlff_flag==1 && rank==0){
     	// fp_mlff = fopen("mlff.log","a");
     	fp_mlff = mlff_str->fp_mlff;
@@ -1499,7 +1513,8 @@ t3 = MPI_Wtime();
 	nlist = (NeighList *) malloc(sizeof(NeighList)*1);
 	desc_str = (DescriptorObj *) malloc(sizeof(DescriptorObj)*1);
 	int *BC, *atomtyp;
-	double *cell, F_estimate_max;
+	double *cell;
+	//double F_estimate_max;
 	double **K_predict, *K_predict_col_major;
 	int *Z;
 	Z = (int *)malloc(pSPARC->Ntypes*sizeof(int));
@@ -1636,7 +1651,7 @@ t2 = MPI_Wtime();
 	free(nlist);
 	free(desc_str);
 	free(Z);
-t4 = MPI_Wtime();
+//t4 = MPI_Wtime();
 }
 
 /**
@@ -1646,7 +1661,8 @@ t4 = MPI_Wtime();
 // TODO: Implement static printing
 void write_MLFF_results(SPARC_OBJ *pSPARC){
 	int rank, nproc, i;
-	FILE *output_fp, *static_fp;
+	FILE *output_fp = NULL;
+	FILE *static_fp = NULL;
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &nproc);
     // write energies into output file   

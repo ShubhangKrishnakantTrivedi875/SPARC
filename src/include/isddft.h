@@ -819,12 +819,16 @@ typedef struct _SPARC_OBJ{
     /* MD/relax options */
     double *ion_vel;       // Ionic velocity 
     double *ion_accel;     // Ionic acceleration
+    double *Pm_ion; // Ionic momenta 
+    double *ion_vel_fractional; // Ionic velocity in fractional coordinates
     double ion_T;          // Ionic temperature
     double PE, KE, TE, TE_ext;     // potential, kinetic and total energies respectively
     double kB;             // Boltzmann constant
     double MD_dt;          // MD time step [femtosecond]
     double mean_elec_T;    // Average of electronic temperature
     double mean_ion_T;     // Average of ionic temperature
+    double mean_internal_pressure; // Average of the internal pressure
+    double mean_total_internal_stress[9]; //Average of each total internal stress component
     double mean_TE;        // Average of total energy
     double mean_KE;        // Average of kinetic energy of ions
     double mean_PE;        // Average of electronic energy
@@ -833,6 +837,8 @@ typedef struct _SPARC_OBJ{
     double mean_TE_ext;    // Average of extended system energy
     double std_elec_T;     // Standard deviation of electronic temperature
     double std_ion_T;      // Standard deviation of ionic temperature
+    double std_internal_pressure; // Standard deviation of the internal pressure
+    double std_total_internal_stress[9];  //Standard deviation of each total internal stress component
     double std_TE;         // Standard deviation of total energy
     double std_KE;         // Standard deviation of kinetic energy of ions
     double std_PE;         // Standard deviation of electronic energy
@@ -858,16 +864,20 @@ typedef struct _SPARC_OBJ{
     double amu2au;         // conversion factor for atomic mass unit -> atomic unit of mass
     double fs2atu;         // conversion factor for femto second -> atomic unit of time (Jiffy) 
     double relaxPrTarget;  // Target pressure for cell relaxation in GPa
-    // NPT
+    // NPT OR NPH common
     int NPTscaleVecs[3];    // which lattice vector can be rescaled?
     int NPTconstraintFlag; // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
-    // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
+    // 3: b:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
+    int NPT_NP_ANGLES;      // Flag to decide whether changing of angles during NPT_NP ensemble is allowed
+    int NPHscaleVecs[3];     // Same as NPTscaleVecs, but meant for NPH
+    int NPHconstraintFlag;   // Same as NPTconstraintFlag, but meant for NPH
+    int NPH_ANGLES;          // Same as NPT_NP_ANGLES, but meant for NPH
     int NPTisotropicFlag;   // whether it is an isotropic cell expansion; a:b:c keeps similar during NPT. 
     // For NPT_NH, if all 3 lattive vectors are scalable, it will be an isotropic expansion;
-    // For NPT_NP, if all 3 lattive vectors are scalable, AND NPTconstraintFlag is 4, it will be an isotropic expansion.
-    double prtarget;       // Target pressure of barostatic system, used in both NPT_NH and NPT_NP
-    double scale;          // length ratio of the size of cell in NPT, used in both NPT_NH and NPT_NP
-    double volumeCell;  // volume of the cell, used in both NPT_NH and NPT_NP
+ 
+    double prtarget;       // Target pressure of barostatic system, used in NPT_NH
+    double scale;          // length ratio of the size of cell in NPT, used in both NPT_NH
+    double volumeCell;  // volume of the cell, used in NPT_NH, NPT_NP, NPH
     double initialLatVecLength[3]; // used for outputting LATVEC_SCALE
     // NPT-NH
     int NPT_NHnnos;              // amount of thermostat variables in the Nose-Hoover chain, it should be smaller than 100
@@ -878,28 +888,52 @@ typedef struct _SPARC_OBJ{
     double vlogv;          // Velocity of virtual baro variables
     double xlogs[L_QMASS];       // Positions of virtual thermal variables
     double Hamiltonian_NPT_NH; // Hamiltonian of the NPT-NH system
-    // NPT-NP
+    // NPT-NP AND NPH common
+    double pressure_external;  // Externally applied hydrostatic pressure, used in NPT_NP and NPH
+    double stress_external[6]; // Externally applied anisotropic stress (applied separately from pr_external),  used in NPT_NP and NPH
+    //In NPT_NP and NPH,  the target_stress[i] = pr_external+stress_external[i];  in contrast to NPT_NH where there is just target_pressure.
     int maxTimeIter;     // largest allowed amount of iteration
-    double NPT_NP_qmass; // qmass used in NPT_NP
-    double NPT_NP_bmass; // bmass used in NPT_NP
-    double range_x_velo; // velocity of x sidelength
-    double range_y_velo; // velocity of y sidelength
-    double range_z_velo; // velocity of z sidelength
-    double G_NPT_NP[3]; // G tensor, for barostat control
-    double Pm_NPT_NP[3]; // Pm tensor
+    double full_lattice[9]; // Lattice_vectors scaled by LATVEC scale 
+    double reciprocal_lattice[9]; //Reciprocal (inverse matrix) lattice of the full cell (i.e of lattice_vector*LATVEC_SCALE),
+    double metric_tensor[9]; // G tensor, for barostat control
+    double reciprocal_metric_tensor[9]; // G tensor associated with reciprocal lattice vectors, for barostat control
+    double initialLatVecAngles[3]; // for keeping lattice vector angles fixed in case of NPT_NP or NPH with constraints.
+    double angle_12;        // Angle between lattice vectors 1 and 2.
+    double angle_13;        // Angle between lattice vectors 1 and 3.
+    double angle_23;        // Angle between lattice vectors 2 and 3. 
+    double rotation_matrix[9]; //For rotating between actual cell, and rotated_cell
+    double lattice_avg_velo[9];  // Average velocity of lattice vectors
+    double Pm_metric_tensor[9]; // Momenta of the metric_tensor
+    double external_stress_lattice[9]; //external_stress matrix multiply reciprocal_metric_tensor
+    double external_stress_cartesian[9]; //external_stress matrix multiply reciprocal_metric_tensor
+    double constraint_stress[9];  // Stress generated by constraining the evolution of cell lattice vectors lengths or angles
+    double kinetic_stress[9];
+    double internal_stress_fractional[9]; // internal electronic stress (total stress minus ion-kinetic stress) in fractional coordinates
+    double total_internal_stress[9];
     double Kbaro; // kinetic energy of barostat variables
     double Ubaro; // potential energy of barostat variables
-    double S_NPT_NP; // S, for thermostat control
-    double Sv_NPT_NP; // velocity of S
+    double SNOSE[3]; // Thermostat control related information: Position variable of thermostat, velocity of thermostat, position variable at previous time step
     double Kther; // kinetic energy of thermostat variable
     double Uther; // potential energy of thermostat variable
     double Hamiltonian_NPT_NP; // Hamiltonian of the NPT-NP system
-    double init_Hamil_NPT_NP; // initial Hamiltonian of the system
+    double Hamiltonian_NPH;    // Hamiltonian of NPH system
+    double init_Hamil_NPT_NP; // initial Hamiltonian in NPT_NP ensemble
+    double init_Hamil_NPH;    // initial Hamiltonian in NPH ensemble
+    double t_run_md;
+    //NPT_NP_specific
+    double NPT_NP_qmass; // fictitious mass of thermostat (qmass) used in NPT_NP
+    double NPT_NP_bmass; // fictitious mass of barostat (bmass) used in NPT_NP
+    
+    //NPH specific
+    double NPH_bmass; // fictitious mass of barostat (bmass) used in NPT_NP
+    double temperature;
+    double internal_pressure;
+   
     // Relaxation
     double Relax_fac;      // Relaxation factor
     int elecgs_Count;      // To count the number of times electronic ground state is calculated
     double *d;             // Search direction in case of NLCG 
-    double NLCG_sigma;          // parameter used in NLCG   
+    double NLCG_sigma;     // parameter used in NLCG   
     int L_history;         // maximum number of relaxation steps in LBFGS stored
     double L_finit_stp;    // finite step for line optiization
     double L_maxmov;       // maximum allowed step size for translation
@@ -1417,15 +1451,28 @@ typedef struct _SPARC_INPUT_OBJ{
     double qmass;        // mass parameter of Nose Hoover thermostat
 
     int NPT_NHnnos;            // number of thermostat variables in NPT_NH
-    int NPTscaleVecs[3];       // which lattice vector can be rescaled?
-    int NPTconstraintFlag; // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
-    // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
     double NPT_NHqmass[L_QMASS];// qmass used in NPT_NH
     double NPT_NHbmass;        // Bmass used in NPT_NH
-    double prtarget;     // Target pressure of barostatic system, UNIT on input file is GPa
-    double NPT_NP_qmass; // qmass used in NPT_NP
-    double NPT_NP_bmass; // Bmass used in NPT_NP
+    double prtarget;     // Target pressure of NPT_NH system, UNIT on input file is GPa
     
+    
+    int NPTscaleVecs[3];       // which lattice vector can be rescaled in NPT_NP?
+    int NPTconstraintFlag; // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
+    // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPT_NP.
+    int NPT_NP_ANGLES;          // whether to allow for changing angles in NPT_NP,  it can only be allowed (by setting to 1), when all lattice vectors can be rescaled using NPTscaleVecs: 1 2 3; 
+    // and when there are NO constraints in length confinement (so no input in NPTconstraintFlag)
+    int NPHscaleVecs[3];        // which lattice vector can be rescaled in NPH? 
+    int NPHconstraintFlag;      // confinement on side length of cell. none: no length confinement (default); 1: a:b keeps unchanged; 2: a:c keeps unchanged; 
+    // 3: a:c keeps unchanged; 4: a:b:c keeps unchanged, isotropic expansion. It is only available for NPH.
+    int NPH_ANGLES;              // whether to allow for changing angles in NPH,  it can only be allowed (by setting to 1), when all lattice vectors can be rescaled using NPHscaleVecs: 1 2 3; 
+    // and when there are NO constraints in length confinement (so no input in NPHconstraintFlag)
+    double pressure_external;  // Externally applied hydrostatic pressure of NPT_NP or NPH system, UNIT on input file is GPa 
+    double stress_external[6]; // Externally applied anisotropic stress tensor (applied separately from pressure_external) for NPT_NP or NPH system, UNIT on input file is GPa 
+    //In NPT_NP and NPH,  the target_stress[i] = pr_external+stress_external[i];  in contrast to NPT_NH where there is just target_pressure.
+
+    double NPT_NP_qmass; // qmass used in NPT_NP
+    double NPT_NP_bmass; // Bmass used in NPT_NP 
+    double NPH_bmass; // Bmass used in NPH  
     /* Walltime */
     double TWtime;
     

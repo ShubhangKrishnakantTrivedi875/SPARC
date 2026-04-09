@@ -55,8 +55,8 @@ void print_ref_atom_MLFF(MLFF_Obj *mlff_str){
     FILE *fptr;
     fptr = fopen(mlff_str->ref_atom_name,"w");
 
-    int *index_elem;
-    int count;
+    //int *index_elem;
+    //int count;
 
     if(fptr == NULL)
     {
@@ -285,7 +285,7 @@ void print_restart_MLFF(MLFF_Obj *mlff_str){
 
 void read_MLFF_files(MLFF_Obj *mlff_str, SPARC_OBJ *pSPARC){
     FILE *fptr;
-    int info;
+    //int info;
     char a1[512], str[512];
 
     // char str1[512] = "MLFF_data_reference_atoms.txt"; 
@@ -436,11 +436,11 @@ void read_MLFF_files(MLFF_Obj *mlff_str, SPARC_OBJ *pSPARC){
         fgets(a1, sizeof (a1), fptr);
     }
 
-    int atm_typ, nimg;
+    //int atm_typ, nimg;
     int count=0;
-    int img_no;
-    double wt_temp;
-    int temp_int;
+    //int img_no;
+    //double wt_temp;
+    //int temp_int;
     while (!feof(fptr)){
         fgets(a1, sizeof(a1), fptr);
         sscanf(a1, "Atom_type: %d weight: %lf", &mlff_str->natm_typ_train[count], &mlff_str->weights[count]);

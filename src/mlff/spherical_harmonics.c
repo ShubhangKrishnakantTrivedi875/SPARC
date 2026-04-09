@@ -162,6 +162,7 @@ void sph_harmonics(const double theta, const double phi, const int LL,
 	
 	
 	memsize_Y = (LL+1)*(LL+1) ;
+	(void)memsize_Y;
 
 	P = (double *) malloc(sizeof(double)*memsize_A_B_P);
 	for ( size_t l =2; l <= LL ; l++) {

@@ -7,7 +7,7 @@
     \item Local, semilocal, and nonlocal (including hybrid) exchange-correlation functionals.
     \item Standard ONCV pseudopotentials, including nonlinear core corrections.
     \item Calculation of ground state energy, atomic forces, and stress tensor.
-    \item Structural relaxation and ab initio molecular dynamics (NVE, NVT, and NPT).
+    \item Structural relaxation and ab initio molecular dynamics (NVE, NVTNH, NVKG, NPTNH, NPTNP and NPH).
     \item Spin polarized and unpolarized calculations.
     \item Spin-orbit coupling.
     \item Dispersion interactions through DFT-D3, vdW-DF1, and vdW-DF2.
@@ -37,6 +37,7 @@
  	    \item \textbf{Shashikant Kumar}: Testing framework, NLCC, MLFF \\  
             \item \textbf{Mostafa Faghih Shojaei}: SPMS table of pseudopotentials \\ 
             \item \textbf{Sayan Bhowmik\footnotemark[1]}: Atom code, DFT+U (Dudarev) \\
+            \item \textbf{Shubhang Krishnakant Trivedi}: NPTNP, NPH in QMD\\
             \item \textbf{Swarnava Ghosh}: Preliminary development \\
             \item \textbf{Deepa Phanish}: Initial development
  	\end{itemize}
@@ -250,7 +251,7 @@ $ echo SPARC doc files installed at: $SPARC_DOC_PATH
   \textbf{Quantum molecular dynamics (QMD) calculations}  \\
   \begin{itemize}
     \item ``.out" file -- See above.
-    \item ``.aimd" file -- Atomic positions, atomic velocities, atomic forces, electronic temperature, ionic temperature and total energy for each QMD step.
+    \item ``.aimd" file -- Atomic positions, atomic velocities, atomic forces, electronic temperature, ionic temperature, pressure (ionic, electronic and total), energies (internal, kinetic, total), entropy, stresses (ionic, electronic and total) and cell parameters: lattice vectors, volume and angles (latter 3 only in case of flexible cell) for each QMD step.
     \item ``.restart" file -- Information necessary to perform a restarted QMD calculation. 
   \end{itemize}
   
@@ -367,7 +368,14 @@ $ echo SPARC doc files installed at: $SPARC_DOC_PATH
   \hyperlink{NPT_NP_BMASS}{\texttt{NPT\_NP\_BMASS}} $\vert$
   \hyperlink{NPT_SCALE_VECS}{\texttt{NPT\_SCALE\_VECS}} $\vert$
   \hyperlink{NPT_SCALE_CONSTRAINTS}{\texttt{NPT\_SCALE\_CONSTRAINTS}} $\vert$ 
+  \hyperlink{NPT_NP_ANGLES}{\texttt{NPT\_NP\_ANGLES}} $\vert$ 
+  \hyperlink{NPH_BMASS}{\texttt{NPH\_BMASS}} $\vert$
+  \hyperlink{NPH_SCALE_VECS}{\texttt{NPH\_SCALE\_VECS}} $\vert$
+  \hyperlink{NPH_SCALE_CONSTRAINTS}{\texttt{NPH\_SCALE\_CONSTRAINTS}} $\vert$ 
+  \hyperlink{NPH_ANGLES}{\texttt{NPH\_ANGLES}} $\vert$ 
   \hyperlink{TARGET_PRESSURE}{\texttt{TARGET\_PRESSURE}} $\vert$
+  \hyperlink{EXTERNAL_PRESSURE}{\texttt{EXTERNAL\_PRESSURE}} $\vert$
+  \hyperlink{EXTERNAL_STRESS}{\texttt{EXTERNAL\_STRESS}} $\vert$
   \hyperlink{RESTART_FLAG}{\texttt{RESTART\_FLAG}} $\vert$
   \hyperlink{TWTIME}{\texttt{TWTIME}}
   \end{block}

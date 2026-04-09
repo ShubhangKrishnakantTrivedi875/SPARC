@@ -474,7 +474,8 @@ void xc_decomposition_atom(SPARC_ATOM_OBJ *pSPARC_ATOM) {
 }
 
 void Calculate_SplineDerivRadFun_atom(SPARC_ATOM_OBJ *pSPARC_ATOM){
-    int ityp, l, lcount, lcount2, np, ppl_sum, psd_len;
+    //int ityp;
+    int l, lcount, lcount2, np, ppl_sum, psd_len;
     int lloc = *pSPARC_ATOM->localPsd;
     psd_len = pSPARC_ATOM->psd->size;
     pSPARC_ATOM->psd->SplinerVlocD = (double *)malloc(sizeof(double)*psd_len);

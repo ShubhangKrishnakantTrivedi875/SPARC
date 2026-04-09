@@ -17,7 +17,7 @@
 
 void mGGA_hamiltonian_term(SPARC_ATOM_OBJ *pSPARC_ATOM, int l, double spin, double *VmGGA) {
     int Nd = pSPARC_ATOM->Nd;
-    int nspinor = pSPARC_ATOM->nspinor;
+    //int nspinor = pSPARC_ATOM->nspinor;
     double *r = pSPARC_ATOM->r;
     double *V3;
 
