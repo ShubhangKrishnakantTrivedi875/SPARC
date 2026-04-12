@@ -22,7 +22,12 @@ import time
 import numpy as np
 
 Ha2eV  = 27.21140795
-Ha2ohm = 1.0 / 4.599e-5   # 1 a.u. conductivity ≈ 21741 (Ω·m)^-1  (for reference)
+# Unit conversion: 1 a.u. of conductivity = e²/(ħ a₀) = 4.6009×10⁶ S/m
+#   → 1 a.u. = 4.6009×10⁶  (Ω·m)⁻¹  =  4.6009×10⁴  (Ω·cm)⁻¹
+#   → 1 a.u. = 0.046009 (μΩ·cm)⁻¹   [since 1 (μΩ·cm)⁻¹ = 10⁸ S/m]
+AU_TO_SI        = 4.6009e6    # [S/m]        per a.u. of conductivity
+AU_TO_OHM_INV_M   = 4.6009e6  # [(Ω·m)⁻¹]   per a.u.
+AU_TO_MUOHM_CM_INV = 4.6009e-2 # [(μΩ·cm)⁻¹] per a.u.  (= AU_TO_SI / 1e8)
 
 
 # ════════════════════════════════════════════════════════════════════════════
@@ -89,8 +94,9 @@ def print_out_params(params):
           f"dy={params['dy']:.6f}  dz={params['dz']:.6f}  [Bohr]")
     print(f"  dV            : {params['dV']:.6e} Bohr³")
     print(f"  FD_ORDER      : {params['FD_ORDER']}  (FDn = {params['FDn']})")
-    print(f"  BC            : (BCx={params['BCx']}, BCy={params['BCy']}, "
-          f"BCz={params['BCz']})   0=periodic  1=Dirichlet")
+    _bc_str = {0: "P", 1: "D"}
+    print(f"  BC            : {_bc_str[params['BCx']]} {_bc_str[params['BCy']]} "
+          f"{_bc_str[params['BCz']]}   (P=periodic  D=Dirichlet)")
     print(f"  KPOINT_GRID   : {params['kpt_grid']}")
     print(f"  KPOINT_SHIFT  : {params['kpt_shift']}")
     print(f"  SPIN_TYP      : {params['spin_typ']}")
@@ -157,13 +163,16 @@ def print_eigen_summary(eign, occ, kpts, kpt_wts):
 
 def print_kg_tensor(sigma, Omega, eta):
     """
-    Print the real part of each diagonal and selected off-diagonal component
-    at a few representative frequencies.
+    Print Re(σ_{αβ}(ω)) — the physical absorptive optical conductivity —
+    at a few representative frequencies, in atomic units and SI.
+
+    Note: Re(sigma) from the resolvent formula is the physical quantity.
     """
     w = 65
     print("\n" + "─" * w)
-    print("  Kubo-Greenwood conductivity tensor σ_{αβ}(ω)  [atomic units]")
+    print("  Kubo-Greenwood conductivity tensor  Re[σ_{αβ}(ω)]")
     print(f"  η = {eta:.4e} Ha = {eta*Ha2eV:.4e} eV")
+    print(f"  Re(σ) is the physical absorptive optical conductivity.")
     print("─" * w)
 
     labels = ['xx', 'xy', 'xz', 'yy', 'yz', 'zz']
@@ -174,16 +183,23 @@ def print_kg_tensor(sigma, Omega, eta):
     show_idx = np.unique(np.linspace(0, n_omega - 1, min(5, n_omega)).astype(int))
 
     header_row = "  ".join(f"Re(s_{l:2s})" for l in labels)
-    print(f"\n  {'w_Ha':>10}  {'w_eV':>10}  {header_row}")
+    print(f"\n  {'w_Ha':>10}  {'w_eV':>10}  {header_row}   [a.u.]")
     print("  " + "-" * (12 + 12 + 14 * len(labels)))
     for wi in show_idx:
-        row_vals = "  ".join(f"{sigma[a,b,wi].real:>12.4e}" for (a,b) in idx)
+        row_vals = "  ".join(f"{sigma[wi,a,b].real:>12.4e}" for (a,b) in idx)
         print(f"  {Omega[wi]:>10.4f}  {Omega[wi]*Ha2eV:>10.4f}  {row_vals}")
 
-    # Isotropic average
-    sigma_avg = (sigma[0,0] + sigma[1,1] + sigma[2,2]) / 3.0
-    print(f"\n  Isotropic Re(sigma_avg) at w={Omega[show_idx[0]]:.4f} Ha : "
-          f"{sigma_avg[show_idx[0]].real:.6e} [a.u.]")
+    # Isotropic average at a few points, with unit conversions
+    sigma_avg = (sigma[:,0,0] + sigma[:,1,1] + sigma[:,2,2]) / 3.0
+    print(f"\n  Isotropic Re(σ_avg) — unit conversions:")
+    print(f"  {'w_Ha':>10}  {'w_eV':>10}  {'[a.u.]':>14}  {'[S/m]':>14}  {'[(μΩcm)⁻¹]':>14}")
+    print("  " + "-" * 70)
+    for wi in show_idx:
+        s_au  = sigma_avg[wi].real
+        s_si  = s_au * AU_TO_SI
+        s_muo = s_au * AU_TO_MUOHM_CM_INV
+        print(f"  {Omega[wi]:>10.4f}  {Omega[wi]*Ha2eV:>10.4f}  "
+              f"{s_au:>14.6e}  {s_si:>14.6e}  {s_muo:>14.6e}")
     print("─" * w)
 
 
@@ -222,10 +238,10 @@ def save_results(sigma, Omega, out_dir, params, cfg):
     ─────────────
       sigma_xx.dat  sigma_xy.dat  sigma_xz.dat
       sigma_yy.dat  sigma_yz.dat  sigma_zz.dat
-      sigma_avg.dat   (isotropic average)
+      sigma_trace_avg.dat   (isotropic average)
       run_info.txt    (all input params + timing)
 
-    Format of each sigma_??.dat
+    Format of each sigma file .dat
     ────────────────────────────
     # omega_Ha   omega_eV   Re(sigma)   Im(sigma)
     <floats in scientific notation>
@@ -241,29 +257,37 @@ def save_results(sigma, Omega, out_dir, params, cfg):
     ]
 
     hdr = ("# omega_Ha          omega_eV            "
-           "Re(sigma)           Im(sigma)           [atomic units]")
+           "Re(sigma)[a.u.]     Im(sigma)[a.u.]     "
+           "Re(sigma)[S/m]      Re(sigma)[(uOhm.cm)^-1]")
 
     for (ai, bi, lab) in components:
         fname = os.path.join(out_dir, f"sigma_{lab}.dat")
+        re_au = sigma[:,ai, bi].real
         data  = np.column_stack([
             Omega,
             Omega * Ha2eV,
-            sigma[ai, bi, :].real,
-            sigma[ai, bi, :].imag,
+            re_au,
+            sigma[:,ai, bi].imag,
+            re_au * AU_TO_SI,
+            re_au * AU_TO_MUOHM_CM_INV,
         ])
         np.savetxt(fname, data, header=hdr, fmt="%.10e", comments='')
         print(f"   sigma_{lab}.dat written  ({len(Omega)} rows)")
 
-    # Isotropic average  σ_avg = Tr(σ)/3
-    sigma_avg = (sigma[0,0] + sigma[1,1] + sigma[2,2]) / 3.0
-    fname = os.path.join(out_dir, "sigma_avg.dat")
+    # Trace  σ_trace_avg = Tr(σ)/3
+    sigma_trace_avg = (sigma[:,0,0] + sigma[:,1,1] + sigma[:,2,2]) / 3.0
+    fname = os.path.join(out_dir, "sigma_trace_avg.dat")
+    re_au = sigma_trace_avg.real
     data  = np.column_stack([
-        Omega, Omega * Ha2eV, sigma_avg.real, sigma_avg.imag,
+        Omega, Omega * Ha2eV,
+        re_au, sigma_trace_avg.imag,
+        re_au * AU_TO_SI,
+        re_au * AU_TO_MUOHM_CM_INV,
     ])
     np.savetxt(fname, data,
-               header=hdr.replace("sigma)", "sigma_avg)"),
+               header=hdr.replace("sigma)", "sigma_trace_avg)"),
                fmt="%.10e", comments='')
-    print(f"   sigma_avg.dat written")
+    print(f"   sigma_trace_avg.dat written")
 
     # ── run_info.txt ──────────────────────────────────────────────────────
     info_path = os.path.join(out_dir, "run_info.txt")
@@ -301,7 +325,9 @@ def save_results(sigma, Omega, out_dir, params, cfg):
         f.write(f"  FD_GRID    : {ni[0]} × {ni[1]} × {ni[2]}\n")
         f.write(f"  Nodes      : {params['Nx']} × {params['Ny']} × {params['Nz']}\n")
         f.write(f"  FD_ORDER   : {params['FD_ORDER']}\n")
-        f.write(f"  BC         : ({params['BCx']}, {params['BCy']}, {params['BCz']})\n")
+        _bc_str = {0: "P", 1: "D"}
+        f.write(f"  BC         : {_bc_str[params['BCx']]} {_bc_str[params['BCy']]} "
+                f"{_bc_str[params['BCz']]}\n")
         f.write(f"  KPOINT_GRID: {params['kpt_grid']}\n")
         f.write(f"  KPOINT_SHIFT: {params['kpt_shift']}\n")
     print(f"   run_info.txt written")

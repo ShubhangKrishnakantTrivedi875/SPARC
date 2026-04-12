@@ -8,17 +8,36 @@ Provides
   build_gradient_info(params)
       Build k-independent sparse FD gradient ingredients (MSPARC translation).
 
-  compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
-                         I_indices, grad_info, params, Omega, eta)
-      Return σ_{αβ}(ω) [Ha, atomic units], shape (3, 3, n_omega).
+  kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
+                 I_indices, grad_info, params, Omega, eta)
+      Return σ_{αβ}(ω) [a.u.], shape (3, 3, n_omega).
+      Re(σ) is the physical absorptive optical conductivity.
 
-Formula
-───────
-  σ_{αβ}(ω) = (2π/V) Σ_k w_k Σ_{n,m}
-                [(f_n−f_m)/(E_n−E_m)] M^α_{nm} [M^β_{nm}]*
-                / (E_n−E_m − ω − iη)
+Formula (resolvent form)
+────────────────────────
+  The code accumulates:
+
+      S_{αβ}(ω) = (2i/V) Σ_k w_k Σ_{n,m}
+                    [(f_n−f_m)/(E_n−E_m)] × M^α_{nm} × [M^β_{nm}]*
+                    × 1/(E_n−E_m − ω − iη)
+
+  and Re[S_{αβ}(ω)] equals the physical absorptive conductivity:
+
+      Re[S_{αβ}(ω)] = (2/V) Im[ Σ_k w_k Σ_{n,m}
+                        (f_m−f_n)/(E_n−E_m) × M^α_{nm} × [M^β_{nm}]*
+                        / (E_n−E_m − ω − iη) ]
+
+  which is the Kubo-Greenwood formula of Zwölf, Abt & Reuter (PRB 2012).
 
   M^α_{nm}(k) = dV Σ_r ψ_n*(r,k) [∂_α ψ_m](r,k)   (FD gradient)
+
+  Units: 1 a.u. of conductivity = e²/(ħ a₀) ≈ 4.6009×10⁶ S/m.
+
+Comparison with QE kubocalc.f90
+────────────────────────────────
+  QE uses (f_n−f_m)/ω instead of (f_n−f_m)/(E_n−E_m). Both agree on
+  resonance; the (E_n−E_m) denominator is more rigorous (satisfies
+  the f-sum rule) and is the form used here.
 
 The gradient matrix uses the exact same central-difference stencil
 as M-SPARC (gradIndicesValues.m + blochGradient.m, cell_typ = 1).
@@ -64,8 +83,9 @@ def build_gradient_info(params):
     x, y, and z directions.
 
     Direct Python translation of M-SPARC's gradIndicesValues.m
-    (S.cell_typ < 3 branch, i.e. orthogonal / non-cyclic cells).
-
+    (S.cell_typ < 3 branch, i.e. below formula is valid for orthogonal and non-orthogonal cells, not supporting cyclic cells).
+    Note: The whole implementation is still only valid for orthogonal cells
+    
     Index convention
     ─────────────────
     Grid points ordered x-fastest (Fortran column-major), matching SPARC:
@@ -146,14 +166,14 @@ def build_gradient_info(params):
                 # ── Dirichlet: drop out-of-domain stencil entries ──
                 keep_p = ~outr
                 I_lst.append(row[keep_p])
-                J_lst.append(make_col(idx_p[keep_p]))
+                J_lst.append(make_col(idx_p)[keep_p])
                 V_lst.append(np.full(keep_p.sum(), +coeff))
                 outl_lst.append(np.zeros(keep_p.sum(), dtype=bool))
                 outr_lst.append(np.zeros(keep_p.sum(), dtype=bool))
 
                 keep_m = ~outl
                 I_lst.append(row[keep_m])
-                J_lst.append(make_col(idx_m[keep_m]))
+                J_lst.append(make_col(idx_m)[keep_m])
                 V_lst.append(np.full(keep_m.sum(), -coeff))
                 outl_lst.append(np.zeros(keep_m.sum(), dtype=bool))
                 outr_lst.append(np.zeros(keep_m.sum(), dtype=bool))
@@ -232,7 +252,13 @@ def _bloch_gradient_matrix(g, k_frac):
 #  Kubo-Greenwood conductivity tensor
 # ════════════════════════════════════════════════════════════════════════════
 
-def compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
+#TODO: Implement Spin
+#    : Implement support for non-orthogonal and cyclic systems
+#    : Implement parallelization over k-points 
+#    : Implement symmetry in the calculation (and reduce calculation only over nonzero matrix elements)
+#    : Have 2 ways for calculating (if all psi are real, then implement a calculation that does not depend on imaginary number in the denominator (so all real), otherwise implement complex)
+
+def kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
                            I_indices, grad_info, params, Omega, eta):
     """
     Compute the frequency-dependent electrical conductivity tensor σ_{αβ}(ω).
@@ -248,7 +274,7 @@ def compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
     5.  Kubo-Greenwood sum:
             σ_{αβ}(ω) += w_k Σ_{n,m} A^α[n,m] [M^β[n,m]]* / (E_n−E_m−ω−iη)
 
-    Global prefactor: 2π / V   [atomic units; factor of 2 for spin degeneracy]
+    Global prefactor: i / V   [atomic units; factor of 2 for spin degeneracy]
 
     Parameters
     ──────────
@@ -266,7 +292,7 @@ def compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
 
     Returns
     ───────
-    sigma : (3, 3, n_omega)  complex128  conductivity tensor [a.u.]
+    sigma : (n_omega, 3, 3)  complex128  conductivity tensor [a.u.]
     timing: dict  per-section timing info
     """
     t0      = time.time()
@@ -275,22 +301,22 @@ def compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
     dV      = params['dV']
     volume  = params['volume']
     n_omega = len(Omega)
-    dirs    = ['x', 'y', 'z']
+    directions    = ['x', 'y', 'z']
 
-    print(f"\n── compute_kubo_greenwood ──────────────────────────────────")
+    print(f"\n──────── kubo_greenwood ──────────────────────────────────")
     print(f"   nkpt={nkpt}  nband={nband}  n_omega={n_omega}  η={eta:.4e} Ha")
     print(f"   dV={dV:.4e} Bohr³  V={volume:.4f} Bohr³")
 
     # ── 1. Sort psi to match ascending eigenvalues ────────────────────────
     print(f"   Sorting psi columns to match eigenvalue order …")
-    psi_sorted = np.zeros_like(psi)
+    psi_band_sorted = np.zeros_like(psi)
     for k in range(nkpt):
         perm = I_indices[:, k].astype(int)
-        psi_sorted[:, :, k] = psi[:, perm, k]
-    print(f"   psi_sorted shape: {psi_sorted.shape}")
+        psi_band_sorted[:, :, k] = psi[:, perm, k]
+    print(f"   psi_band_sorted shape: {psi_band_sorted.shape}")
 
-    sigma = np.zeros((3, 3, n_omega), dtype=complex)
-
+    sigma = np.zeros((n_omega, 3, 3), dtype=complex)
+    
     t_grad_total   = 0.0
     t_matel_total  = 0.0
     t_kgsum_total  = 0.0
@@ -298,25 +324,28 @@ def compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
     for ki in range(nkpt):
         t_k    = time.time()
         w_k    = float(kpt_wts[ki])
-        psi_k  = psi_sorted[:, :, ki]      # (Nd, nband)  complex or real
+        psi_k  = psi_band_sorted[:, :, ki]      # (Nd, nband)  complex or real
         e_k    = eign[:, ki]               # (nband,)  Ha
         f_k    = occ[:, ki]                # (nband,)
 
         print(f"\n   k = {ki+1}/{nkpt}  kpt=({kpts[ki,0]:+.4f},{kpts[ki,1]:+.4f},"
-              f"{kpts[ki,2]:+.4f})  w={w_k:.5f}")
+              f"{kpts[ki,2]:+.4f})  w_k={w_k:.5f}")
 
         # ── Energy/occupation difference matrices  (nband × nband) ────────
         dE = e_k[:, None] - e_k[None, :]          # E_n − E_m
         df = f_k[:, None] - f_k[None, :]          # f_n − f_m
 
-        # (f_n−f_m)/(E_n−E_m): diagonal is 0/0; adding eye avoids the 0/0
-        # (diagonal of df is 0 so the diagonal of the ratio is always 0)
-        df_over_dE = df / (dE + np.eye(nband))
+        # (f_n−f_m)/(E_n−E_m): set to zero wherever |E_n−E_m| < DEGEN_THRESH.
+        # Degenerate states share the same occupation (df≈0) so the limit is 0.
+        # The threshold also covers the diagonal (dE=0 exactly).
+        DEGEN_THRESH = 1e-10   # Ha — well below any physical energy spacing
+        safe_mask    = np.abs(dE) > DEGEN_THRESH
+        df_over_dE   = np.where(safe_mask, df / np.where(safe_mask, dE, 1.0), 0.0)
 
         # ── 2. Bloch gradient matrices ────────────────────────────────────
         t_g = time.time()
         G = {}
-        for ai, d in enumerate(dirs):
+        for ai, d in enumerate(directions):
             G[d] = _bloch_gradient_matrix(grad_info[d], float(kpts[ki, ai]))
         t_grad_total += time.time() - t_g
         print(f"     Bloch gradient matrices assembled")
@@ -324,24 +353,25 @@ def compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
         # ── 3. Momentum matrix elements  M^α[n,m] = dV ψ_n† G_α ψ_m ─────
         t_m = time.time()
         M = {}
-        for d in dirs:
+        for d in directions:
             Gpsi = G[d] @ psi_k            # (Nd, nband)
             M[d] = dV * (psi_k.conj().T @ Gpsi)   # (nband, nband)  complex
         t_matel_total += time.time() - t_m
-        print(f"     |M_x|² max = {np.max(np.abs(M['x'])**2):.4e}  "
+        print(f"|M_x|² max = {np.max(np.abs(M['x'])**2):.4e}  "
               f"|M_y|² max = {np.max(np.abs(M['y'])**2):.4e}  "
-              f"|M_z|² max = {np.max(np.abs(M['z'])**2):.4e}")
+              f"|M_z|² max = {np.max(np.abs(M['z'])**2):.4e}  ")
 
         # ── 4. Occupation-weighted matrix ─────────────────────────────────
-        WM = {d: M[d] * df_over_dE for d in dirs}
+        WM = {d: M[d] * df_over_dE for d in directions}
 
         # ── 5. Kubo-Greenwood frequency sum ───────────────────────────────
         t_kg = time.time()
-        for wi, omega in enumerate(Omega):
-            denom = 1.0 / (dE - omega - 1j * eta)    # (nband, nband)
-            for ai, da in enumerate(dirs):
-                for bi, db in enumerate(dirs):
-                    sigma[ai, bi, wi] += (
+        for wi, omega_i in enumerate(Omega):
+            denom = 1.0 / (dE - omega_i - 1j * eta)    # (nband, nband)
+            
+            for ai, da in enumerate(directions):
+                for bi, db in enumerate(directions):
+                    sigma[wi, ai, bi] += (
                         w_k * np.sum(WM[da] * M[db].conj() * denom)
                     )
         t_kgsum_total += time.time() - t_kg
@@ -349,8 +379,14 @@ def compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
         elapsed_k = time.time() - t_k
         print(f"     k-point done  ({elapsed_k:.2f}s)")
 
-    # Global prefactor: 2π/V  (spin degeneracy ×2 included)
-    sigma *= (2.0 * np.pi / volume)
+    # Global prefactor: i/V
+    sigma *= (1 * 1j / volume)  # factor of 2 accounts spin unpolarized calculation
+    
+   # w_omega = np.ones(len(Omega)) * (Omega[1] - Omega[0])
+    # w_omega[0] *= 0.5
+    # w_omega[-1] *= 0.5
+    # print("check11: f sum rule", 2 / 3 * volume / (np.pi * np.sum(occ)) * np.sum(trace_real_sigma * w_omega))
+    # print("sum occ: ",np.sum(occ))
 
     total_elapsed = time.time() - t0
     timing = dict(
@@ -360,7 +396,7 @@ def compute_kubo_greenwood(psi, header, eign, occ, kpts, kpt_wts,
         kg_sum      = t_kgsum_total,
     )
 
-    print(f"\n   KG tensor computed  (total = {total_elapsed:.2f}s)")
+    print(f"\n   KG tensor computation timings (total = {total_elapsed:.2f}s)")
     print(f"   Breakdown:  gradient={t_grad_total:.2f}s  "
           f"matrix_elem={t_matel_total:.2f}s  kg_sum={t_kgsum_total:.2f}s")
     return sigma, timing

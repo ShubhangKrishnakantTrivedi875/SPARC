@@ -17,7 +17,7 @@ Two ways to supply input
 
     Any CLI argument you omit will fall back to the value in input_params.py.
 
-Authors: (your names)
+Authors: ()
 """
 
 import os
@@ -32,7 +32,7 @@ if _HERE not in sys.path:
     sys.path.insert(0, _HERE)
 
 from file_reader import read_out_file, read_psi_file, read_eigen_file
-from kg_solver   import build_gradient_info, compute_kubo_greenwood
+from kg_solver   import build_gradient_info, kubo_greenwood
 from printing    import (print_banner, print_run_config, print_out_params,
                          print_psi_summary, print_eigen_summary,
                          print_kg_tensor, print_timing_summary, save_results)
@@ -205,7 +205,7 @@ def main():
     print(f"    omega range : {_src('omega_start',cli_args.omega_start)}")
     print(f"    eta         : {_src('eta',        cli_args.eta)}")
 
-    # ── frequency array ───────────────────────────────────────────────────
+    # ── Set up frequency array ───────────────────────────────────────────────────
     Omega = np.linspace(cfg['omega_start'], cfg['omega_end'], cfg['n_omega'])
 
     # ── STEP 1: read .out ─────────────────────────────────────────────────
@@ -237,7 +237,7 @@ def main():
     t_grad = time.time() - t0
 
     # ── STEP 5: compute KG tensor ─────────────────────────────────────────
-    sigma, timing_kg = compute_kubo_greenwood(
+    sigma, timing_kg = kubo_greenwood(
         psi, header,
         eign, occ, kpts, kpt_wts, I_indices,
         grad_info, params, Omega,

@@ -34,14 +34,60 @@ import numpy as np
 _NUM = r"[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?"   # matches any real number
 
 
-def _last_numbers_on_keyword_line(fpath, keyword):
-    """Return list[float] from the LAST line in fpath that contains keyword."""
+def _coerce(token):
+    """Convert a string token to int, float, or leave as str."""
+    try:
+        iv = int(token)
+        # Avoid coercing scientific-notation strings like "1e3" to int
+        if str(iv) == token:
+            return iv
+    except ValueError:
+        pass
+    try:
+        return float(token)
+    except ValueError:
+        return token
+
+
+def _last_tokens_on_keyword_line(fpath, keyword):
+    """
+    Return list of tokens (int | float | str) from the LAST line in *fpath*
+    that contains *keyword*.
+
+    Tokens are the whitespace-separated words that appear *after* the
+    keyword (including any trailing colon).  Each token is coerced to int
+    if it looks like a plain integer, to float if it looks like a real
+    number (including scientific notation), otherwise kept as a str.
+
+    Examples
+    ────────
+      "BC: P P P"          → ['P', 'P', 'P']
+      "FD_GRID: 20 20 20"  → [20, 20, 20]
+      "LATVEC_SCALE: 7.65 7.65 7.65" → [7.65, 7.65, 7.65]
+    """
     result = []
     with open(fpath) as fh:
         for line in fh:
             if keyword in line:
-                result = [float(x) for x in re.findall(_NUM, line)]
+                # Drop everything up to and including the keyword (+ optional colon)
+                after = re.split(re.escape(keyword) + r":?", line, maxsplit=1)[-1]
+                result = [_coerce(t) for t in after.split()]
     return result
+
+
+def _last_numbers_on_keyword_line(fpath, keyword):
+    """
+    Return list[float] from the LAST line in *fpath* that contains *keyword*.
+
+    Only numeric tokens (int / float / scientific) are returned; any
+    non-numeric tokens (e.g. 'P', 'D') are silently skipped.  This keeps
+    backward-compatibility with callers that expect purely numeric output.
+
+    For lines that may contain non-numeric tokens use
+    _last_tokens_on_keyword_line instead.
+    """
+    tokens = _last_tokens_on_keyword_line(fpath, keyword)
+    return [float(t) for t in tokens if isinstance(t, (int, float))]
 
 
 def _numbers_below_keyword(fpath, keyword, n_lines=3):
@@ -111,7 +157,7 @@ def read_out_file(fpath):
     cell         = _last_numbers_on_keyword_line(fpath, "CELL:")
     fd_grid      = [int(x) for x in _last_numbers_on_keyword_line(fpath, "FD_GRID:")]
     fd_order_raw = _last_numbers_on_keyword_line(fpath, "FD_ORDER:")
-    bc_raw       = _last_numbers_on_keyword_line(fpath, "BC:")
+    bc_raw       = _last_tokens_on_keyword_line(fpath, "BC:")
     kpt_grid_raw = _last_numbers_on_keyword_line(fpath, "KPOINT_GRID:")
     kpt_shift_raw= _last_numbers_on_keyword_line(fpath, "KPOINT_SHIFT:")
     spin_typ_raw = _last_numbers_on_keyword_line(fpath, "SPIN_TYP:")
@@ -151,7 +197,7 @@ def read_out_file(fpath):
                 f"Lattice-vector mismatch (max |Δ| = {diff:.2e}).\n"
                 "  Check: LATVEC × LATVEC_SCALE  vs  'Lattice vectors (Bohr)'."
             )
-        print(f"   ✓  Lattice vectors self-consistent  (max |Δ| = {diff:.2e})")
+        print(f"   ✓  Lattice vectors (max |Δ| = {diff:.2e})")
     else:
         print("   ⚠  'Lattice vectors (Bohr)' block not found – skipping cross-check.")
 
@@ -176,7 +222,7 @@ def read_out_file(fpath):
         raise ValueError(
             "Non-orthogonal cell detected "
             f"(off-diagonal metric elements: {[f'{v:.3e}' for v in off_diag]}).\n"
-            "  This code supports orthogonal cells only."
+            "  This code (as for now) supports orthogonal cells only."
         )
     print(f"   ✓  Orthogonal cell confirmed")
 
@@ -187,7 +233,20 @@ def read_out_file(fpath):
 
     if not bc_raw:
         raise ValueError("BC keyword not found in .out file.")
-    BCx, BCy, BCz = int(bc_raw[0]), int(bc_raw[1]), int(bc_raw[2])
+
+    _BC_MAP = {"P": 0, "p": 0, "D": 1, "d": 1}
+
+    def _parse_bc(tok):
+        """Accept int/float 0|1 or string P|D."""
+        if isinstance(tok, str):
+            if tok.upper() not in _BC_MAP:
+                raise ValueError(
+                    f"Unrecognised BC token '{tok}'. Expected P, D, 0, or 1."
+                )
+            return _BC_MAP[tok.upper()]
+        return int(tok)
+
+    BCx, BCy, BCz = _parse_bc(bc_raw[0]), _parse_bc(bc_raw[1]), _parse_bc(bc_raw[2])
 
     Nx = fd_grid[0] + BCx      # number of grid nodes (Dirichlet adds one boundary node)
     Ny = fd_grid[1] + BCy
@@ -228,7 +287,8 @@ def read_out_file(fpath):
     print(f"   Mesh     : dx={dx:.4f}  dy={dy:.4f}  dz={dz:.4f}  Bohr")
     print(f"   dV       : {dV:.4e} Bohr³")
     print(f"   FD_ORDER : {fd_order}  (FDn = {FDn})")
-    print(f"   BC       : ({BCx}, {BCy}, {BCz})   0=periodic  1=Dirichlet")
+    _BC_STR = {0: "P", 1: "D"}
+    print(f"   BC       : {_BC_STR[BCx]} {_BC_STR[BCy]} {_BC_STR[BCz]}")
     print(f"   KPOINT_GRID  : {kpt_grid}")
     print(f"   KPOINT_SHIFT : {kpt_shift}")
     print(f"   SPIN_TYP : {spin_typ}   NSTATES : {nstates}")
